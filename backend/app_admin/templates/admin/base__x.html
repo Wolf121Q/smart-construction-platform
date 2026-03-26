@@ -1,0 +1,495 @@
+{% load i18n static bootstrap_admin_template_tags  %}
+{% load i18n static housing_society_template_tags  %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:'en-us' }}" {% if LANGUAGE_BIDI %}dir="rtl" {% endif %}>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name='description' content='Construction Management System, quality assurance is about preparation. By building quality into decision-making throughout your projects, you can be confident that you’re ordering the right materials, using the correct equipment and everyone knows what to expect.'>
+  <meta name='subject' content='Construction Management System'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, width=device-width, initial-scale=1'>
+  <meta name='keywords' content='Construction Management System,Construction Management, Construction, Project Estimation, Bluebeam, Contract Management, Construction Safety, Contractors, AutoCAD, Subcontracting, Pre-construction, Value Engineering, Project Planning, Contract Negotiation '>
+  <meta name='author' content='ClayStone Pvt. Ltd '>
+  <meta name='page-topic' content='Construction Management System'>
+  <meta name='page-type' content='Construction Management'>
+  <meta name='audience' content='Everyone'>
+  <meta name='designer' content='ClayStone Pvt. Ltd '>
+  <meta name='date' content=' Sep 20th, 2022'>
+  <meta name='language' content='ES'>
+  <meta name='copyright' content='Construction Management System'>
+  <meta name='summary' content='Construction Management System has not only supported materials management, progress management, quality management and manpower management of large and complex plant construction, but also been used as a project optimization tool that conveys requirements from construction to engineering and procurement.'>
+  <meta name='revised' content=' wednesday, Sep 20th, 2022, 10:00 pm'>
+  <meta name='abstract' content='Construction Management System is the coordination of people, materials, and equipment toward completion of a construction project within defined requirements of cost, schedule, scope, and quality. In other words, construction project management refers to the oversight of many different aspects of the project to ensure timeliness and efficient use of capital.'>
+  <meta name='topic' content='Construction Management System,Construction Management, Construction, Project Estimation'>
+  <meta name='Classification' content='Construction Management'>
+  <meta name='designer' content=' ClayStone Pvt. Ltd'>
+  <meta name='reply-to' content=' info@Claystone.pk'>
+  <meta name='owner' content='Construction Management System'>
+  <meta name='"twitter:title"' content='Construction Management System'>
+  <meta name='"twitter:image"' content=' '>
+  <meta name='viewport' content=' width=device-width, initial-scale=1'>
+  <meta property="og:title" content='Construction Management System'>
+  <title>{% block title %}{% endblock %}</title>
+  {% block bootstrap_admin_css %}
+  {% endblock bootstrap_admin_css %}
+  <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static 'admin/css/base.css' %}{% endblock %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/datetime_widget.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/bootstrap/dist/css/bootstrap.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/fontawesome.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/regular.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/brands.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/solid.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/basictable/basictable.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ace-font.css' %}">
+  <!-- date css code start -->
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/tiny-date-picker/tiny-date-picker.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/tiny-date-picker/date-range-picker.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css' %}" />
+  <!-- date css code end -->
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ace.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/custom.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/loader.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/card-shadow.css' %}" />
+<style>
+  .sidebar-light .submenu .nav-text::before {
+  display: none;
+  position: absolute;
+  left: 3em;
+  z-index: 1;
+  opacity: 0.65;
+  top: calc(50% - 0.1875rem);
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 0.75rem;
+  background-color: currentColor;
+  left: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+
+/* CSS for larger devices */
+/*@media (min-width: 501px) {
+  .sidebar-contact-info{
+    display: none !important;
+  }
+}*/
+
+/* CSS for small screens */
+/*@media (max-width: 500px) {
+  .sidebar-contact-info {
+    display: block !important;
+  }
+}
+*/
+
+</style>
+  {% block extrastyle %}{% endblock %}
+  {% if LANGUAGE_BIDI %}
+  {# PUT HERE YOUR CUSTOM RTL STYLESHEET #}
+  {% comment %}
+  <link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static 'admin/css/rtl.css' %}{% endblock %}" />
+  {% endcomment %}
+  {% endif %}
+  {% block jquery %}
+  <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+  {% endblock jquery %}
+  <script>
+    (function ($) {
+      $(document).ready(function () {
+        $("#overlay").delay(600).fadeOut(500);
+      });
+    })(django.jQuery);
+  </script>
+  <script type="text/javascript">
+    window.__admin_media_prefix__ = "{% filter escapejs %}{% static "
+    admin / " %}{% endfilter %}";
+  </script>
+  <script type="text/javascript">
+    window.__admin_utc_offset__ = "{% filter escapejs %}{% now "
+    Z " %}{% endfilter %}";
+  </script>
+  {% block extrahead %}{% endblock %}
+  {% block blockbots %}
+  <meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <link rel="icon" type="image/x-icon" href="{% display_favicon %}">
+</head>
+{% load i18n %}
+{% display_sidebar_menu cl.has_filters as is_displaying_menu %}
+{% if '_popup' in request.GET %} {% with is_popup=1 %} {% endwith %} {% endif %}
+<body class="{% if '_popup' in request.GET %} __popup {% endif %}{% block bodyclass %}{% endblock %}{% if not is_displaying_menu %} no-sidebar{% endif %}" data-admin-utc-offset="{% now 'Z' %}">
+  <div id="loader" class="animated yt-loader" style="display: none;"></div>
+  <div class="body-container">
+    {% block main_header %}
+    {% include 'admin/includes/navigation.html' %}
+    {% endblock main_header %}
+    <div class="main-container bgc-white">
+      {% if not '_popup' in request.GET %}
+      {% if is_displaying_menu %}
+      {% block sidebar_menu %}
+      <!-- Sidebar -->
+      <div id="sidebar" class="sidebar sidebar-fixed expandable sidebar-light ">
+        <div class="sidebar-inner ">
+          <div class="flex-grow-1 ace-scroll" data-ace-scroll="{}">
+            <ul class="nav has-active-border active-on-right nav-list">
+              <li class="nav-item {% if 'index' in segment %} active {% endif %}" style="display:none">
+                <a href="/" class="nav-link">
+                  <i class="nav-icon fa fa-tachometer-alt"></i>
+                  <span class="nav-text fadeable">
+                    <span>Dashboard</span>
+                  </span>
+                </a>
+                <b class="sub-arrow"></b>
+              </li>
+              {% if available_apps %}
+              {% for app in available_apps %}
+                <li class="nav-item {% if app.app_url in request.path %}open{% endif %}">
+                  <a href="{{ app.app_url }}" class="nav-link dropdown-toggle"
+                    title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">
+                    <i class="nav-icon fa fa-cube"></i>
+                    <span class="nav-text fadeable">
+                      <span>{{ app.name }}</span>
+                    </span>
+                    <b class="caret fa fa-angle-left rt-n90"></b>
+                  </a>
+                  {% if app.models|length > 0 %}
+                  <div class="hideable submenu collapse {% if app.app_url in request.path %}show{% endif %}">
+                    <ul class="submenu-inner" style="padding-right: 2px;">
+                      {% endif %}
+                      {% for model in app.models %}
+                      <li class="nav-item {% if model.admin_url == request.path or model.admin_url in request.path %}active{% endif %}">
+                        <a class="nav-link " href="{% firstof model.admin_url model.add_url '#' %}" style="padding: 11px 0px 11px 25px;"
+                          title="{% if not model.admin_url and not model.add_url %}{% trans "You don't have permission to view or edit anything." %}{% endif %}">
+                          <span class="row" style="margin-left: -10px; margin-right: -1px;">
+                              <span><i class="{{ model.icon}} text-150"></i></span>
+                              <span class="col">{{ model.name|title}}</span>
+                          </span>
+                        </a>
+                      </li>
+                      {% endfor %}
+                      {% if app.models|length > 0 %}
+                    </ul>
+                  </div>
+                  {% endif %}
+                </li>
+                {% endfor %}
+                {% else %}
+                <!-- <p>{% trans "You don't have permission to edit anything." %}</p> -->
+                {% endif %}
+            </ul>
+          </div><!-- /.sidebar scroll -->
+          <button class="btn btn-info mb-1 mx-2 mt-2px py-2 radius-t-1 radius-b-1 border-x-1 border-t-2 border-b-2 brc-primary-m3 sidebar-contact-info d-md-none" id="toggleCodeSection">Info <i class="fa fa-info-circle text-110 ml-2"></i> </button> 
+          <div id="codeSectionContainer" class="sidebar-section">
+          <div class="sidebar-section">
+            <div class="sidebar-section-item fadeable-bottom">
+         <!-- <div class="fadeinable"> 
+                <div class="pos-rel">
+                  <img alt="Alexa's Photo" src="assets/image/avatar/avatar3.jpg" width="42"
+                    class="px-1px radius-round mx-2 border-2 brc-default-m2" />
+                  <span class="bgc-success radius-round border-2 brc-white p-1 position-tr mr-1 mt-2px"></span>
+                </div>
+              </div> -->
+              <div class="fadeable hideable w-100 bg-transparent shadow-none border-0 mb-4">
+                <!-- shows this when full-width -->
+                <div id="sidebar-footer-bg"
+                  class="d-flex align-items-center bgc-white shadow-sm mx-2 mt-2px py-2 radius-t-1 radius-b-1 border-x-1 border-t-2 border-b-2 brc-primary-m3"
+                  style="height: 200px;">
+                  <div class="d-flex mr-auto py-1">
+                    <div class="text-80 text-grey ml-2">
+                      <div class="flex-div">
+                        <p>
+                        <div class="navbar-info-card" style="margin-bottom: 10px;font-size: 17px;"><strong>For any query pl contact:</strong></div>
+                        <span style="font-size: 15px;"><strong>Mngr (QA) Zishan Ali</strong></span><br>
+                        <span class="navbar-info-card"><i class="fa fa-phone fa-flip-horizontal"></i> Tel:
+                          0514610245</span><br>
+                        <span class="navbar-info-card"><i class="fa fa-mobile"></i> &nbsp;&nbsp;Mob: 03116110110</span>
+                        <br>
+                        <span class="navbar-info-card"><i class="fa fa-envelope"></i> Email: qa.sec.hd@gmail.com</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> 
+
+
+
+        <!-- Code section content goes here -->
+        </div>
+
+
+
+        </div>
+      </div>
+      <!-- End Sidebar -->
+      {% endblock sidebar_menu %}
+      {% endif %}
+      {% endif %}
+      <!--<div class="body-container">
+       <div class="col-sm-3 col-md-2 sidebar"> -->
+      {% block content_container %}
+      {% comment %}<div id="content"
+        class="{% if is_displaying_menu %}col-xs-8 col-xs-offset-4 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2{% else %}col-sm-12{% endif %} main {% block coltype %}colM{% endblock %}">
+        {% endcomment %}
+        <div role="main" class="main-content bgc-white">
+          {% if not '_popup' in request.GET %}
+          {% block breadcrumbs %}
+          <div class="breadcrumbs ace-save-state d-none" id="breadcrumbs">
+            <ul class="breadcrumb">
+              <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="{% url 'admin:index' %}" title="{% trans 'Home' %}">Home</a>
+              </li>
+              {% if cl.opts %}
+              <li>
+                <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}"
+                  title="{% trans 'Home' %}">{{ cl.opts.app_config.verbose_name }}</a>
+              </li>
+              {% endif %}
+              <li class="active">{{ cl.opts.verbose_name_plural|capfirst }}</li>
+            </ul><!-- /.breadcrumb -->
+          </div>
+          {% endblock %}
+          {% endif %}
+          <div class=" container-fluid mt-3" >
+            {% block messages %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if message.tags == 'success' %}
+            <div
+              class="alert fade show bgc-white text-dark-tp3 border-1 brc-secondary-l2 shadow-sm radius-0 py-3 d-flex align-items-start">
+              <div class="position-tl w-102 m-n1px border-t-4 brc-success"></div>
+              <div class="bgc-success-l4 px-3 py-3 radius-round mr-4 border-2 brc-success-m2">
+                <i class="fa fa-check text-140 text-success mx-2px"></i>
+              </div>
+              <div class="text-dark-tp3">
+                <h3 class="text-success-d1 text-130">Alert Message!</h3>
+                {{ message|capfirst }}
+              </div>
+              <button type="button"
+                class="close align-self-start ml-auto mt-n25 mr-n2 text-success-d2 text-150 opacity-2 bgc-h-success-l2 radius-round px-15 pt-1px pb-3px"
+                data-dismiss="alert" aria-label='{% trans "Close" %}'>
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            {% else %}
+            <div role="alert"
+              class="alert alert-warning bgc-warning-l4 brc-warning-m3 border-2 d-flex align-items-center">
+              <i class="fas fa-exclamation-circle mr-3 fa-2x text-orange"></i>
+              <div class="text-dark-tp2">
+                {{ message|capfirst }}
+              </div>
+              <button type="button" class="close align-self-start ml-auto text-danger-d2 text-150" data-dismiss="alert"
+                aria-label='{% trans "Close" %}'>
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endblock messages %}
+            {% block content %}
+            {% block object-tools %}{% endblock %}
+            {{ content }}
+            {% endblock %}
+          </div>
+        </div>
+        {% endblock content_container %}
+        {% if cl.has_filters %}
+        <div id="id-filters-modal"
+          class="my-1 my-lg-2 modal modal-nb ace-aside aside-right aside-offset aside-below-nav" data-backdrop="false"
+          tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div
+              class="modal-content w-auto flex-grow-1 pb-1px radius-0 radius-l-2 border-y-2 border-l-1 brc-default-m3 bgc-white-tp1 shadow">
+              <!--<div class="modal-header p-0 radius-0 mx-3">
+                <h4 class="modal-title text-primary-d1 text-140 pt-2 pl-1">{% trans 'Filter' %}</h4>
+                <button type="button" class="close m-0 mr-n2" data-dismiss="modal" aria-label="Close">
+                  <i class="fa fa-times text-70" aria-hidden="true"></i>
+                </button>
+              </div> -->
+              <div class="modal-body" style="padding: 0.5rem;overflow: auto !important;">
+                {% block filters %}{% endblock filters %}
+              </div>
+            </div><!-- .modal-content -->
+            <div class="aside-header align-self-start mt-1 mt-lg-5 text-right d-style">
+              <button type="button" class="btn bgc-primary-d1 btn-lg shadow-sm pl-2 radius-l-2 f-n-hover py-1 py-md-2"
+                data-toggle="modal" data-target="#id-filters-modal">
+                <i class="fa fa-filter text-110 ml-1" style="color: white;"></i>
+              </button>
+            </div>
+          </div><!-- .modal-dialog -->
+        </div><!-- .modal-aside -->
+        {% endif %}
+      </div>
+    </div>
+    <!-- change chat_box start -->
+    {% include "partials/chat_box.html" %} 
+    {% include "partials/comment_attachment_detail.html" %} 
+    <!-- change chat_box  end -->
+    {% block bootstrap_admin_js %}
+    <!--  <script src="{% static 'bootstrap_admin/js/base.js' %}"></script>-->
+    <script src="{% static 'assets/node_modules/jquery/dist/jquery.js' %}"></script>
+    <script>
+      if (typeof jQuery === 'undefined' && django && django.jQuery) {
+        jQuery = django.jQuery;
+      }
+    </script>
+    <!-- heighchart chart js  -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'assets/heightchart_js/highcharts.js' %}"></script>
+    <script src="{% static 'assets/heightchart_js/pareto.js' %}"></script>
+    <script src="{% static 'assets/heightchart_js/sankey.js' %}"></script>
+    <script src="{% static 'assets/heightchart_js/organization.js' %}"></script>
+    <script src="{% static 'assets/heightchart_js/export-data.js' %}"></script>
+    <script src="{% static 'assets/heightchart_js/exporting.js' %}"></script>
+    <script src="{% static 'assets/heightchart_js/accessibility.js' %}"></script>
+    <!-- heighchart chart js  -->
+    <!--   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+    <script src="{% static 'assets/node_modules/popper.js/dist/umd/popper.js' %}"></script>
+    <script src="{% static 'assets/node_modules/bootstrap/dist/js/bootstrap.js' %}"></script>
+    <script src="{% static 'assets/node_modules/node-waves/dist/waves.js' %}"></script>
+   <!-- date js code start -->
+   <script src="{% static 'assets/node_modules/tiny-date-picker/dist/date-range-picker.js' %}"></script>
+   <script src="{% static 'assets/node_modules/moment/moment.js' %}"></script>
+   <script src="{% static 'assets/node_modules/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js' %}"></script>
+   <!-- date js code end -->
+    <script src="{% static 'assets/js/ace.js' %}"></script>
+    <script src="{% static 'assets/js/custom_extra.js' %}"></script>
+    <!-- <script src="http://www.openlayers.org/api/OpenLayers.js"></script> -->
+    <script src="{% static 'assets/module/ChatBoxApi.js' %}"></script>
+    <script src="{% static 'assets/module/ProjectApi.js' %}"></script>
+    <script>
+      $(document).bind("ajaxStart", function(){
+    $("#loader").show();
+    }).bind("ajaxComplete", function(){
+     $("#loader").hide();
+    });
+    // org chart High chart js code start
+      Highcharts.chart('organizational_chart', {
+      chart: {
+        height: 600,
+        inverted: true,
+        marginTop: 100
+      },
+
+      title: {
+        text: ' '
+      },
+      credits: {
+      enabled: false
+      },
+      exporting: {
+          enabled: false
+      },
+      accessibility: {
+        point: {
+          descriptionFormatter: function(point) {
+            var nodeName = point.toNode.name,
+              nodeId = point.toNode.id,
+              nodeDesc = nodeName === nodeId ? nodeName : nodeName + ', ' + nodeId,
+              parentDesc = point.fromNode.id;
+            return point.index + '. ' + nodeDesc + ', reports to ' + parentDesc + '.';
+          }
+        }
+      },
+      events: {
+                mouseOut: function () {
+                  alert("HELLO")
+                }
+            },
+
+      series: [{ 
+        type: 'organization', 
+        name: 'Highsoft',
+        keys: ['from', 'to'],
+        data: {{organization_data_list|safe}},
+        levels: [{
+          level: 0,
+          color: 'coral',
+          dataLabels: {
+            color: 'white'
+          },
+          height: 25
+        }, {
+          level: 1,
+          color: 'teal',
+          dataLabels: {
+            color: 'white'
+          },
+          height: 25
+        }, {
+          level: 2,
+          color: '#980104'
+        }, {
+          level: 4,
+          color: '#359154'
+        }],
+        nodes: {{organization_nodes|safe}},
+        colorByPoint: false,
+        color: '#007ad0',
+        dataLabels: {
+          color: 'white'
+        },
+        borderColor: 'white',
+        nodeWidth: 65
+      }],
+      tooltip: {
+        positioner: function(labelWidth, _, point) {
+          var plotX = point.plotX,
+            chartWidth = this.chart.chartWidth;
+          return {
+            x: plotX + labelWidth + 30 > chartWidth ? plotX - labelWidth : plotX + 30,
+            y: 40,
+          };
+        },
+        borderWidth: 1,
+        backgroundColor: 'rgba(255,255,255,0.8)',
+      },
+      exporting: {
+        allowHTML: true,
+        sourceWidth: 800,
+        sourceHeight: 600
+      }
+
+    });
+
+
+
+
+    // org chart High chart js code end
+    </script>
+
+    <script>
+      $(document).ready(function() {
+        $('#toggleCodeSection').on('click', function() {
+          $('#codeSectionContainer').toggleClass('hidden');
+        });
+        
+        $(window).on('resize', function() {
+          if ($(window).width() >= 300 && $(window).width() <= 500) {
+            $('#codeSectionContainer').addClass('hidden');
+          } else {
+            $('#codeSectionContainer').removeClass('hidden');
+          }
+        });
+      });
+    </script>
+ 
+    {% endblock bootstrap_admin_js %}
+
+    {% block js %}{% endblock js %}
+</body>
+</html>

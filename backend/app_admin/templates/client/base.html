@@ -1,0 +1,147 @@
+{% load i18n static bootstrap_admin_template_tags  %}
+{% load i18n static housing_society_template_tags  %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl" {% endif %}>
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta   name='description'   content='Construction Management System, quality assurance is about preparation. By building quality into decision-making throughout your projects, you can be confident that you’re ordering the right materials, using the correct equipment and everyone knows what to expect.'>
+  <meta   name='subject'   content='Construction Management System'>
+  <meta   name='viewport'   content='width=device-width, initial-scale=1'>
+  <meta   name='viewport'   content='width=device-width, initial-scale=1.0, width=device-width, initial-scale=1'>
+  <meta   name='keywords'   content='Construction Management System,Construction Management, Construction, Project Estimation, Bluebeam, Contract Management, Construction Safety, Contractors, AutoCAD, Subcontracting, Pre-construction, Value Engineering, Project Planning, Contract Negotiation '>
+  <meta   name='author'   content='ClayStone Pvt. Ltd '>
+  <meta   name='page-topic'   content='Construction Management System'>
+  <meta   name='page-type'   content='Construction Management'>
+  <meta   name='audience'   content='Everyone'>
+  <meta   name='designer'   content='ClayStone Pvt. Ltd '>
+  <meta   name='date'   content=' Sep 20th, 2022'>
+  <meta   name='language'   content='ES'>
+  <meta   name='copyright'   content='Construction Management System'>
+  <meta   name='summary'   content='Construction Management System has not only supported materials management, progress management, quality management and manpower management of large and complex plant construction, but also been used as a project optimization tool that conveys requirements from construction to engineering and procurement.'>
+  <meta   name='revised'   content=' wednesday, Sep 20th, 2022, 10:00 pm'>
+  <meta   name='abstract'   content='Construction Management System is the coordination of people, materials, and equipment toward completion of a construction project within defined requirements of cost, schedule, scope, and quality. In other words, construction project management refers to the oversight of many different aspects of the project to ensure timeliness and efficient use of capital.'>
+
+  <meta   name='topic'   content='Construction Management System,Construction Management, Construction, Project Estimation'>
+  <meta   name='Classification'   content='Construction Management'>
+  <meta   name='designer'   content=' ClayStone Pvt. Ltd'>
+  <meta   name='reply-to'   content=' info@Claystone.pk'>
+  <meta   name='owner'   content='Construction Management System'>
+
+  <meta   name='”twitter:title”'   content='Construction Management System'>
+ 
+  <meta   name='”twitter:image”'   content=' '>
+  <meta   name='viewport'   content=' width=device-width, initial-scale=1'>
+  <meta    property=" og:title"  content='Construction Management System'>
+
+ 
+  <title>{% block title %}{% endblock %}</title>
+  {% block bootstrap_admin_css %}
+  {% endblock bootstrap_admin_css %}
+
+  <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static 'admin/css/base.css' %}{% endblock %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/datetime_widget.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/bootstrap/dist/css/bootstrap.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/fontawesome.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/regular.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/brands.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/solid.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/basictable/basictable.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ace-font.css' %}">
+
+<style>
+  .sidebar-light .submenu .nav-text::before {
+  display: none;
+  position: absolute;
+  left: 3em;
+  z-index: 1;
+  opacity: 0.65;
+  top: calc(50% - 0.1875rem);
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 0.75rem;
+  background-color: currentColor;
+  left: 10px;
+}
+</style>
+
+
+  {% block extrastyle %}{% endblock %}
+
+  {% if LANGUAGE_BIDI %}
+  {# PUT HERE YOUR CUSTOM RTL STYLESHEET #}
+  {% comment %}
+  <link rel="stylesheet" type="text/css"
+    href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />
+  {% endcomment %}
+  {% endif %}
+
+  {% block jquery %}
+  <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+
+  {% endblock jquery %}
+  <script>
+    (function ($) {
+      $(document).ready(function () {
+        $("#overlay").delay(600).fadeOut(500);
+      });
+    })(django.jQuery);
+  </script>
+  <script type="text/javascript">
+    window.__admin_media_prefix__ = "{% filter escapejs %}{% static "
+    admin / " %}{% endfilter %}";
+  </script>
+  <script type="text/javascript">
+    window.__admin_utc_offset__ = "{% filter escapejs %}{% now "
+    Z " %}{% endfilter %}";
+  </script>
+
+  {% block extrahead %}{% endblock %}
+  {% block blockbots %}
+  <meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <link rel="icon" type="image/x-icon" href="{% display_favicon %}">
+</head>
+{% load i18n %}
+{% display_sidebar_menu cl.has_filters as is_displaying_menu %}
+{% if '_popup' in request.GET %} {% with is_popup=1 %} {% endwith %} {% endif %}
+
+<body class="{% if '_popup' in request.GET %} __popup {% endif %}{% block bodyclass %}{% endblock %}{% if not is_displaying_menu %} no-sidebar{% endif %}" data-admin-utc-offset="{% now "Z" %}">
+  <div id="loader" class="animated yt-loader" style="display: none;"></div>
+
+
+
+
+
+      {% block content_container %}
+      
+
+       
+      {% endblock content_container %}
+
+    {% block bootstrap_admin_js %}
+    <!--  <script src="{% static 'bootstrap_admin/js/base.js' %}"></script>-->
+    <script src="{% static 'assets/node_modules/jquery/dist/jquery.js' %}"></script>
+    <script>
+      if (typeof jQuery === 'undefined' && django && django.jQuery) {
+        jQuery = django.jQuery;
+      }
+    </script>
+
+
+   
+ 
+    {% endblock bootstrap_admin_js %}
+
+    {% block js %}{% endblock js %}
+</body>
+
+</html>

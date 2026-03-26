@@ -1,0 +1,324 @@
+{% extends "client/base.html" %}
+{% load i18n static bootstrap_admin_template_tags  %}
+{% load i18n static housing_society_template_tags  %}
+{% load i18n %}
+
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+
+{% block content %}
+
+      <div class="row flex-grow-1" id="row-1">
+        <div class="col-12 d-lg-flex bgc-white shadow radius-1 overflow-hidden">
+
+          <div class="row flex-grow-1" id="row-2" >
+
+            <!-- Including Into Page from admin/includes/intro.html -->
+            <div id="id-col-intro" class="col-lg-6 d-none d-lg-flex border-r-1 brc-default-l3 px-0">
+              {% include 'client/includes/__intro.html' %}
+            </div>
+
+            <div id="id-col-main" class="col-12 py-lg-5 bgc-white px-0 col-lg-6 mx-auto d-flex align-items-center justify-content-center">
+              <!-- you can also use these tab links -->
+              <ul class="d-none mt-n4 mb-4 nav nav-tabs nav-tabs-simple justify-content-end bgc-black-tp11"
+                role="tablist">
+                <li class="nav-item mx-2">
+                  <a class="nav-link active px-2" data-toggle="tab" href="#id-tab-login" role="tab"
+                    aria-controls="id-tab-login" aria-selected="true">
+                    Login
+                  </a>
+                </li>
+                <li class="nav-item mx-2">
+                  <a class="nav-link px-2" data-toggle="tab" href="#id-tab-signup" role="tab"
+                    aria-controls="id-tab-signup" aria-selected="false">
+                    Signup
+                  </a>
+                </li>
+              </ul>
+
+
+              <div class="tab-content tab-sliding border-0 p-0" data-swipe="right">
+
+                <div class="tab-pane active show mh-100 px-3 px-lg-0 pb-3" id="id-tab-login">
+
+                  {% if form.errors%} 
+                  {% if form.errors or form.non_field_errors %}
+                 <div class="alert d-flex bgc-red-l3 brc-success-m4 border-0 p-0" role="alert" style="width: 100%">
+                     <div class="bgc-red px-3 py-1 text-center radius-l-1">
+                         <span class="fa-2x text-black">
+                             ⚠
+                             
+                         </span>
+                     </div>
+ 
+ 
+                     <span class="ml-3 align-self-center text-dark-tp3 text-110">
+                         {% if form.errors and not form.non_field_errors %}
+                         <p>
+                             <strong>
+                                 {% blocktrans count form.errors.items|length as counter %}Please correct the error
+                                 below.{% plural %}Please correct the errors below.{% endblocktrans %}
+                             </strong>
+                         </p>
+                         {% endif %}
+ 
+                         {% if form.non_field_errors %}
+                         {% for error in form.non_field_errors %}
+                         <p>
+                             {{ error }}
+                         </p>
+                         {% endfor %}
+                         {% endif %}
+ 
+                         {% if form.errors %}
+                         {% for field in form %}
+                         {% for error in field.errors %}
+                         <p class="border-decoration">
+                             <strong><span class="glyphicon glyphicon-asterisk"></span> {{ field.label }}:
+                             </strong>{{ error|escape }}
+                         </p>
+                         {% endfor %}
+                         {% endfor %}
+                         {% endif %}
+                     </span>
+                 </div>
+                 {% endif %} 
+                 {% endif %}  
+                  
+
+                  <!-- Include Login Page Here  -->
+
+                  <!-- show this in desktop -->
+                  <div class="d-none d-lg-block col-md-6 offset-md-3 mt-lg-4 px-3576">
+                    <h4 class="text-grey border-b-1 brc-gold-l2 pb-2 text-130">
+                      <i class="fa fa-file-alt text-orange-m1 mr-1"></i>
+                      Sign up
+                    </h4>
+                  </div>
+
+                  <!-- show this in mobile device -->
+                  <div class="d-lg-none text-secondary-m1 my-4 text-center">
+                    <a href="{% url 'auth_login' %}">
+                      <img class="text-200 mb-4" src="{% display_favicon %}" width="120px">
+                    </a>
+                    <h1 class="text-170">
+                      <span class="text-blue-d1">
+                           <span class="text-80 text-dark-tp3">{{ society }}</span>
+                      </span>
+                    </h1>
+                    Sign up
+                  </div>  
+                  {% include 'client/includes/registration_step_partial.html' %}
+                  <form id="register_form" method="post" action="" class="form-row mt-4" novalidate>
+                    <div id="sms_otp_msg_box"
+                      class="form-group col-sm-12 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3"
+                      style="display:none">
+                      <div
+                        class="alert alert-collapse alert-success bg-white brc-success-m3 rounded border-2 d-inline-flex"
+                        role="alert">
+                        <span class="mr-4 d-inline-block" id="sms_otp_msg">
+
+                        </span>
+
+                        <button type="button" class="close align-self-center ml-auto text-danger text-150"
+                          data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {% csrf_token %}
+                    
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                      <div class="d-flex align-items-center input-floating-label text-blue brc-success-m2">
+                        {{form.membership_no|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fa fa-user text-gold ml-n4"></i>
+                        {{ form.membership_no|get_label:'floating-label text-grey ml-n3'}}
+                      </div>
+                      
+                      <span class="alert-danger" data-validate-for="membership_no"></span>
+                      
+                    </div>
+
+
+
+                    <div class="form-group col-sm-12 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                      <div class="d-flex align-items-center input-floating-label text-gold ">
+                        {{form.first_name|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fa fa-user text-gold ml-n4"></i>
+                        {{ form.first_name|get_label:'floating-label text-grey ml-n3'}}
+                      </div>
+                          <span class="alert-danger"  id="first_name" data-validate-for="first_name">{{form.first_name.errors}} </span>
+                    </div>
+                    
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                      <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                        {{form.middle_name|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fa fa-user text-gold ml-n4"></i>
+                        {{ form.middle_name|get_label:'floating-label text-grey ml-n3'}}
+                      </div>
+                      <span class="alert-danger" id="middle-name" data-validate-for="middle_name">{{form.middle_name.errors}}</span>
+                    </div>
+
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                      <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                        {{form.last_name|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fa fa-user text-gold ml-n4"></i>
+                        {{ form.last_name|get_label:'floating-label text-grey ml-n3'}}
+                      </div>
+                      <span class="alert-danger" id="last_name" data-validate-for="last_name">{{form.last_name.errors}}</span>
+                    </div>
+
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                      <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                        {{form.password|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fa fa-key text-gold ml-n4"></i>
+                        {{ form.password|get_label:'floating-label text-grey ml-n3'}}
+                      </div>                    
+                      <span class="alert-danger"  data-validate-for="password" id="registration-password-validator">{{form.password.errors}}</span>
+                    </div>
+
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                      <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                        {{form.confirm_password|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fa fa-key text-gold ml-n4"></i>
+                        {{ form.confirm_password|get_label:'floating-label text-grey ml-n3'}}
+                      </div>
+                      <span class="alert-danger" data-validate-for="confirm_password" id="registration-confirm-password-validator">{{form.confirm_password.errors}}</span>
+                    </div>
+                    
+
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                      <button type="submit" class="btn bgc-blue text-white  btn-block px-4 btn-bold mt-2 mb-4"
+                        value="{% trans 'Submit' %}" />{% trans 'Submit' %} </button>
+                    </div>
+                  </form>
+                  
+
+                </div>
+              </div><!-- .tab-content -->
+            </div>
+          </div><!-- /.row -->
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+      {% include 'client/includes/responsive_footer_of_auth_pages.html' %}
+      {% include 'client/includes/footer_for_auth_screens.html' %}
+      {% endblock %}
+      {% block js %}
+      <script>
+        // Registration Steps
+        $('#step_2').addClass('active');
+        $('#step_3').addClass('active');
+        $('#connecting_steps').css({
+          "left": "21.5%",
+          "right": "12.5%",
+          "max-width": "65.5%"
+        })
+        // blocking Title
+        $('#step1-title').css("display","none")
+        $('#step2-title').css("display","none")
+        // Showing Tick Icon 
+        $('#step1_complete').css("display","block")
+        $('#step2_complete').css("display","block")
+      </script>
+      
+      
+      <script src="{% static 'assets/validation/jquery.js' %}"></script>
+      <script src="{% static 'assets/validation/parsley.js' %}"></script>
+      <script>
+          $(document).ready(function () {
+          // Password
+        $('#id_password').attr("data-parsley-minlength",8)
+         $('#id_password').attr("data-parsley-required")
+         $('#id_password').attr("data-parsley-trigger","focusout")
+         $('#id_password').attr("data-parsley-errors-container","#registration-password-validator")
+         $('#id_password').attr("data-parsley-uppercase","1")
+         $('#id_password').parsley()
+
+        //  Confirm Password
+        $('#id_confirm_password').attr("data-parsley-minlength",8)
+         $('#id_confirm_password').attr("data-parsley-required")
+         $('#id_confirm_password').attr("data-parsley-trigger","focusout")
+         $('#id_confirm_password').attr("data-parsley-errors-container","#registration-confirm-password-validator")
+         $('#id_confirm_password').attr("data-parsley-uppercase","1")
+         $('#id_confirm_password').attr("data-parsley-equalto","#id_password")
+         $('#id_confirm_password').parsley()
+
+         $('#id_first_name').attr("data-parsley-required")
+         $('#id_first_name').attr("data-parsley-trigger","keyup")
+         $('#id_first_name').attr("data-parsley-alphadash","")
+         $('#id_first_name').attr("data-parsley-errors-container","#first_name")
+         $('#id_first_name').parsley()
+
+        //  $('#id_first_name').attr("data-parsley-required")
+        //  $('#id_first_name').attr("data-parsley-trigger","keyup")
+        //  $('#id_first_name').attr("data-parsley-alpha-only","/^[A-Za-z]+$/")
+        //  $('#id_first_name').attr("data-parsley-errors-container","#first_name")
+        //  $('#id_first_name').parsley()
+
+
+         $('#id_middle_name').attr("data-parsley-required")
+         $('#id_middle_name').attr("data-parsley-trigger","focusout")
+         $('#id_middle_name').attr("data-parsley-errors-container","#middle-name")
+         $('#id_middle_name').attr("data-parsley-alphadash","")
+         $('#id_middle_name').parsley()
+
+         $('#id_last_name').attr("data-parsley-required")
+         $('#id_last_name').attr("data-parsley-trigger","focusout")
+         $('#id_last_name').attr("data-parsley-alphadash","")
+         $('#id_last_name').attr("data-parsley-errors-container","#last_name")
+         $('#id_last_name').parsley()
+
+         $('#id_password').attr("data-bs-toggle","tooltip")
+         $('#id_password').attr("data-placement","right")
+         $('#id_password').attr("title","Yourpassword123")
+         
+
+         
+       });  
+       
+        //    Password Upper Case Validator 
+        window.Parsley.addValidator('uppercase', {
+            requirementType: 'number',
+            validateString: function(value, requirement) {
+            var uppercases = value.match(/[A-Z]/) || [];
+            return uppercases.length >= requirement;
+            },
+            messages: {
+            en: 'Your password must contain at least %s uppercase letter.'
+        }
+      });
+
+      window.Parsley.addValidator('alphadash', {
+          validateString: function(value) {
+            return true == (/^[a-zA-Z]+$/.test(value));
+          },
+          messages: {
+            en: 'Alphabets only.'
+          }
+        });
+
+    // function validateName(){
+    //     var regName =/^[A-Za-z]+$/;
+    //     var name = document.getElementById('id_first_name').value;
+    //     if(!regName.test(name)){
+    //         // alert('Please enter your full name (first & last name).');
+    //         document.getElementById('first_name').innerHTML = 'Please enter your full name (first & last name).';
+    //         return false;
+    //     }else{
+    //         //alert('Valid name given.');
+            
+    //         return true;
+    //     }
+    //   }
+
+
+      </script>
+      <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script> -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+      <script>
+        $(document).ready(function(){
+            $('[data-bs-toggle="tooltip"]').tooltip();   
+        });
+        </script>
+      
+      {% endblock js %}

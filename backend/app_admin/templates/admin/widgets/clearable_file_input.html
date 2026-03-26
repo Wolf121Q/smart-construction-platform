@@ -1,0 +1,41 @@
+{% load bootstrap_admin_template_tags %}
+<div class="form-group row">
+    <div class="col-12">
+      <div class="row">
+          {% if widget.is_initial %}
+          {% if widget.value.url|endswithImage %}
+            <a href="javascript:void(0);" class="col-2 ml-3" title="{{ widget.name | title }}" onclick="CustomExtra.getPopup('{{ widget.value.url }}')"> <img src="{{ widget.value.url }}" title="{{ widget.name | title }}" height="50"></a>
+          {% else %}
+            <button class="form-control col-2 ml-3" type="button"  title="{{ widget.name | title }}" onclick="CustomExtra.getPopup('{{ widget.value.url }}')">View : {{ widget.name | title }}</button>
+          {% endif %}
+        <div class="input-group col-2">
+            {% if not widget.required %}
+            <label class="text-orange-d3 text-600" for="{{ widget.checkbox_id }}">
+                <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}" class="ace-switch ace-switch-thin text-grey-l1 bgc-warning-d2 mr-1">
+                {{ widget.clear_checkbox_label }}
+            </label>&nbsp;
+            {% endif %}
+        </div>
+        {% endif %}
+        <div class="col-5">
+            <label class="ace-file-input">
+              <input type="{{ widget.type }}" class="ace-file-input" name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
+                <div class="ace-file-container d-flex flex-column border-1 brc-grey-l2 brc-h-warning-m1">
+                  <div class="ace-file-placeholder h-100">
+                    <span class="ace-file-icon align-self-center mx-2px">
+                      <i class="fa fa-upload bgc-grey-m1 text-white w-4 py-2 text-center"></i>
+                    </span>
+                    <span class="ace-file-name text-grey-m2 px-1">
+                      No {{ widget.name}} chosen
+                    </span>
+                    <span title="{{ widget.name | title }}" class="ace-file-btn ml-auto bgc-default text-white px-2 pt-2 text-90 my-1px mr-1px">{{ widget.input_text }} </span>
+                  </div>
+                </div>
+                <a title="" class="remove position-rc text-danger mr-n25 w-3 radius-2 border-1 brc-h-danger-m4 text-center" href="javascript:void(0);">
+                  <i class="fa fa-times"></i>
+                </a>
+            </label>          
+        </div>
+      </div>
+    </div>
+</div>

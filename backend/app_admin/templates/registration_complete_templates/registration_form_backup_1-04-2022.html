@@ -1,0 +1,206 @@
+{% extends "client/base.html" %}
+{% load i18n static bootstrap_admin_template_tags  %}
+{% load i18n static housing_society_template_tags  %}
+{% load i18n %}
+
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+
+{% block content %}
+
+                                    {% if form.errors or form.non_field_errors %}
+                                    <div class="alert d-flex bgc-red-l3 brc-success-m4 border-0 p-0" role="alert" style="width: 100%">
+                                      <div class="bgc-red px-3 py-1 text-center radius-l-1">
+                                        <span class="fa-2x text-white">
+                                        ⚠ <!-- &#9888; -->
+                                        </span>
+                                      </div>
+
+                                      <span class="ml-3 align-self-center text-dark-tp3 text-110">
+                                          {% if form.errors and not form.non_field_errors %}
+                                            <p>
+                                              <strong>
+                                                {% blocktrans count form.errors.items|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+                                              </strong>
+                                            </p>
+                                          {% endif %}
+
+                                          {% if form.non_field_errors %}
+                                            {% for error in form.non_field_errors %}
+                                              <p>
+                                                {{ error }}
+                                              </p>
+                                            {% endfor %}
+                                          {% endif %}
+
+                                          {% if form.errors %}
+                                            {% for field in form %}
+                                              {% for error in field.errors %}
+                                                <p class="border-decoration">
+                                                  <strong><span class="glyphicon glyphicon-asterisk"></span> {{ field.label }}: </strong>{{ error|escape }}
+                                                </p>
+                                              {% endfor %}
+                                            {% endfor %}
+                                          {% endif %}
+                                      </span>
+                                    </div>
+                                    {% endif %}
+                                      {% include 'admin/includes/auth_screen_design.html' %}
+                                      <div class="d-none d-lg-block col-md-6 offset-md-3 mt-lg-4 px-0">
+                                        <h4 class="text-white border-b-1 brc-gold-l2 pb-2 text-130">
+                                            <i class="fa fa-file-alt  text-gold mr-1"></i>
+                                          Registration
+                                        </h4>
+                                    </div>
+
+                                    <!-- show this in mobile device -->
+                                    <div class="d-lg-none text-secondary-m1 my-4 text-center">
+
+                                        <p class="text-white mt-3">Registration </p>
+                                    </div>
+                                                                <!-- Register Feilds-->
+
+                                      <form id="register_form"  method="post" action="" class="mt-4">
+                                                  <div id="sms_otp_msg_box" class="form-group col-sm-12 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3" style="display:none">
+                                                      <div class="alert alert-collapse alert-success bg-white brc-success-m3 rounded border-2 d-inline-flex" role="alert">
+                                                          <span class="mr-4 d-inline-block" id="sms_otp_msg">
+
+                                                          </span>
+
+                                                        <button type="button" class="close align-self-center ml-auto text-danger text-150" data-dismiss="alert" aria-label="Close">
+                                                          <span aria-hidden="true">×</span>
+                                                        </button>
+                                                      </div>
+                                                  </div>
+                                              {% csrf_token %}
+                                            {{form.step}}
+                                              
+                                              
+
+                                          <div class="form-group col-sm-12 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                                              <div class="d-flex align-items-center input-floating-label text-gold ">
+                                                {{form.first_name|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                                  <i class="fa fa-user text-gold ml-n4"></i>
+                                                  {{ form.first_name|get_label:'floating-label text-white ml-n3'}}
+                                              </div>
+                                              <span class="alert-danger" data-validate-for="first_name"></span>
+                                          </div>
+
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                              {{form.middle_name|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                                  <i class="fa fa-user text-gold ml-n4"></i>
+                                                  {{ form.middle_name|get_label:'floating-label text-white ml-n3'}}
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="middle_name"></span>
+                                          </div>
+
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                              {{form.last_name|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                                  <i class="fa fa-user text-gold ml-n4"></i>
+                                                  {{ form.last_name|get_label:'floating-label text-white ml-n3'}}
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="last_name"></span>
+                                          </div>
+
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                              {{form.membership_no|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                              <i class="fa fa-user text-gold ml-n4"></i>
+                                              {{ form.membership_no|get_label:'floating-label text-white ml-n3'}}
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="membership_no"></span>
+                                          </div>
+
+
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                                {{form.national_identity_type|add_class:'ace-select text-white bg-transparent-black brc-dark-m5 brc-h-dark-m1'}}
+                                            </div>
+                                          </div>
+
+                                         
+
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                              {{form.national_identity_number|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                              <i class="fa fa-user text-gold ml-n4"></i>
+                                              {{ form.national_identity_number|get_label:'floating-label text-white ml-n3'}}
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="national_identity_number"></span>
+                                          </div>
+
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                              {{form.phone|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                              <i class="fa fa-user text-gold ml-n4"></i>
+                                              {{ form.phone|get_label:'floating-label text-white ml-n3'}}
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="phone"></span>
+                                          </div>
+
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                              {{form.sms_otp|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                              <i class="fa fa-user text-gold ml-n4"></i>
+                                              {{ form.sms_otp|get_label:'floating-label text-white ml-n3'}}
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="sms_otp"></span>
+                                          </div>
+
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                              {{form.email|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                              <i class="fa fa-user text-gold ml-n4"></i>
+                                              {{ form.email|get_label:'floating-label text-white ml-n3'}}
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="email"></span>
+                                          </div>
+
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                              {{form.email_otp|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                              <i class="fa fa-user text-gold ml-n4"></i>
+                                              {{ form.email_otp|get_label:'floating-label text-white ml-n3'}}
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="email_otp"></span>
+                                          </div>
+
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                              {{form.password|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                              <i class="fa fa-key text-gold ml-n4"></i>
+                                              {{ form.password|get_label:'floating-label text-white ml-n3'}}
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="password"></span>
+                                          </div>
+                                          
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                                            <div class="d-flex align-items-center input-floating-label text-gold brc-success-m2">
+                                              {{form.confirm_password|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                              <i class="fa fa-key text-gold ml-n4"></i>
+                                              {{ form.confirm_password|get_label:'floating-label text-white ml-n3'}}
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="confirm_password"></span>
+                                          </div>
+                                          
+                                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                                            <button type="submit"  class="btn bgc-gold text-white btn-block px-4 btn-bold mt-2 mb-4" value="{% trans 'Log in' %}" />{% trans 'Sign Up' %} </button>
+                                          </div>
+                                        </form>
+
+                                        <!-- Below lines are from the Include Statement of auth_screen_design all tags are closing here Below -->
+                                  </div>
+
+                              </div><!-- .tab-content -->
+                          </div>
+
+                      </div><!-- /.row -->
+
+                  </div><!-- /.col -->
+              </div><!-- /.row -->
+
+          </div>
+</div>
+{% endblock %}
+

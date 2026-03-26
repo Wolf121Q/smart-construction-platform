@@ -1,0 +1,109 @@
+{% load i18n static project_template_tags %}
+
+  
+
+<style>
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 150px) and (max-device-width : 480px) {
+  .card_heading_text{
+        font-size: 5vmin;
+        font-weight: 600;
+        font-weight: 600;
+       }
+
+  .heading_info_text{
+      font-size: 3vmin;
+      }
+
+  .thead_text{
+        font-size: 3vmin;
+        font-weight: 600 !important;
+       }
+
+
+  .rounded_box_text{
+ 
+  width: 37px;
+  height: 37px;
+  }
+
+
+  .tbody_text{
+      font-size: 3vmin;
+      }
+}
+
+ 
+</style>
+
+
+
+<div class="row mt-2 ml-1 mr-1">
+    <div class="col-lg-12">
+      {% if task_action_qs %}
+      <div class="card acard">
+        <div class="card-body p-0">
+          <div class="table-responsive-md">
+            <table class="table text-dark-m1 brc-black-tp10 mb-1 border-2 table-hover table table-bordered text-dark-m1 mb-0">
+              <thead class="thead_text">
+                <!-- <tr class="text-white brc-black-tp10"  style="background-image: linear-gradient(160deg, #0093E9 0%, #53C9F7 100%);"> -->
+                <tr class="text-white brc-black-tp10  bg-info bg-gradient">
+                  <th colspan="12" class="text-left"><i style="float: left;" class="mr-2 far fa-hand-point-down text-130 ml-2 d-none d-lg-inline-block card_heading_text"></i><h4 class="ml-2" style="font-weight: bold;"> Observation Details </h4></th>
+                </tr>
+                <tr class="text-white text-left font-weight-bold text-95 brc-black-tp10" style="background-image: linear-gradient(160deg, #0093E9 0%, #53C9F7 100%);">
+                  <th class="align-text-top">SER</th>
+                  <th class="align-text-top">CA REF #</th>
+                  <th class="align-text-top">FLAG</th>
+                  <th class="align-text-top">TYPE OF WORK</th>
+                  <th class="align-text-top">OBSN</th>
+                  <th class="align-text-top">OBSN BY</th>
+                  <th class="align-text-top">OBSN AT</th>
+                  <th class="align-text-top">CONTR</th>
+                  <th class="align-text-top">TASK PROGRESS</th>
+                  <th class="align-text-top">ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody class="tbody_text">
+              {% for task_action in task_action_qs %}
+                <tr class="text-90 text-left">
+                  <td>{{forloop.counter}}</td>
+                  <td>{{task_action.project.reference_number}}</td>         
+                  <td>
+                    {% if task_action.parent %} 
+                    <icon class="fa fa-flag" style="width: 50px;height:50px;color: {{task_action.parent.status.color}}"><span class="text-black text-90 pl-1" style="color: #5e5a5a;">{{task_action.parent.status.parent.name}}</span></icon>
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                    <icon class="fa fa-flag" style="width: 50px;height:50px;color: {{task_action.status.color}}"><span class="text-black text-90 pl-1" style="color: #5e5a5a;">{{task_action.status.parent.name}}</span></icon>
+                   {% else %}
+                    <icon class="fa fa-flag" style="width: 50px;height:50px;color: {{task_action.status.color}}"><span class="text-black text-90 pl-1" style="color: #5e5a5a;">{{task_action.status.parent.name}}</span></icon>
+                    {% endif %}
+                  </td>
+                  
+                  <td>{{task_action.task}}</td>
+                  <td>{{task_action.description|safe|capfirst}} </td>
+                  <td>{{task_action.created_by.full_name}}</td>
+                  <td>At {{task_action.created_on}}</td>
+                  <td>{{task_action.project.contractor}}</td>
+                  <td>{{task_action.task.progress_actual}}</td>
+                  <td>
+                    <a href ="javascript:void(0);" onclick='ChatBoxApi.ShowChatBox("{{task_action.id}}","{{task_action.project.reference_number}}")'    
+                    class="btn-outline-info border-0"><i class="far fa-comment-dots text-130"></i></a>
+                    {% if task_action.id|check_for_first_attachment %}
+                    <a type="button" onclick="ChatBoxApi.task_action_first_attachment('{{task_action.id}}')" class="btn-outline-info border-0">
+                        <i class="fas fa-paperclip text-130"></i>
+                    </a>
+                    {% endif %}
+                  </td>
+                  <!-- <td>Hiking</td> -->
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+</div>
+
+

@@ -1,0 +1,51 @@
+from django.contrib import admin
+from core.submodels.SystemStatus import SystemStatus
+from project.models import TaskStatus
+from utils.IP import get_client_ip
+from django.utils.safestring import mark_safe
+# Register your submodels here.
+
+
+class TaskStatusAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code','parent','created_by','updated_by', 'created_on', 'updated_on')
+    # list_filter = ('contract_status',)
+    readonly_fields = ["created_on","updated_on","created_by","updated_by"]
+    exclude = ("ip","created_by","updated_by")
+    #fields = ('name', 'image', 'description')
+
+    # fieldsets = (
+    #     ('Task Info', {
+    #         'fields': (('project', 'name', 'code'), ('start_date','end_date', 'status'))
+    #     }),
+    # )
+    search_fields = ('name','code', 'created_on', 'updated_on')
+    ordering = ('name','code', 'created_on', 'updated_on')
+
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+            
+        if db_field.name == "parent":
+            kwargs["queryset"] = SystemStatus.objects.filter(system_code__in =['system_status_task_status_material','system_status_task_status_inspection'])
+            #kwargs['disabled'] = True
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(parent__system_code__in = ['system_status_task_status_material','system_status_task_status_inspection'])
+    
+
+    # This will help you to disable delete functionaliyt
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+    def save_model(self, request, obj, form, change):
+        if not obj.created_by:
+            # Only set added_by during the first save.
+            obj.created_by = request.user
+        else:
+            obj.updated_by = request.user
+        obj.ip = get_client_ip(request)
+        super().save_model(request, obj, form, change)
+
+admin.site.register(TaskStatus, TaskStatusAdmin)

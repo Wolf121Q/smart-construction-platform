@@ -1,0 +1,715 @@
+{% extends "client/base.html" %}
+{% load i18n static bootstrap_admin_template_tags  %}
+{% load i18n static housing_society_template_tags  %}
+{% load i18n %}
+
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+
+{% block content %}
+<style>
+  .hide {
+    display: none;
+
+  }
+</style>
+
+      <div class="row flex-grow-1" id="row-1">
+        
+
+
+
+        <div class="col-12  d-lg-flex bgc-white shadow radius-1 overflow-hidden" >
+
+
+          <div class="row flex-grow-1" id="row-2" >
+
+            <!-- Including Into Page from admin/includes/intro.html -->
+            <div id="id-col-intro" class="col-lg-6 d-none d-lg-flex border-r-1 brc-default-l3 px-0" >
+              {% include 'client/includes/__intro.html' %}
+            </div>
+           
+
+            <div id="id-col-main" class="col-12 py-lg-5 bgc-white px-0 col-lg-6 mx-auto d-flex align-items-center justify-content-center">
+              <!-- you can also use these tab links -->
+              <ul class="d-none mt-n4 mb-4 nav nav-tabs nav-tabs-simple justify-content-end bgc-black-tp11" role="tablist">
+                  <li class="nav-item mx-2">
+                    <a class="nav-link active px-2" data-toggle="tab" href="#id-tab-login" role="tab" aria-controls="id-tab-login" aria-selected="true">
+                      Login
+                    </a>
+                  </li>
+                
+                  <li class="nav-item mx-2">
+                    <a class="nav-link px-2" data-toggle="tab" href="#id-tab-signup" role="tab" aria-controls="id-tab-signup" aria-selected="false">
+                      Signup
+                    </a>
+                  </li>
+              </ul>
+
+
+              <div class="tab-content tab-sliding border-0 p-0" data-swipe="right">
+                <div class="tab-pane active show mh-100 px-3 px-lg-0 pb-3" id="id-tab-login">
+                  {% if form.errors or form.non_field_errors %}
+                  <div class="alert d-flex bgc-red-l3 brc-success-m4 border-0 p-0" role="alert" >
+                    <div class="bgc-red px-3 py-1 text-center radius-l-1">
+                      <span class="fa-2x text-white">
+                        ⚠
+                      </span>
+                    </div>
+          
+                    <span class="ml-3 align-self-center text-dark-tp3 text-110">
+                      {% if form.errors and not form.non_field_errors %}
+                      <p>
+                        <strong>
+                          {% blocktrans count form.errors.items|length as counter %}Please correct the error
+                          below.{% plural %}Please
+                          correct the errors below.{% endblocktrans %}
+                        </strong>
+                      </p>
+                      {% endif %}
+          
+                      {% if form.non_field_errors %}
+                      {% for error in form.non_field_errors %}
+                      <p>
+                        {{ error }}
+                      </p>
+                      {% endfor %}
+                      {% endif %}
+          
+                      {% if form.errors %}
+                      {% for field in form %}
+                      {% for error in field.errors %}
+                      <p class="border-decoration">
+                        <strong><span class="glyphicon glyphicon-asterisk"></span> {{ field.label }}: </strong>{{ error|escape }}
+                      </p>
+                      {% endfor %}
+                      {% endfor %}
+                      {% endif %}
+                    </span>
+                  </div>
+                  {% endif %} 
+                  
+                  <!-- Include Login Page Here  -->
+                  <!-- show this in desktop -->
+                  <div class="d-none d-lg-block col-md-6 offset-md-3 mt-lg-4 px-0">
+                    <h4 class="text-grey border-b-1 brc-gold-l2 pb-2 text-130">
+                      <i class="fa fa-file-alt text-orange-m1 mr-1"></i>
+                      Verify OTP
+                    </h4>
+                  </div>
+
+                  <!-- show this in mobile device -->
+                  <div class="d-lg-none text-secondary-m1 my-4 text-center">
+                    <a href="{% url 'auth_login' %}">
+                      <img class="text-200 mb-4" src="{% display_favicon %}" width="100px">
+                    </a>
+                    <h1 class="text-170">
+                      <span class="text-blue-d1">
+                           <span class="text-80 text-dark-tp3">{{ society.name}}</span>
+                      </span>
+                    </h1>
+                    Verify OTP
+                  </div>  
+
+                  {% include 'client/includes/registration_step_partial.html' %}
+                 
+
+                  <form id="registration_form" method="post" action="" class="form-row mt-4">
+                    <div id="sms_otp_msg_box" class="form-group col-sm-12 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3" style="display:none">
+                      <div id="alert-color" class="alert alert-collapse alert-success brc-success rounded border-2 d-inline-flex" role="alert">
+                        <span class="mr-4 d-inline-block" id="sms_otp_msg"></span>
+                        <button type="button" class="close align-self-center ml-auto text-grey text-150"
+                          data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {% csrf_token %}
+                    {{ form.ref_sid}}
+                    {{ form.step}}
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                        <progress style="display:none;width: 100%;height: 1.1rem;text-align: center;color: white;background-image: green;-webkit-appearance: none;-moz-appearance: none;appearance: none;" value="0" max="120" id="progressBar"></progress>
+                    </div>
+
+
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                      <div class="d-flex align-items-center input-floating-label text-blue brc-success-m2">
+                        {{form.membership_no|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fa fa-user text-gold ml-n4"></i>
+                        {{ form.membership_no|get_label:'floating-label text-grey ml-n3'}}
+                      </div>
+                      <span class="alert-danger" data-validate-for="membership_no"></span>
+                    </div>
+
+                    {{form.phone}}
+                    {{form.phone_code}}
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                      <div class="d-flex align-items-center input-floating-label text-blue brc-success-m2">
+                        
+                        {{form.mobile|add_class:'form-control form-control-lg '}}
+                        <i class="fas fa-phone text-gold ml-3" style="font-size: 26px;"></i>
+                        <!-- <i class="fa fa-user text-gold ml-n4"></i> -->
+                        <!-- {{ form.phone|get_label:'floating-label text-white ml-n3'}} -->
+                        &nbsp;&nbsp;&nbsp;&nbsp; <span class="badge btn-blue badge-lg arrowed ml-n1 mb-1">
+                        Mobile No
+                        </span>
+                      </div>
+                      <span class="alert-danger" data-validate-for="id_phone"></span>
+                      <span id="valid-msg" class="hide text-success">✓ Valid</span>
+                      <span id="error-msg" class="hide text-danger"></span>
+                    </div>
+
+                    <div id="sms_otp_box" class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1" style="display:none">
+                      <div class="d-flex align-items-center input-floating-label text-blue brc-success-m2">
+                        {{form.sms_otp|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fa fa-user text-gold ml-n4"></i>
+
+                        <label class="floating-label text-grey ml-n3" for='id_{{form.sms_otp.name}}'>SMS OTP</label>
+                      </div>
+                      <span class="alert-danger" data-validate-for="sms_otp">{{form.sms_otp.errors}}</span>
+                    </div>
+                   
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                      <!-- {% if form.sms_otp.errors %}
+                      <span class="alert-danger" data-validate-for="sms_otp">{{form.sms_otp.errors}}</span>
+                      {% endif %} -->
+                      <div class="d-flex align-items-center input-floating-label text-blue brc-success-m2">
+                        {{form.email|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fas fa-envelope text-gold ml-n4"></i> 
+                        {{ form.email|get_label:'floating-label text-grey ml-n3'}}
+                      </div>
+                      <span class="alert-danger" data-validate-for="email-validator" id="email-validator">{{form.email.errors}}</span>
+                    </div>
+
+                    <div id="email_otp_box"
+                      class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1"
+                      style="display:none">
+                      <div class="d-flex align-items-center input-floating-label text-blue brc-success-m2">
+                        {{form.email_otp|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fa fa-user text-gold ml-n4"></i>
+                        {{ form.email_otp|get_label:'floating-label text-grey ml-n3'}}
+                      </div>
+                      <span class="alert-danger" data-validate-for="email_otp">{{form.email_otp.errors}}</span>
+                    </div>
+
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                            <button id="otp_resend" type="button" onclick="OTP.resend_otp();" style="display:none" class="btn bgc-blue text-white btn-block px-4 btn-bold mt-2 mb-4"
+                       value="{% trans 'Resend OTP' %}" />{% trans 'Resend OTP' %} </button>
+                      <button type="button" onclick="OTP.registration();"
+                        class="btn bgc-blue text-white btn-block px-4 btn-bold mt-2 mb-4"
+                        value="{% trans 'Submit' %}" />{% trans 'Submit' %} </button>
+                    </div>
+                  </form>
+
+
+                </div>
+              </div><!-- .tab-content -->
+            </div>
+          </div><!-- /.row -->
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+      {% include 'client/includes/responsive_footer_of_auth_pages.html' %}
+      {% include 'client/includes/footer_for_auth_screens.html' %}
+      {% endblock %}
+      {% block js %}
+       <script src="{% static 'assets/js/validation/jquery.js' %}"></script>
+       <script src="{% static 'assets/js/validation/parsley.js' %}"></script>
+      <script src="{% static 'assets/module/OTP.js' %}"></script>
+      <script type="text/javascript" src="{% static 'assets/international_mobile/js/intlTelInput.js' %}"></script>
+      <script type="text/javascript" src="{% static 'assets/international_mobile/js/utils.js' %}"></script>
+      <script>
+        var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+
+        var input = document.querySelector("#id_mobile");
+          errorMsg = document.querySelector("#error-msg"),
+          validMsg = document.querySelector("#valid-msg");
+          // define a length for mobile number 
+          $("#id_mobile").prop('maxLength', 15);
+
+        var iti = window.intlTelInput(input, {
+          formatOnDisplay: true,
+          separateDialCode:true,
+          // customPlaceholder: function (selectedCountryPlaceholder, selectedCountryData) {
+          //   return "Mobile Number";
+          //   // return  selectedCountryPlaceholder;
+          // },
+          initialCountry: "pk",
+          nationalMode: false,
+          excludeCountries: ["il", "in"],
+          preferredCountries: ['pk', 'us'],
+          utilsScript: "{% static 'assets/international_mobile/js/utils.js' %}",
+        });
+        function formatIntlTelInput() {
+          if (typeof intlTelInputUtils !== 'undefined') { // utils are lazy loaded, so must check
+              var currentText = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+              if (typeof currentText === 'string') { // sometimes the currentText is an object :)
+                  iti.setNumber(currentText); // will autoformat because of formatOnDisplay=true
+              }
+          }
+      }
+
+        var reset = function () {
+          input.classList.remove("error");
+          errorMsg.innerHTML = "";
+          errorMsg.classList.add("hide");
+          validMsg.classList.add("hide");
+        };
+
+        // on blur: validate
+        input.addEventListener('blur', function () {
+          reset();
+          if (input.value.trim()) {
+            if (iti.isValidNumber()) {
+              validMsg.classList.remove("hide");
+              document.getElementById('id_phone').value = iti.getNumber()
+              $("#id_phone_code").val(iti.selectedCountryData.dialCode)
+
+
+            } else {
+              input.classList.add("error");
+              var errorCode = iti.getValidationError();
+              errorMsg.innerHTML = errorMap[errorCode];
+              errorMsg.classList.remove("hide");
+            }
+          }
+        });
+
+        // on keyup / change flag: reset
+        input.addEventListener('change', reset);
+        input.addEventListener('keyup', reset);
+      </script>
+
+      <script>
+        // steps colors and tick 
+        $('#step_2').addClass('active');
+        $('#connecting_steps').css({
+          "left": "21.5%",
+          "right": "12.5%",
+          "max-width": "50.5%"
+        })
+        $('#step1-title').css("display","none")
+        $('#step1_complete').css("display","block")
+
+
+        $('#id_email').attr("data-parsley-type","email");
+        $('#id_email').attr("data-parsley-trigger","focusout");
+        $('#id_email').attr("data-parsley-errors-container","#email-validator");
+        $('#id_email').parsley();
+      </script>
+
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-auth.js"></script>
+
+<script type="text/javascript">
+/*
+  var config = {
+
+        apiKey: "AIzaSyBL928n2jB5FxX8-kciLEO-QgQrwi8kUGM",
+        authDomain: "dha-islamabad-membership.firebaseapp.com",
+        databaseURL: "dha-islamabad-membership.firebaseapp.com",
+        projectId: "dha-islamabad-membership",
+        storageBucket: "mdha-islamabad-membership.appspot.com",
+        messagingSenderId: "1054686798957",
+        appId: "1:1054686798957:web:6f91a2cbfeea36d1960b64",
+        measurementId: "G-G13XCRCG79"
+
+    };
+
+    firebase.initializeApp(config);
+    //firebase.analytics();
+    var CLIENT_ID ='firebase-adminsdk-gvpis@manage-your-business.iam.gserviceaccount.com';
+
+
+//$('[data-rel=tooltip]').tooltip({container:'body'});
+//$.mask.definitions['~']='[+-]';
+
+
+
+$("#id_mobile").val('');
+var input = document.querySelector("#id_mobile"),
+  errorMsg = document.querySelector("#error-msg"),
+  validMsg = document.querySelector("#valid-msg");
+
+// here, the index maps to the error code returned from getValidationError - see readme
+var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+
+// initialise plugin
+var iti = window.intlTelInput(input, {
+  dropdownContainer: document.body,
+  initialCountry: "PK",
+  excludeCountries: ["il","in"],
+  preferredCountries: ['pk', 'us'],
+  utilsScript: "{% static 'assets/js/utils.js' %}"
+});
+
+var reset = function() {
+  input.classList.remove("error");
+  errorMsg.innerHTML = "";
+  errorMsg.classList.add("hide");
+  validMsg.classList.add("hide");
+
+  $("#sign-in-button").attr("disabled", true);
+
+  if (input.value.trim()) {
+    if (iti.isValidNumber()) {
+
+      //console.log(iti.selectedCountryData);
+
+      var number = iti.getNumber();
+
+      //console.log(number);
+
+      VerifyUser($("#email").val(),number);
+
+      $("#dialcode").val(iti.selectedCountryData.dialCode);
+      $("#iso2code").val(iti.selectedCountryData.iso2);
+
+      validMsg.classList.remove("hide");
+    } else {
+
+      $("#sign-in-button").attr("disabled", true);
+      input.classList.add("error");
+      var errorCode = iti.getValidationError();
+      errorMsg.innerHTML = errorMap[errorCode];
+      errorMsg.classList.remove("hide");
+    }
+  }
+};
+
+// on blur: validate
+input.addEventListener('blur', function() {
+  reset();
+});
+reset();
+// on keyup / change flag: reset
+input.addEventListener('change', reset);
+input.addEventListener('keyup', reset);
+
+
+function resetform()
+{
+   document.getElementById("forgot_password").reset();
+}
+*/
+function VerifyUser(email,phone)
+{
+    email   = email.trim();
+    phone   = phone.trim();
+
+/*
+   $.post("verifyuser",{_token:"csrf_token",login:email,phone:phone},function(data){
+        //var obj = jQuery.parseJSON(data);
+        if(data==1)
+        {
+
+          $.gritter.add({
+            // (string | mandatory) the heading of the notification
+            title: 'status',
+            // (string | mandatory) the text inside the notification
+            text: "You are login successfully",
+            class_name: 'gritter-info gritter-light'
+          });
+
+          $("#phone-number").val(phone);
+          $("#sign-in-button").attr("disabled", false);
+          $("#sign-in-button").trigger("click");
+
+        }
+        else
+        {
+          //alert("Sorry Your Information Not Valid!");
+            $.gritter.add({
+              // (string | mandatory) the heading of the notification
+              title: 'Error',
+              // (string | mandatory) the text inside the notification
+              text: "Sorry Your Information Not Valid!",
+              class_name: 'gritter-error gritter-light'
+            });
+        }
+   });
+*/
+}
+
+function VerifyUserByUID(phoneNumber,uid,idtoken)
+{
+   $.post("VerifyUserByUID",{_token:"csrf_token",phoneNumber:phoneNumber,uid:uid,idtoken:idtoken},function(data){
+        //var obj = jQuery.parseJSON(data);   
+
+        if(data==1)
+        {
+          onSignOutClick();
+          location.reload(); 
+        }
+        else
+        {
+          //alert("Sorry Can't Authication");
+
+          $.gritter.add({
+            // (string | mandatory) the heading of the notification
+            title: 'Error',
+            // (string | mandatory) the text inside the notification
+            text: "Sorry Can't Authication",
+            class_name: 'gritter-error gritter-light'
+          });          
+        }     
+   });
+
+}
+</script>
+<script type="text/javascript">
+
+  /**
+   * Set up UI event listeners and registering Firebase auth listeners.
+   */
+  window.onload = function() {
+    // Listening for auth state changes.
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        var uid = user.uid;
+        var email = user.email;
+        var photoURL = user.photoURL;
+        var phoneNumber = user.phoneNumber;
+        var isAnonymous = user.isAnonymous;
+        var displayName = user.displayName;
+        var providerData = user.providerData;
+        var emailVerified = user.emailVerified;
+      }
+        updateSignInButtonUI();
+        updateSignInFormUI();
+        updateSignOutButtonUI();
+        updateSignedInUserStatusUI();
+        updateVerificationCodeFormUI();
+
+    });
+
+    // Event bindings.
+    document.getElementById('sign-out-button').addEventListener('click', onSignOutClick);
+    document.getElementById('id_mobile').addEventListener('keyup', updateSignInButtonUI);
+    document.getElementById('id_mobile').addEventListener('change', updateSignInButtonUI);
+    document.getElementById('verification-code').addEventListener('keyup', updateVerifyCodeButtonUI);
+    document.getElementById('verification-code').addEventListener('change', updateVerifyCodeButtonUI);
+    document.getElementById('verification-code-form').addEventListener('submit', onVerifyCodeSubmit);
+    document.getElementById('cancel-verify-code-button').addEventListener('click', cancelVerification);
+
+    // [START appVerifier]
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
+      'size': 'invisible',
+      'callback': function(response) {
+        // reCAPTCHA solved, allow signInWithPhoneNumber.
+        onSignInSubmit();
+      }
+    });
+    // [END appVerifier]
+
+    recaptchaVerifier.render().then(function(widgetId) {
+      window.recaptchaWidgetId = widgetId;
+      updateSignInButtonUI();
+    });
+  };
+
+  /**
+   * Function called when clicking the Login/Logout button.
+   */
+  function onSignInSubmit() {
+    if (isPhoneNumberValid()) {
+      window.signingIn = true;
+      updateSignInButtonUI();
+      var phoneNumber = getPhoneNumberFromUserInput();
+      var appVerifier = window.recaptchaVerifier;
+      firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+          .then(function (confirmationResult) {
+            // SMS sent. Prompt user to type the code from the message, then sign the
+            // user in with confirmationResult.confirm(code).
+            window.confirmationResult = confirmationResult;
+            window.signingIn = false;
+            updateSignInButtonUI();
+            updateVerificationCodeFormUI();
+            updateVerifyCodeButtonUI();
+            updateSignInFormUI();
+          
+          }).catch(function (error) {
+            // Error; SMS not sent
+            console.error('Error during signInWithPhoneNumber', error);
+            window.alert('Error during signInWithPhoneNumber:\n\n'
+                + error.code + '\n\n' + error.message);
+            window.signingIn = false;
+            updateSignInFormUI();
+            updateSignInButtonUI();
+          });
+    }
+  }
+
+  /**
+   * Function called when clicking the "Verify Code" button.
+   */
+  function onVerifyCodeSubmit(e) {
+    e.preventDefault();
+    if (!!getCodeFromUserInput()) {
+      window.verifyingCode = true;
+      updateVerifyCodeButtonUI();
+      var code = getCodeFromUserInput();
+      confirmationResult.confirm(code).then(function (result) {
+        // User signed in successfully.
+        var user = result.user;
+        window.verifyingCode = false;
+        window.confirmationResult = null;
+        updateVerificationCodeFormUI();
+
+        obj       =   jQuery.parseJSON(JSON.stringify(user, null, '  '));
+
+        var idtoken     =   obj.stsTokenManager.accessToken; 
+        var uid         =   user.uid; 
+        var phoneNumber =   user.phoneNumber; 
+
+        VerifyUserByUID(phoneNumber,uid,idtoken);
+
+      }).catch(function (error) {
+        // User couldn't sign in (bad verification code?)
+        console.error('Error while checking the verification code', error);
+        window.alert('Error while checking the verification code:\n\n'
+            + error.code + '\n\n' + error.message);
+        window.verifyingCode = false;
+        updateSignInButtonUI();
+        updateVerifyCodeButtonUI();
+      });
+    }
+  }
+
+  /**
+   * Cancels the verification code input.
+   */
+  function cancelVerification(e) {
+    e.preventDefault();
+    window.confirmationResult = null;
+    updateVerificationCodeFormUI();
+    updateSignInFormUI();
+  }
+
+  /**
+   * Signs out the user when the sign-out button is clicked.
+   */
+  function onSignOutClick() {
+    firebase.auth().signOut();
+  }
+
+  /**
+   * Reads the verification code from the user input.
+   */
+  function getCodeFromUserInput() {
+    return document.getElementById('verification-code').value;
+  }
+
+  /**
+   * Reads the phone number from the user input.
+   */
+  function getPhoneNumberFromUserInput() {
+    return document.getElementById('phone-number').value;
+  }
+
+  /**
+   * Returns true if the phone number is valid.
+   */
+  function isPhoneNumberValid() {
+    var pattern = /^\+[0-9\s\-\(\)]+$/;
+    var phoneNumber = getPhoneNumberFromUserInput();
+    return phoneNumber.search(pattern) !== -1;
+  }
+
+  /**
+   * Re-initializes the ReCaptacha widget.
+   */
+  function resetReCaptcha() {
+    if (typeof grecaptcha !== 'undefined'
+        && typeof window.recaptchaWidgetId !== 'undefined') {
+      grecaptcha.reset(window.recaptchaWidgetId);
+    }
+  }
+
+  /**
+   * Updates the Sign-in button state depending on ReCAptcha and form values state.
+   */
+  function updateSignInButtonUI() {
+    document.getElementById('sign-in-button').disabled =
+        !isPhoneNumberValid()
+        || !!window.signingIn;
+  }
+
+  /**
+   * Updates the Verify-code button state depending on form values state.
+   */
+  function updateVerifyCodeButtonUI() {
+    document.getElementById('verify-code-button').disabled =
+        !!window.verifyingCode
+        || !getCodeFromUserInput();
+  }
+
+  /**
+   * Updates the state of the Sign-in form.
+   */
+  function updateSignInFormUI() {
+    if (firebase.auth().currentUser || window.confirmationResult) {
+      document.getElementById('sign-in-form').style.display = 'none';
+    } else {
+      resetReCaptcha();
+      document.getElementById('sign-in-form').style.display = 'block';
+    }
+  }
+
+  /**
+   * Updates the state of the Verify code form.
+   */
+  function updateVerificationCodeFormUI() {
+    if (!firebase.auth().currentUser && window.confirmationResult) {
+      document.getElementById('verification-code-form').style.display = 'block';
+    } else {
+      document.getElementById('verification-code-form').style.display = 'none';
+    }
+  }
+
+  /**
+   * Updates the state of the Sign out button.
+   */
+  function updateSignOutButtonUI() {
+    if (firebase.auth().currentUser) {
+      document.getElementById('sign-out-button').style.display = 'block';
+      $("#forgot_password").hide();
+
+    } else {
+      document.getElementById('sign-out-button').style.display = 'none';
+    }
+  }
+
+  /**
+   * Updates the Signed in user status panel.
+   */
+  function updateSignedInUserStatusUI() {
+    var user = firebase.auth().currentUser;
+    if (user) {
+        document.getElementById('sign-in-status').textContent = 'Signed in';
+        document.getElementById('account-details').textContent = JSON.stringify(user, null, '  ');
+        $("#forgot_password").hide();
+
+    } else {
+      document.getElementById('sign-in-status').textContent = 'Signed out';
+      document.getElementById('account-details').textContent = 'null';
+    }
+  }
+
+  
+
+  setTimeout(function() {
+  
+    $("#sign-in-button").attr("disabled", true);
+    $("#verification-code").val("");
+  
+  }, 1500);
+
+$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+
+</script>
+
+
+
+      {% endblock js %}

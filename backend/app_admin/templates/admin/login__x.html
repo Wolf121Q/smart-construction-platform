@@ -1,0 +1,217 @@
+{% load i18n static bootstrap_admin_template_tags %}
+{% load i18n static housing_society_template_tags  %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/bootstrap/dist/css/bootstrap.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ace.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/custom.css' %}" />
+   <link rel="icon" type="image/x-icon" href="{% static 'assets/image/askari_favicon.png' %}">
+
+  <style>
+    .bgc-white {
+        background-color: #00000085 !important;
+    }
+  
+  
+    .text-gold {
+        color: #daa25e !important;
+    }
+    input{
+      background-color: #202020;
+    }
+    
+    .form-control {
+        color: #fff;
+        /* background-color: #ffffff1a; */
+        background-color: #202020;
+        border: 1px solid #daa25e;
+        border-color: #daa25e !important;
+        border-radius: 0.125rem;
+        font-family: inherit;
+        transition-duration: 120ms;
+    }
+    
+    .form-control:focus {
+      box-shadow: 0 0 0 2px rgba(245, 153, 66, 0.2);
+      color: #696969;
+      border-color: #f59942;
+      background-color: #202020;
+      outline: none;
+  }
+    
+    
+    /* .input-floating-label .floating-label {
+        pointer-events: none;
+        background-color: #000;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+        position: absolute;
+        left: 1.5rem;
+        top: 50%;
+        
+        transform: translateY(-50%);
+        transition: all 0.15s;
+    } */
+
+    .input-floating-label .floating-label {
+    pointer-events: none;
+    background-color: #464646;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    position: absolute;
+    border-radius: 4px;
+    font-size: 14px;
+    left: 1.5rem;
+    top: 0%;
+    transform: translateY(-50%);
+    transition: all 0.15s;
+}
+
+    .text-grey-l1 {
+        color: #fff !important;
+    }
+    
+    .text-dark-tp4 {
+        color: #fff !important;
+    }
+    .text-grey-m2 {
+        color: #daa25e !important;
+    }
+    .brc-secondary-l2 {
+        border-color: #daa25e !important;
+    }
+    .bgc-blue-l4, .bgc-h-blue-l4:hover {
+        background-color: #00000085 !important;
+    }
+
+
+    .text-blue {
+      color: #caa666 !important;
+    }
+
+    .powered-company {
+      color: #caa666 !important;
+    }
+ 
+    </style>
+</head>
+<body>
+
+    <div class="body-container w-100" style="background-image: url('{% static 'assets/image/bg_claystone.jpg' %}'); background-repeat: no-repeat;  background-size: cover;" >
+        <div class="main-container container bgc-transparent">
+          <div class="main-content minh-100 justify-content-center" style="background: none;">
+          <div class="p-2 p-md-4">
+          {% if form.errors or form.non_field_errors %}
+          <div class="alert d-flex bgc-red-l3 brc-success-m4 border-0 p-0" role="alert" style="width: 100%">
+            <div class="bgc-red px-3 py-1 text-center radius-l-1">
+              <span class="fa-2x text-white">
+              ⚠ <!-- &#9888; -->
+              </span>
+            </div>
+            <span class="ml-3 align-self-center text-dark-tp3 text-110">
+                {% if form.errors and not form.non_field_errors %}
+                  <p>
+                    <strong>
+                      {% blocktrans count form.errors.items|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+                    </strong>
+                  </p>
+                {% endif %}
+
+                {% if form.non_field_errors %}
+                  {% for error in form.non_field_errors %}
+                    <p>
+                      {{ error }}
+                    </p>
+                  {% endfor %}
+                {% endif %}
+
+                {% if form.errors %}
+                  {% for field in form %}
+                    {% for error in field.errors %}
+                      <p class="border-decoration">
+                        <strong><span class="glyphicon glyphicon-asterisk"></span> {{ field.label }}: </strong>{{ error|escape }}
+                      </p>
+                    {% endfor %}
+                  {% endfor %}
+                {% endif %}
+            </span>
+          </div>
+          {% endif %}
+            <div class="row" id="row-1">
+              <div class="col-12 col-xl-10 offset-xl-1 bgc-white shadow radius-1 overflow-hidden">
+                <div class="row" id="row-2">
+                  <div id="id-col-intro" class="col-lg-5 d-none d-lg-flex border-r-1 brc-default-l2 px-0" style="border-color: #daa25e !important;">
+                    <!-- the left side section is carousel in this demo, to show some example variations -->
+                    <div id="loginBgCarousel" class="carousel slide minw-100 h-100">
+                      <div class="carousel-inner minw-100 h-100">
+                        <div class="carousel-item active minw-100 h-100">
+                          <!-- default carousel section that you see when you open login page -->
+                          <div class="h-100 px-3 bg-transparent-black d-flex flex-column align-items-center justify-content-center">
+                            <br>
+                              <img src="{% static 'assets/image/askari_logo_small.png' %}" title="Askari Housing Directorate">
+                              <div class="mt-auto mb-4 text-dark-tp2 text-120">                         
+                              <div class="text-center py-4 border-t-1 ">
+                                  <span class="text-80 text-white">Powered by</span>
+                                  <a class="mt-5 mb-2 powered-company" href="//claystone.pk" >www.claystone.pk</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="id-col-main" class="col-12 col-lg-7 py-lg-5 bgc-white px-0" style="background: #00000085 !important;">
+                    <div class="tab-content tab-sliding border-0 p-0" data-swipe="right" style="border-color: #ffff6 !important;">
+                      <div class="tab-pane active show mh-100 px-3 px-lg-0 pb-3" id="id-tab-login">
+                        <!-- show this in desktop -->
+                        <div class="d-none d-lg-block col-md-6 offset-md-3 mt-lg-4 px-0">
+                          <h4 class="text-dark-tp4 border-b-1 brc-secondary-l2 pb-1 text-130" style="color: white;">
+                            <i class="fa fa-coffee text-orange-m1 mr-1"></i>
+                            Welcome Back
+                          </h4>
+                        </div>
+                        <form action="{{ app_path }}" method="post" id="login-form" autocomplete="off" class="form-row mt-4">
+                          {% csrf_token %}
+                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                            <div class="d-flex align-items-center input-floating-label text-blue brc-blue-m2">
+                              {{ form.username|add_class:'form-control form-control-lg pr-4 shadow-non' }}
+                              <i class="fa fa-user text-grey-m2 ml-n4"></i>
+                              <label class="floating-label text-grey-l1 ml-n3 {% if form.username.errors %}has-error{% endif %}" for="id_username">
+                                Username
+                              </label>
+                            </div>
+                          </div>
+                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-2 mt-md-1">
+                            <div class="d-flex align-items-center input-floating-label text-blue brc-blue-m2">
+                              {{ form.password|add_class:'form-control form-control-lg pr-4 shadow-none' }}
+                              <i class="fa fa-key text-grey-m2 ml-n4"></i>
+                              <label class="floating-label text-grey-l1 ml-n3 {% if form.password.errors %}has-error{% endif %}" for="id_password">
+                                Password
+                              </label>
+                            </div>
+                          </div>
+                          <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                            <button type="submit" class="btn btn-primary btn-block px-4 btn-bold mt-2 mb-4" style="background: #daa25e !important;border-color: #daa25e !important;">
+                              {% trans 'Log in' %}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div><!-- .tab-content -->
+                  </div>
+                </div><!-- /.row -->
+              </div><!-- /.col -->
+            </div><!-- /.row -->
+          </div>
+        </div>
+      </div>
+    </div>
+  <body>
+</html>

@@ -1,0 +1,117 @@
+{% load i18n admin_urls static admin_list %}
+{% load i18n static project_template_tags %}
+ 
+  
+    <!-- cards code start -->
+    <div class="row mt-2 mb-4">
+      <div class="col-xl-12">
+        <div class="row px-3 px-lg-4">
+          <div class="col-12 mt-35">
+            <div class="row h-100 mx-n425">
+
+              <div class="col-12 col-md-3 px-0 mb-2 mb-md-0">
+                <div class="ccard h-100 pt-2 pb-25 px-25 d-flex mx-2 overflow-hidden">
+                  <!-- the colored circles on bottom right -->
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3" style="width: 5.25rem; height: 5.25rem;"></div>
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5" style="width: 4.75rem; height: 4.75rem;"></div>
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5" style="width: 4.25rem; height: 4.25rem;"></div>
+                  <div class="flex-grow-1 pl-25 pos-rel d-flex flex-column">
+                    <div class="text-secondary-d4">
+                      <span class="text-200">
+                        {{ project_regions.count }}
+                      </span>
+                      <!-- <span class="text-md text-danger-m1 align-text-bottom text-nowrap">
+                        (-2% <i class="ml-2px fa fa-caret-down"></i>)
+                      </span> -->
+                    </div>
+                    <div class="mt-auto text-nowrap text-secondary-d2 text-105 letter-spacing mt-n1">
+                      <span class="font-weight-bold text-85">Region</span> <small style="font-size: 9px;">Zone</small>
+                    </div>
+                  </div>
+                  <div class="ml-auto pr-1 align-self-center pos-rel text-125">
+                    <i class="fa fa-globe text-purple opacity-1 fa-2x mr-25"></i>
+                  </div>
+                </div><!-- /.ccard -->
+              </div><!-- /.col -->
+
+
+
+              <div class="col-12 col-md-3 px-0 mb-2 mb-md-0">
+                <div class="ccard h-100 pt-2 pb-25 px-25 d-flex mx-2 overflow-hidden">
+                  <!-- the colored circles on bottom right -->
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-blue-l3 opacity-3" style="width: 5.25rem; height: 5.25rem;"></div>
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-blue-l2 opacity-5" style="width: 4.75rem; height: 4.75rem;"></div>
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-blue-l1 opacity-5" style="width: 4.25rem; height: 4.25rem;"></div>
+                  <div class="flex-grow-1 pl-25 pos-rel d-flex flex-column">
+                    <div class="text-secondary-d4">
+                      <span class="text-200">
+                        {{ project_cities.count }}
+                      </span>
+                      <!-- <span class="text-md text-success-m1 align-text-bottom text-nowrap">
+                        (+8% <i class="ml-2px fa fa-caret-up"></i>)
+                      </span> -->
+                    </div>
+                    <div class="mt-auto text-nowrap text-secondary-d2 text-105 letter-spacing mt-n1">
+                      <span class="font-weight-bold text-85">Stations</span> <small style="font-size: 9px;">City</small>
+                    </div>
+                  </div>
+                  <div class="ml-auto pr-1 align-self-center pos-rel text-110">
+                    <i class="fas fa-city text-blue opacity-1 fa-2x mr-25"></i>
+                    
+                  </div>
+                </div><!-- /.ccard -->
+              </div><!-- /.col -->
+
+
+
+              <div class="col-12 col-md-3 px-0 mb-2 mb-md-0">
+                <div class="ccard h-100 pt-2 pb-25 px-25 d-flex mx-2 overflow-hidden">
+                  <!-- the colored circles on bottom right -->
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-orange-l3 opacity-3" style="width: 5.25rem; height: 5.25rem;"></div>
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-orange-l2 opacity-5" style="width: 4.75rem; height: 4.75rem;"></div>
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-orange-l1 opacity-5" style="width: 4.25rem; height: 4.25rem;"></div>
+                  <div class="flex-grow-1 pl-25 pos-rel d-flex flex-column">
+                    <div class="text-secondary-d4">
+                      <span class="text-200">
+                        {{organization_qs.count}}
+                      </span>
+                    </div>
+                    <div class="mt-auto text-nowrap text-secondary-d2 text-105 letter-spacing mt-n1">
+                      <span class="font-weight-bold text-85">Site</span> <small style="font-size: 9px;">Organization</small>
+                    </div>
+                  </div>
+                  <div class="ml-auto pr-1 align-self-center pos-rel text-115">
+                    <i class="far fa-building text-blue opacity-1 fa-2x mr-25"></i>
+                  </div>
+                </div><!-- /.ccard -->
+              </div><!-- /.col -->
+
+
+              <div class="col-12 col-md-3 px-0 mb-2 mb-md-0">
+                <div class="ccard h-100 pt-2 pb-25 px-25 d-flex mx-2 overflow-hidden">
+                  <!-- the colored circles on bottom right -->
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-green-l3 opacity-3" style="width: 5.25rem; height: 5.25rem;"></div>
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-green-l2 opacity-5" style="width: 4.75rem; height: 4.75rem;"></div>
+                  <div class="position-br	mb-n5 mr-n5 radius-round bgc-green-l1 opacity-5" style="width: 4.25rem; height: 4.25rem;"></div>
+                  <div class="flex-grow-1 pl-25 pos-rel d-flex flex-column">
+                    <div class="text-secondary-d4">
+                      <span class="text-200">
+                        {{qs.count}}
+                      </span>
+                    </div>
+                    <div class="mt-auto text-nowrap text-secondary-d2 text-105 letter-spacing mt-n1">
+                      <span class="font-weight-bold text-85">CA</span> <small style="font-size: 9px;">Programe</small>
+                    </div>
+                  </div>
+                  <div class="ml-auto pr-1 align-self-center pos-rel text-115">
+                    <i class="fas fa-book-open text-blue opacity-1 fa-2x mr-25"></i>
+                  </div>
+                </div><!-- /.ccard -->
+              </div><!-- /.col -->
+            </div>
+          </div>
+
+        </div><!-- /.row -->
+      </div>
+    </div>
+<!-- card code end -->

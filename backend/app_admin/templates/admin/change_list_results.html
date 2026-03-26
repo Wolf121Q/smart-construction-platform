@@ -1,0 +1,74 @@
+{% load i18n static %}
+
+<style>
+.card-layout{
+  width: 100%;
+}
+.table-responsive-layout{
+  display: grid !important;
+}
+
+</style>
+
+
+ 
+
+<div class="card dsfsdfadf">
+  <div class="card-body card-layout">
+    <div class="radius-1 table-responsive table-responsive-layout">
+      {% if results %}
+        <table id="result_list" class="d-style w-100 table table-striped table-bordered">
+          <thead class="bgc-white text-blue text-uppercase text-80">
+            <tr role="row">
+              {% for header in result_headers %}
+                <th scope="col" {{ header.class_attrib }} class="">
+                  {% if header.sortable %}
+                    {% if header.sort_priority > 0 %}
+                      <div class="sortoptions">
+                        <a class="sortremove" href="{{ header.url_remove }}" title="{% trans "Remove from sorting" %}">
+                          <span class="fa fa-remove"></span>
+                        </a>
+                        {% if num_sorted_fields > 1 %}
+                          <span class="sortpriority" title="{% blocktrans with priority_number=header.sort_priority %}Sorting priority: {{ priority_number }}{% endblocktrans %}">{{ header.sort_priority }}</span>
+                        {% endif %}
+                        <a href="{{ header.url_toggle }}" class="toggle" title="{% trans "Toggle sorting" %}">
+                          <span class="fas fa-arrow-{% if header.ascending %}down ascending{% else %}up descending{% endif %}"></span>
+                        </a>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                  <div class="th-inner {% if header.sortable %}sortable both {% if header.ascending %}asc{% else %}desc{% endif %}{% endif %}">
+                    {% if header.sortable %}
+                      <a href="{{ header.url_primary }}" class="text-sm-left text-nowrap">{{ header.text|capfirst }}</a>
+                    {% else %}
+                      <span class="text-sm-left text-nowrap">{{ header.text|capfirst }}</span>
+                    {% endif %}
+                  </div>
+                  <div class="fht-cell"></div>
+                </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody class="mt-1">
+            {% for result in results %}
+              {% if result.form.non_field_errors %}
+                <tr>
+                  <td colspan="{{ result|length }}">
+                    <span class="d-inline-block text-grey-d2">{{ result.form.non_field_errors }}</span>
+                  </td>
+                </tr>
+              {% endif %}
+              <tr class="bgc-h-yellow-l4 d-style {% cycle 'row1' 'row2' %}">{% for item in result %}{{ item }}{% endfor %}</tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% if result_hidden_fields %}
+  <div class="hiddenfields">{# DIV for HTML validation #}
+    {% for item in result_hidden_fields %}{{ item }}{% endfor %}
+  </div>
+{% endif %}

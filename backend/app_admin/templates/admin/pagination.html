@@ -1,0 +1,80 @@
+{% load admin_list %}
+{% load i18n %}
+
+<div class="btn-group ml-sm-auto mt-3 mt-sm-0">
+  <a href="#" id="prev-btn" class="btn btn-lighter-default btn-bgc-white btn-a-secondary radius-l-1 px-3 ml-2 border-2" style="height: 37px;">
+    <i class="fa fa-caret-left mr-1"></i>
+    Prev
+  </a>
+  <ul class="paginator pagination">
+    {% if pagination_required %}
+      {% for i in page_range %}
+        {% if i == "." %}
+          <li class="disabled">
+            <a href="#">...</a>
+          </li>
+        {% else %}
+          <li>
+            {% paginator_number cl i %}
+          </li>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% if show_all_url %}
+      <li>
+        <a href="{{ show_all_url }}" class="showall">{% trans 'Show all' %}</a>
+      </li>
+    {% endif %}
+  </ul>
+  <a href="#" id="next-btn" class="btn btn-lighter-default btn-bgc-white btn-a-secondary radius-r-1 px-3 ml-2 border-2 ml-n2px" style="height: 37px;">
+    Next
+    <i class="fa fa-caret-right ml-1"></i>
+  </a>
+</div>
+
+
+<script>
+  // Function to parse URL parameters
+  function getUrlParameter(name) {
+      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+      var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+      var results = regex.exec(location.search);
+      return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+  }
+
+  // Function to update URL
+  function updateUrl(paramValue) {
+      var newUrl;
+      var baseUrl = window.location.href.split('?')[0];
+      var existingParams = window.location.search;
+
+      if (existingParams) {
+          var updatedParams = existingParams.replace(/([&?])p=[^&]*(&|$)/, '$1p=' + paramValue + '$2');
+          newUrl = baseUrl + updatedParams;
+      } else {
+          newUrl = baseUrl + '?p=' + paramValue;
+      }
+
+      window.location.href = newUrl; // Navigate to the new URL
+  }
+
+  // Event listener for the Next button
+  document.getElementById('next-btn').addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent default link behavior
+
+      var pValue = parseInt(getUrlParameter('p')) || 0;
+      updateUrl(pValue + 1);
+  });
+
+
+   // Event listener for the Previous button
+   document.getElementById('prev-btn').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default link behavior
+
+        var pValue = parseInt(getUrlParameter('p')) || 0;
+        if (pValue > 1) {
+            updateUrl(pValue - 1); // Decrement p value and navigate to the new URL
+        }
+    });
+
+</script>

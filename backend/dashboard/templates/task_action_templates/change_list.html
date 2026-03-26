@@ -1,0 +1,678 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+{% load i18n bootstrap_admin_template_tags %}
+
+{% block extrastyle %}
+{{ block.super }}
+<!-- <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" /> -->
+<link rel="stylesheet" type="text/css"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+{% if cl.formset %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" /> -->
+{% endif %}
+{% if cl.formset or action_form %}
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{% endif %}
+{{ media.css }}
+{% if not actions_on_top and not actions_on_bottom %}
+<style>
+  /* Set the desired width for the specific <td> element */
+  td.column-get_description, td.field-get_description {
+      white-space: nowrap; /* prevent text from wrapping */ 
+  }
+
+  .table-responsive {
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+-ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.table {
+width: 100%;
+min-width: 600px; /* Adjust this based on the minimum width your table needs */
+}
+
+.table thead th, .table tbody td {
+white-space: nowrap;
+text-align: left;
+vertical-align: middle;
+}
+
+.card {
+margin-bottom: 20px;
+}
+
+.card-header, .card-body, .panel-footer {
+padding: 1rem;
+}
+
+.pagination-detail, .pagination {
+  float: none;
+  text-align: center;
+}
+
+</style>
+{% endif %}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media.js }}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs ace-save-state d-none" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="ace-icon fa fa-home home-icon"></i>
+      <a href="{% url 'admin:index' %}" title="{% trans 'Home' %}">Home</a>
+    </li>
+    <li>
+      <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}"
+        title="{% trans 'Home' %}">{{ cl.opts.app_config.verbose_name }}</a>
+    </li>
+    <li class="active">{{ cl.opts.verbose_name_plural|capfirst }}</li>
+  </ul><!-- /.breadcrumb -->
+
+</div>
+{% endblock %}
+{% endif %}
+
+
+{% block coltype %}flex{% endblock %}
+
+{% block filters %}
+  {% if cl.has_filters %}
+    <div id="changelist-filter">
+      {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row mt-0">
+  <div class="col-12">
+
+    <!-- FIRST ROW CONTAINING BUTTONS -->
+
+    <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
+      <div class="row h-100 mx-n425">
+        <div class="ml-2 d-none d-xl-inline-block">
+          <div class="ml-auto d-flex">
+                <h1 class="page-title text-primary-d2 text-140">
+                  {% block title %}
+                    {{ cl.opts.verbose_name_plural }}
+                  {% endblock %}
+                </h1>
+          </div>
+          
+          <div class="dropdown dropdown-hover">
+            <a data-display="static" href="#" class="mt-1 btn dropdown-toggle border-0 btn-outline-default py-1 px-2 btn-h-light-primary btn-a-light-primary radius-1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 20px;">
+              {% if selected_filters %}
+                (Selected Param [{{selected_filters}}]) 
+              {% endif %}
+            </a>
+    
+          </div><!-- /.dropdown -->
+
+        </div>
+    
+        <div class="ml-auto d-flex mr-3">
+          <div class="text-right">
+            <button  class="btn btn-bgc-white btn-lighter-danger btn-h-danger btn-a-info border-2 radius-round btn-lg px-25 mx-1" title="Obsns Mk Timeline" data-toggle="modal" data-target="#obsns_mk_timeline_modal">
+              <i class="fas fa-exclamation-circle text-110"></i>
+            </button>
+            <a href="javascript:location.reload();"  class=" btn btn-bgc-white btn-lighter-info btn-h-info btn-a-info border-2 radius-round btn-lg px-25 mx-1"> <i class="fas fa-sync-alt "></i></a>
+          </div>
+    
+        </div>
+      </div>
+    </div>
+
+    <!-- FIRST ROW CONTAINING BUTTONS -->
+
+    <!-- CARDS -->
+
+    <div class="container-fluid mb-3">
+      <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="row h-100 mx-n425">
+
+          <div class="col-12 col-md-4 px-0 mb-2 mb-md-0">
+            <div class="ccard h-100 pt-2 pb-25 px-25 d-flex mx-2 overflow-hidden">
+              <!-- the colored circles on bottom right -->
+              <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                style="width: 5.25rem; height: 5.25rem;"></div>
+              <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                style="width: 4.75rem; height: 4.75rem;"></div>
+              <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                style="width: 4.25rem; height: 4.25rem;"></div>
+
+
+              <div class="flex-grow-1 pl-25 pos-rel d-flex flex-column">
+                <div class="text-secondary-d4">
+                  <span style="font-size: 17px; font-weight: 600;">
+                    Inspection Flag
+                  </span>
+                  <span class="text-danger-m1 align-text-bottom text-nowrap" style="font-size: 12px;">
+                    (Overall Stats)
+                  </span>
+                </div>
+
+                <div class="mt-auto text-nowrap text-secondary-d2 text-105 letter-spacing mt-n1">
+                  <button style="font-size: 12px;" data-toggle="modal"
+                    data-target="#inspection_flag_taskaction_modal" type="button" class="btn btn-primary px-3"
+                    data-dismiss="modal">
+                    Click To View
+                  </button>
+                </div>
+              </div>
+
+              <div class="ml-auto pr-1 align-self-center pos-rel text-125">
+                <i class="fa fa-flag text-purple opacity-1 fa-2x mr-25"></i>
+              </div>
+            </div><!-- /.ccard -->
+          </div><!-- /.col -->
+
+
+          <div class="col-12 col-md-4 mb-2 mb-md-0">
+            <div class="ccard h-100 pt-2 pb-25 px-25 d-flex mx-2 overflow-hidden">
+              <!-- the colored circles on bottom right -->
+              <div class="position-br	mb-n5 mr-n5 radius-round bgc-green-l3 opacity-3"
+                style="width: 5.25rem; height: 5.25rem;"></div>
+              <div class="position-br	mb-n5 mr-n5 radius-round bgc-green-l2 opacity-5"
+                style="width: 4.75rem; height: 4.75rem;"></div>
+              <div class="position-br	mb-n5 mr-n5 radius-round bgc-green-l1 opacity-5"
+                style="width: 4.25rem; height: 4.25rem;"></div>
+
+              <div class="flex-grow-1 pl-25 pos-rel d-flex flex-column">
+                <div class="text-secondary-d4">
+                  <span style="font-size: 17px; font-weight: 600;">
+                    Material Flag
+                  </span>
+                  <span class="text-danger-m1 align-text-bottom text-nowrap" style="font-size: 12px;">
+                    (Overall Stats)
+                  </span>
+                </div>
+
+                <div class="mt-auto text-nowrap text-secondary-d2 text-105 letter-spacing mt-n1">
+                  <button style="font-size: 12px;" data-toggle="modal" data-target="#material_flag_taskaction_modal"
+                    type="button" class="btn btn-primary px-3" data-dismiss="modal">
+                    Click To View
+                  </button>
+                </div>
+              </div>
+
+              <div class="ml-auto pr-1 align-self-center pos-rel text-125">
+                <i class="fa fa-flag text-green opacity-1 fa-2x mr-25"></i>
+              </div>
+            </div><!-- /.ccard -->
+          </div><!-- /.col -->
+
+
+          <div class="col-12 col-md-4 px-0 mb-2 mb-md-0">
+            <div class="ccard h-100 pt-2 pb-25 px-25 d-flex mx-2 overflow-hidden">
+              <!-- the colored circles on bottom right -->
+              <div class="position-br	mb-n5 mr-n5 radius-round bgc-orange-l3 opacity-3"
+                style="width: 5.25rem; height: 5.25rem;"></div>
+              <div class="position-br	mb-n5 mr-n5 radius-round bgc-orange-l2 opacity-5"
+                style="width: 4.75rem; height: 4.75rem;"></div>
+              <div class="position-br	mb-n5 mr-n5 radius-round bgc-orange-l1 opacity-5"
+                style="width: 4.25rem; height: 4.25rem;"></div>
+
+
+              <div class="flex-grow-1 pl-25 pos-rel d-flex flex-column">
+                <div class="text-secondary-d4">
+                  <span style="font-size: 17px; font-weight: 600;">
+                    {{total_projects}}
+                  </span>
+                </div>
+                <div class="mt-auto text-nowrap text-secondary-d2 text-105 letter-spacing mt-n1"
+                  style="font-size: 12px;">
+                  Projects
+                </div>
+              </div>
+
+
+              <div class="ml-auto pr-1 align-self-center pos-rel text-125">
+                <i class="fa fa-bolt text-orange opacity-1 fa-2x mr-25"></i>
+              </div>
+            </div><!-- /.ccard -->
+          </div><!-- /.col -->
+
+        </div>
+      </div>
+    </div>
+
+    <!-- CARDS -->
+    <div class="row">
+      <div class="col-3 ml-auto">
+          <!-- Time since filter form  -->
+        <form id="time-since-filter-form" method="get" action="{% url 'admin:dashboard_taskactionlist_changelist' %}">
+          {{ time_since_filter_form.time_since|add_class:"form-control" }}
+        </form>
+      </div>
+      <div class="col-3 ml-auto">
+          <!-- Time since filter form  -->
+        <form id="flag-filter-form" method="get" action="{% url 'admin:dashboard_taskactionlist_changelist' %}">
+          {{ flag_filter_form.flag_form_filter_field|add_class:"form-control" }}
+        </form>
+      </div>
+      <div class="col-6 ml-auto">
+        {% if cl.search_fields %}
+          {% block search %}{% search_form cl %}{% endblock %}
+        {% endif %}
+      </div>
+    </div>
+   
+  <form id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
+  <div class="card dcard">
+     
+          {% if action_form and actions_on_top and cl.full_result_count %}
+          <div class="card-header text-white border-0">
+            {% admin_actions %}
+          </div>
+          {% endif %}
+          
+         
+           
+        
+
+
+      {% if cl.date_hierarchy %}
+     
+        {% block date_hierarchy %}
+        <div class="card-header text-white border-0">
+          {% date_hierarchy cl %}
+        {% endblock %}
+      </div>
+      {% endif %}
+      
+    
+  		
+      <div class="card-body p-0 border-x-1 border-b-1 brc-default-m4 radius-0 overflow-hidden">
+
+
+		  <div id="content-main" class="bootstrap-table bootstrap4">
+		    {% if cl.formset.errors %}
+		      <div role="alert" class="errornote alert alert-warning fade in">
+		        <button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">{% trans "Close" %}</span></button>
+		        {% blocktrans count cl.formset.total_error_count as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+		        {{ cl.formset.non_form_errors }}
+		      </div>
+		    {% endif %}
+
+
+        <div class="table-responsive">
+		    <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+		      <div class="panel panel-default">
+		        
+
+		        
+		        {% if cl.formset %}
+		          <div>{{ cl.formset.management_form }}</div>
+		        {% endif %}
+		          {% block result_list %}
+
+		            {% result_list cl %}
+		            {% if cl.result_count > cl.list_per_page or actions_on_bottom and cl.full_result_count %}
+		              <div class="panel-body actions-bottom">
+		                <div class="row">
+		                  {% if action_form and actions_on_bottom and cl.full_result_count %}
+		                    <div class="col-sm-4">
+		                        {% admin_actions %}
+		                    </div>
+		                  {% endif %}
+		                  <div class="{% if action_form and actions_on_bottom and cl.full_result_count %}col-sm-8{% else %}col-sm-12{% endif %}">
+		                    
+		                  </div>
+
+		                </div>
+
+		              </div>
+
+		            {% endif %}
+		          {% endblock %}
+		          <div class="panel-footer" id="panel-footer">
+		            <span class="info pull-left">
+
+		            </span>
+		            <div class="right-buttons">
+		              {% if cl.formset and cl.result_count %}
+		              <input type="submit" name="_save" class="save btn btn-primary btn-xs" value="{% trans 'Save' %}"/>
+		              {% endif %}
+		            </div>
+		          </div>
+		       
+		      </div>
+		    </div>
+		   
+		    <div class="fixed-table-pagination">
+  		    	<div class="float-left pagination-detail">
+  		    		<span class="pagination-info">
+                  {{ cl.result_count }}
+                  {% ifequal cl.result_count 1 %}
+                    {{ cl.opts.verbose_name }}
+                  {% else %}
+                    {{ cl.opts.verbose_name_plural }}
+                  {% endifequal %}
+        			</span>
+  				</div>
+  				<div class="float-right pagination">
+            {% block pagination %}{% pagination cl %}{% endblock %}
+  				</div>
+  			</div>
+      </div>
+
+		  </div>
+
+      </div>
+    </div>
+  </div>
+</form>
+
+{% include "partials/tag_modal_box.html" %}
+{% include "partials/obsns_modal_box.html" %} 
+{% include 'task_action_templates/flag_summary_modal_mat.html' %}
+{% include 'task_action_templates/flag_summary_modal_ins.html' %}
+
+
+<!-- Charts Model Box Start -->
+  <div class="modal fade modal-fs" id="modalFullscreen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true" style="max-height: 550px;">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold" id="exampleModalLabel2">
+            Region Wise Distribution Charts
+          </h5>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <!-- content -->
+          <div class="row mb-5">
+                    
+            <div class="col-sm-12 col-md-6 col-lg-6 mt-2 mt-lg-0 pr-lg-2">
+              <div class="bcard card h-100 shadow-lg">
+                <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+                  <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+                    Inspection Flags
+                  </h5>
+                <!-- the dropdowns -->
+                  <div class="card-toolbar no-border">
+                  </div><!-- /.card-toolbar -->
+                </div>
+                <figure class="highcharts-figure">
+                  <div id="container1"></div>
+              </figure>
+              </div><!-- /.card -->
+            </div>
+         
+            <div class="col-sm-12 col-md-6 col-lg-6 mt-2 mt-lg-0 pr-lg-2">
+              <div class="bcard card h-100 shadow-lg">
+                <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+                  <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+                    Material Flags
+                  </h5>
+                <!-- the dropdowns -->
+                  <div class="card-toolbar no-border">
+                  </div><!-- /.card-toolbar -->
+                </div>
+                <figure class="highcharts-figure">
+                  <div id="container2"></div>
+              </figure>
+              </div><!-- /.card -->
+            </div>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Charts Model Box End -->
+
+{% include "partials/tag_modal_box.html" %}
+{% include "partials/obsns_modal_box.html" %}
+{% include 'task_action_templates/flag_summary_modal_mat.html' %}
+{% include 'task_action_templates/flag_summary_modal_ins.html' %}
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script src="{% static 'assets/node_modules/bootstrap-table/dist/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'assets/node_modules/bootstrap-table/dist/extensions/mobile/bootstrap-table-mobile.js' %}">
+</script>
+<script src="{% static 'assets/module/DashboardApi.js' %}"></script>
+
+<script>
+  $(window).on('load', function () {
+    var urlParams = new URLSearchParams(window.location.search); //get all parameters
+    var drf_gte = urlParams.get('drf__project_taskactions__created_on__gte');
+    var drf_lte = urlParams.get('drf__project_taskactions__created_on__lte');
+    if (drf_gte && drf_lte) {
+      $('#id-daterange-from').val(drf_gte)
+      $('#id-daterange-to').val(drf_lte)
+    }
+  });
+
+  function getModelBox(task_action_comment_id = '', comment = '', remarks_by_tag = '', remark_date = '', flag_color =
+    '') {
+    if (task_action_comment_id != '') {
+
+      $("#comment_id").val(task_action_comment_id);
+      users_list = DashboardApi.getUsers();
+
+      var options, index, select, option;
+
+      // Get the raw DOM object for the select box
+      select = document.getElementById('tag_user_ids');
+      // Clear the old options
+      select.options.length = 0;
+
+      // Load the new options
+      options = users_list; // Or whatever source information you're working with
+      for (index = 0; index < users_list.length; ++index) {
+        option = options[index];
+        select.options.add(new Option(option.name, option.value));
+      }
+
+      $("#remarks_by_tag_id").text(remarks_by_tag);
+      $("#remark_date_id").text(remark_date);
+      $("#remark_color").css("color", flag_color)
+      $("#message_area").text(comment)
+      $('#modal_forward_tag').modal('show');
+    }
+  }
+
+  function registerCommentReply() {
+    var comment_id = $('#comment_id').val();
+    var user_id = $("#tagged_user").val();
+    var comment = $('#modal_comment_textarea_id').val();
+    var attachments = $('#modal_comment_attachment_id').prop('files');
+
+    var fd = new FormData();
+
+    if (attachments.length > 0) {
+      fd.append('attachments', attachments[0]);
+      fd.append('comment_id', comment_id)
+      fd.append('user_id', user_id)
+      fd.append('comment', comment)
+    }
+
+    // $('#comment_bell_body').load();
+
+    if (comment_id != "" && user_id != "" && comment != "" && attachments != "") {
+      $.ajax({
+        url: '/dashboard/projectdirectorhousing/comment_reply/',
+        method: 'POST',
+        data: fd,
+        contentType: false,
+        processData: false, // added data type
+
+        success: function (res) {
+          location.reload(true);
+        }
+      }); // new script code
+
+    } else {
+      alert("Please Provide All Required Data")
+    }
+
+  }
+
+  // Time since filter form logic 
+  const selectField = document.querySelector('#id_time_since');
+
+  const params = new URLSearchParams(window.location.search);
+  time_ago_param =  params.get('time_ago')
+
+  if (selectField) {
+      // Setting up the value of the selected field
+      if (time_ago_param){
+        selectField.value = time_ago_param;
+      }
+
+      selectField.addEventListener('change', function() {
+          const selectedValue = this.value;
+          const formAction = document.querySelector('#time-since-filter-form').action;
+          const url = new URL(window.location.href);
+          if (selectedValue) {
+            url.searchParams.set('time_ago', selectedValue);
+            window.location.href = url.toString();
+          }
+          else{
+            const currentUrl = new URL(window.location.href);
+            currentUrl.search = '';
+            window.location.href = currentUrl.toString();
+          }
+      });
+  }
+  // flag filter form form logic 
+  const flag_form_filter_field = document.querySelector('#id_flag_form_filter_field');
+  const parent_flag_params = new URLSearchParams(window.location.search);
+  parent_flag_param =  params.get('pending_flag_status')
+
+  if (flag_form_filter_field) {
+      // Setting up the value of the selected field
+      if (parent_flag_param){
+        flag_form_filter_field.value = parent_flag_param;
+      }
+
+      flag_form_filter_field.addEventListener('change', function() {
+          const flagSelectedValue = this.value;
+          const formAction = document.querySelector('#flag-filter-form').action;
+          const url = new URL(window.location.href);
+          if (flagSelectedValue) {
+            url.searchParams.set('pending_flag_status', flagSelectedValue);
+            window.location.href = url.toString();
+          }
+          else{
+            const currentUrl = new URL(window.location.href);
+            currentUrl.search = '';
+            window.location.href = currentUrl.toString();
+            
+          }
+      });
+  }
+
+</script>
+<script>
+  $('.ins_flag').click(function () {
+    //selector where from images detect for light box
+    $(".intro").AutoLightbox(); //auto lightbox with default settings
+    $("article").AutoLightbox({
+      dimBackground: false
+    }); //lightbox with custom setting, dim background off
+  });
+
+  $('#modal_attachment_close').click(function () {
+    $("#modal_obsns_attachment_body").empty();
+  })
+
+  $('#bell_notifications').click(function () {
+    $('#navbar-notif-tab-2').empty();
+    DashboardApi.getBellNotifications();
+  })
+
+  function getTaskActions(ca_id = "", flag_id = "") {
+    event.preventDefault();
+    if ($("#task_response:not(:empty)").length) {
+      $("#task_response").empty();
+    }
+
+    DashboardApi.getTaskActions(ca_id, flag_id)
+    $("#top_cards").hide();
+  }
+
+  function getNotificationTaskAction(comment_id = "") {
+    event.preventDefault();
+    if ($("#task_response:not(:empty)").length) {
+      $("#task_response").empty();
+    }
+    DashboardApi.getNotificationTaskAction(comment_id)
+    $("#top_cards").hide();
+  }
+
+  function getTaskActionAttachments(task_action_id = "") {
+    event.preventDefault();
+    if ($("#modal_obsns_attachment_body:not(:empty)").length) {
+      $("#modal_obsns_attachment_body").empty();
+    }
+
+    DashboardApi.getTaskActionAttachmentsJs(task_action_id)
+    $('#lightbox_modal_task_action_attachment').modal('show');
+  }
+
+  function allow_click(item) {
+    if (item.innerText == 0) {
+      item.setAttribute("href", "javascript:void(0);")
+    }
+  }
+
+  // modal closing code
+  $("#hide").click(function () {
+    $('#modal_obsns_attachment').modal('hide');
+    $(".lightbox").each(function () {
+      $(this).addClass("d-none");
+    });
+  });
+
+
+  $('#id_chat_box_operation').prop('disabled', true);
+  // Tag User Comment Reply
+  $('#modal_organization_chart_body').on('change', '#tag_user1', function () {
+    var $option = $(this).find('option:selected');
+    $('#tagged_user').val($option.val());
+    $("#tag_to_badge").text("@" + String($option.text()));
+    $("#tag_to_badge").removeClass('d-none');
+    $("#remove_tag_to_badge").removeClass('d-none');
+    $("#modal_organization_chart").modal('hide');
+    $('#id_chat_box_operation').prop('disabled', false);
+
+  });
+
+  $('#remove_tag_to_badge').on('click', function () {
+    $('#id_chat_box_operation').prop('disabled', true);
+    $('#tagged_user').val('');
+    $("#tag_to_badge").addClass('d-none');
+    $("#remove_tag_to_badge").addClass('d-none');
+  });
+</script>
+
+<script>
+  // Get a reference to the button element
+  const button = document.getElementById('obsnFlagPage');
+
+  // Remove the hidden attribute
+  button.removeAttribute('hidden');
+  const badgeSpan = document.querySelector('#obsnFlagPage .badge');
+  // Update the inner text of the span element
+  badgeSpan.innerText = '{{ queryset_count }}';
+</script>
+{% endblock js %}

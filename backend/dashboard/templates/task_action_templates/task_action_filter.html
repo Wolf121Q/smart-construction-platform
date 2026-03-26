@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load i18n static bootstrap_admin_template_tags %}
+
+<div class="card border-0 shadow-sm radius-0 mr-2 col-3" id="card-2" style="height:316px;overflow-y: auto;">
+	<div class="card-header bgc-primary-d1">
+	  <h5 class="card-title text-white">
+	    <i class="fa fa-filter mr-2px"></i>
+	    {% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}
+	  </h5>
+	</div>
+    <div class="card-body bgc-transparent p-0 border-1 brc-primary-m3 border-t-0">
+      <table class="table table-striped table-hover mb-0 text-danger">
+        <tbody>
+        	{% for choice in choices %}
+	          <tr>
+	            <td>
+	              <a style="width:315px;" href="{{ choice.query_string|iriencode }}" title="{{ choice.display }}" class="text-primary-d2  {% if choice.selected %} m-1 badge bgc-white border-1 border-l-4 radius-0 brc-success-m2 btn-text-success px-25 text-90 {% endif %}">&nbsp;{{ choice.display|task_action_filter_label }}&nbsp;</a>
+	            </td>
+	          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div><!-- /.card-body -->
+</div>

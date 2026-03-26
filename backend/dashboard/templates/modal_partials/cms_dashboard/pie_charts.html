@@ -1,0 +1,67 @@
+{% load i18n admin_urls static admin_list %}
+{% load i18n static project_template_tags %}
+ 
+
+
+<!-- site, metrial and progress chart cord start -->
+<div class="row mt-4">
+  <!-- demographics chart -->
+  <div class="col-12 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="card ccard h-100">
+      <div class="card-header border-0 text-dark-m2">
+        <h4 class="text-120">
+          Progress
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="pos-rel"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+          <canvas id="piechart_progress" style="display: block; width: 435px; height: 261px;" class="chartjs-render-monitor" width="435" height="261"></canvas>
+          <div class="position-center text-center">
+            <h3 class="d-none d-sm-block d-md-none d-xl-block" style="font-size: 3vmin !important;">84,529</h3>
+            <h3 class="d-sm-none d-md-block d-xl-none text-140" style="font-size: 3vmin !important;">~84k</h3>
+            Visitors
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="card ccard h-100">
+      <div class="card-header border-0 text-dark-m2">
+        <h4 class="text-120">
+        Site
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="pos-rel"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+          <canvas id="piechart_site" style="display: block; width: 435px; height: 261px;" class="chartjs-render-monitor" width="435" height="261"></canvas>
+          <div class="position-center text-center">
+            <h3 class="d-none d-sm-block d-md-none d-xl-block" style="font-size: 3vmin !important;">84,529</h3>
+            <h3 class="d-sm-none d-md-block d-xl-none text-140" style="font-size: 3vmin !important;">~84k</h3>
+            Visitors
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="card ccard h-100">
+      <div class="card-header border-0 text-dark-m2">
+        <h4 class="text-120">
+          Material
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="pos-rel"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+          <canvas id="piechart_material" style="display: block; width: 435px; height: 261px;" class="chartjs-render-monitor" width="435" height="261"></canvas>
+          <div class="position-center text-center">
+            <h3 class="d-none d-sm-block d-md-none d-xl-block" style="font-size: 3vmin !important;">84,529</h3>
+            <h3 class="d-sm-none d-md-block d-xl-none text-140" style="font-size: 3vmin !important;">~84k</h3>
+            Visitors
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- site, metrial and progress chart cord end -->

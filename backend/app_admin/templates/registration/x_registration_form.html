@@ -1,0 +1,420 @@
+{% extends "client/base.html" %}
+{% load i18n static bootstrap_admin_template_tags  %}
+{% load i18n static housing_society_template_tags  %}
+{% load i18n %}
+
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+
+{% block content %}
+
+<style>
+  .arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+  }
+
+  .right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
+ 
+</style>
+
+
+<div class="row flex-grow-1" id="row-1">     
+        <div class="col-12  d-lg-flex bgc-white shadow radius-1 overflow-hidden">
+
+          <div class="row flex-grow-1" id="row-2">
+
+            <!-- Including Into Page from admin/includes/intro.html -->
+            <div id="id-col-intro" class="col-lg-6 d-none d-lg-flex border-r-1 border-r-1 brc-default-l3 px-0" >
+              {% include 'client/includes/__intro.html' %}
+            </div>
+            <div id="id-col-main" class="col-12  bgc-white px-0 col-lg-6 mx-auto d-flex align-items-center justify-content-center">
+              <!-- you can also use these tab links -->
+              <ul class="d-none mt-n4 mb-4 nav nav-tabs nav-tabs-simple justify-content-end bgc-black-tp11"
+                role="tablist">
+                <li class="nav-item mx-2">
+                  <a class="nav-link active px-2" data-toggle="tab" href="#id-tab-login" role="tab"
+                    aria-controls="id-tab-login" aria-selected="true">
+                    Login
+                  </a>
+                </li>
+                <li class="nav-item mx-2">
+                  <a class="nav-link px-2" data-toggle="tab" href="#id-tab-signup" role="tab"
+                    aria-controls="id-tab-signup" aria-selected="false">
+                    Signup 
+                  </a>
+                </li>
+              </ul>
+
+
+              <div class="tab-content tab-sliding border-0 p-0" data-swipe="right">
+                <div class="tab-pane active show mh-100 px-3 px-lg-0 pb-3" id="id-tab-login">
+                  {% if form.errors or form.non_field_errors %}
+                  <div class="alert d-flex bgc-red-l3 brc-success-m4 border-0 p-0" role="alert" style="width: 100%">
+                    <div class="bgc-red px-3 py-1 text-center radius-l-1">
+                      <span class="fa-2x text-white">
+                        ⚠
+                        
+                      </span>
+                    </div>
+          
+                    <span class="ml-3 align-self-center text-dark-tp3 text-110">
+                      {% if form.errors and not form.non_field_errors %}
+                      <p>
+                        <strong>
+                          {% blocktrans count form.errors.items|length as counter %}Please correct the error
+                          below.{% plural %}Please
+                          correct the errors below.{% endblocktrans %}
+                        </strong>
+                      </p>
+                      {% endif %}
+          
+                      {% if form.non_field_errors %}
+                      {% for error in form.non_field_errors %}
+                      <p>
+                        {{ error }}
+                      </p>
+                      {% endfor %}
+                      {% endif %}
+          
+                      {% if form.errors %}
+                      {% for field in form %}
+                      {% for error in field.errors %}
+                      <p class="border-decoration">
+                        <strong><span class="glyphicon glyphicon-asterisk"></span> {{ field.label }}: </strong>{{ error|escape }}
+                      </p>
+                      {% endfor %}
+                      {% endfor %}
+                      {% endif %}
+                    </span>
+                  </div>
+                  {% endif %} 
+                      <!-- show this in mobile device -->
+                   <div class="d-lg-none text-secondary-m1 my-4 text-center">
+                    <a href="{% url 'auth_login' %}">
+                      <img class="text-200 mb-4" src="{% display_favicon %}" width="100">
+                    </a>
+                    <h1 class="text-170">
+                        <span class="text-blue-d1">
+                           <span class="text-80 text-dark-tp3">{{society.name}}</span>
+                        </span>
+                    </h1>
+                    Verify Membership
+                  </div>
+                  {% include 'client/includes/registration_step_partial.html' %}
+                   <!-- show this in desktop -->
+                   <div class="d-none d-lg-block col-md-6 offset-md-3 mt-lg-4 px-0">
+                    <h4 class="text-dark-tp4 border-b-1 brc-secondary-l2 pb-1 text-130">
+                        <i class="fa fa-coffee text-orange-m1 mr-1"></i>
+                        Verify Membership
+                    </h4>
+                  </div>
+                  <form id="register_form" method="post" action="" class="form-row mt-4" novalidate>
+                    <div id="sms_otp_msg_box" class="form-group col-sm-12 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3" style="display:none">
+                      <div  class="alert alert-collapse alert-success bg-white brc-success-m3 rounded border-2 "
+                        role="alert">
+                        <span class="mr-4 d-inline-block" id="sms_otp_msg">
+                        </span>
+                        <button type="button" class="close align-self-center ml-auto text-danger text-150"
+                          data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                    </div>
+                    {% csrf_token %}
+                    <div  id="ms_number_block" class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                      <div class="d-flex align-items-center input-floating-label text-blue brc-success-m2">
+                        {{form.membership_no|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fa fa-user text-gold ml-n4"></i>
+                        {{ form.membership_no|get_label:'floating-label text-grey ml-n3'}}
+                        <span class="form-text d-inline-block ml-3">
+                          <button id="popover-2" type="button" data-placement="bottom" title="" data-content="<img src='{% static 'assets/image/ms_no_2_2.jpeg' %}'/>" data-original-title="Hint" class="px-4 btn btn-xs btn-info btn-bold brc-white-tp3 shadow-sm radius-round text-125 px-25">?</button> 
+                        </span>
+                      </div>
+                    
+                      <span class="alert-danger" data-validate-for="membership_no">{{form.membership_no.errors}}</span>
+                    </div>
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                      <div class="d-flex align-items-center input-floating-label text-blue brc-success-m2">
+                        {{form.national_identity_type|add_class:'ace-select text-grey bg-transparent-black brc-dark-m5 brc-h-dark-m1'}}
+                      </div>
+                    </div>
+                    
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-1">
+                      <div class="d-flex align-items-center input-floating-label text-blue brc-success-m2">
+                        {{form.national_identity_number|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                        <i class="fas fa-id-card text-gold ml-n4"></i>
+                        {{ form.national_identity_number|get_label:'floating-label text-grey ml-n3'}}
+                      </div>
+                      <span class="alert-danger" data-validate-for="national_identity_number">{{form.national_identity_number.errors}}</span>
+                    </div>
+
+                    <script src='https://www.google.com/recaptcha/api.js'></script>
+                    <div class="g-recaptcha" data-sitekey="6LdvJSwgAAAAAFRsR7LGvc8cLcjBkXg2DSNp-Zlk" style="margin-left:25.5%;"></div>
+                    
+                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-2">
+                      <label class="d-inline-block mt-3 mb-0 text-secondary-d2">
+                         {{form.terms_and_conditions|add_class:'mr-1'}}
+                        <span class="text-dark-m3">I have read and agree to <a href="#terms-conditions" data-toggle="modal" class="text-blue-d2">Terms & Conditions</a></span>
+                        <span class="alert-danger" data-validate-for="national_identity_number">{{form.terms_and_conditions.errors}}</span>
+                      </label>
+                      <button type="submit" class="btn btn-success btn-block px-4 btn-bold mt-2 mb-3"
+                                      value="{% trans 'Submit' %}" />{% trans 'Submit' %} </button>
+                    </div>
+                  </form>
+
+                  <div class="form-row w-100">
+                    <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 d-flex flex-column align-items-center justify-content-center">
+                      <hr class="brc-default-l2 mt-0 mb-2 w-100">
+
+                      <div class="p-0 px-md-2 text-dark-tp4 my-3">
+                          <div class="alert fade show bgc-white brc-secondary-l2 rounded" role="alert">
+                              <div class="position-tl h-102 border-l-4 brc-blue m-n1px rounded-left"></div><!-- the big blue line on left -->
+                              <h5 class="alert-heading text-blue-m1 font-bolder">
+                                <i class="fas fa-info-circle text-blue mr-1 mb-1"></i>
+                                Note
+                              </h5>
+                              <span style="font-size: 15px; font-weight: 600; line-height: 2fr;">In case of delayed OTP or account creation help</span>
+                              <span class="alert-link text-blue-m2">
+                                Please call us on
+                              </span>.
+                              <p class="mt-3 mb-0">
+                                <span class="text-primary font-bolder py-0 px-2">
+                                  <i class="fa fa-phone fa-flip-horizontal mr-1"></i> +92-51-111-555-400 (4)
+                                </span>
+                              </p><br>
+                              <span style="font-size: 14px; font-weight: 550; line-height: 2fr;"><i class="arrow right"></i> &nbsp; If you are a DHAI-R Mobile App user, Please use same login/password.<br><i class="arrow right"></i> &nbsp; Only for DHAI-R valid members</span> 
+                            </div>
+                      </div>
+                    </div>  
+                </div>
+                <!-- include App Version -->
+                          <!-- app Version here -->
+                          {% include 'client/includes/version.html' %}
+                          <!-- end app version -->
+                 <!-- End Version here  -->
+
+              </div><!-- .tab-content -->
+            </div>
+          </div><!-- /.row -->
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+      </div>
+     
+      
+        <!-- Model With scrollbars inside -->
+        <div class="modal fade" id="terms-conditions" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+      
+              <div class="modal-header">
+                <h5 class="modal-title text-blue-d2">
+                  Terms and Conditions 
+                </h5>
+      
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+      
+              <div class="modal-body ace-scrollbar terms-and-conditions" id="scrollable_terms">
+                {{ reg_terms.description.html|safe }}
+              
+              </div>
+              <div class="modal-footer">
+                <button type="button" disabled="disabled" class="btn btn-primary accept" data-dismiss="modal" onclick="acceptCheckBox()">
+                  Accept
+                </button>
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="rejectCheckBox()" >
+                  Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Model With scrollbars inside -->
+          
+          {% include 'client/includes/responsive_footer_of_auth_pages.html' %}
+          {% include 'client/includes/footer_for_auth_screens.html' %}
+
+      {% endblock %}
+      {% block js %}
+      <script>
+        // disabling terms and condition checkbox
+          $(document).ready(function(){
+            // by default it will be false
+            $( "#id_terms_and_conditions" ).attr('disabled','disabled');
+            // if it is false then disable it only it will be enable by Accept button 
+            $( "#id_terms_and_conditions" ).change(function() {
+              if($( "#id_terms_and_conditions" ).prop( "checked", false )){
+                $( "#id_terms_and_conditions" ).attr('disabled','disabled');
+              }
+            });
+
+           // popovers with custom templates
+        $('#popover-2')
+          .popover({
+            container: 'body',
+            trigger: 'focus',
+            html: true,
+            placement: 'auto',
+            template: '<div class="popover brc-primary-m2 border-b-2" role="tooltip"><div class="arrow arrow2 brc-primary-l2"></div><div class="arrow brc-primary-m1"></div><h3 class="popover-header bgc-primary-l2 border-0 text-110 text-dark-tp3 text-600"></h3><div class="popover-body text-grey-d3 text-105"></div></div>'
+          })
+
+
+ 
+        });
+
+        // Terms and Condition accept button
+        function acceptCheckBox(){
+          $( "#id_terms_and_conditions" ).prop( "checked", true );
+          $( "#id_terms_and_conditions" ).removeAttr('disabled');
+         } 
+        // Terms and Condition accept button
+        function rejectCheckBox(){
+          $( "#id_terms_and_conditions" ).prop( "checked", false );
+          $( "#id_terms_and_conditions" ).attr('disabled','disabled');
+         } 
+        //  step colors
+        $('#step_2').removeClass('active');
+        $('#step_3').removeClass('active')
+        $('#connecting_steps').css({
+          "left": "21.5%",
+          "right": "12.5%",
+          "max-width": "12.5%"
+        }) 
+
+        function scrollToAccept() {
+        const terms = document.querySelector('.terms-and-conditions');
+        const button = document.querySelector('.accept');
+        // const watch = document.querySelector('.watch');
+
+        if (!terms) {
+          return; // quit function because there is no terms
+        }
+
+        // fires on page load because can't find element
+        function obCallback(payload) {
+          // console.log(payload[0].isIntersecting); // whether element is in view or not
+          // console.log(payload[0].intersectionRatio); // how much of the element is showing
+          if (payload[0].intersectionRatio === 1) {
+            button.disabled = false;
+            // stop observing the last element
+            ob.unobserve(terms.lastElementChild);
+          }
+        }
+
+        // takes in callback parameter
+        // will be called every time it needs to check if something is currently on the page
+        // watcher (needs to be told what to watch
+        const ob = new IntersectionObserver(obCallback, {
+          root: terms,
+          threshold: 1,
+        });
+
+        // call observe method on what we want to watch
+        // ob.observe(watch);
+        ob.observe(terms.lastElementChild);
+
+      }
+
+      scrollToAccept();
+
+      </script>
+      
+  
+      <script src="{% static 'assets/node_modules/inputmask/dist/jquery.inputmask.js' %}"></script>
+      <script>
+
+         var national_identity_type = $("#id_national_identity_type").val();
+         if(national_identity_type == ''){
+           $("#id_national_identity_number").attr("disabled","disabled");
+          //  $("#id_national_identity_number").attr("placeholder", "Disbaled");
+         }
+        function national_identity_masking() {
+          var national_identity_type = $("#id_national_identity_type").val();
+
+
+          if (national_identity_type == 1) {
+            $("#id_national_identity_number").html("CNIC");
+
+            try { //not working in IE11
+              $("#id_national_identity_number").inputmask("99999-9999999-9")
+            } catch (e) {}
+          } else if (national_identity_type == 2) {
+            $("#id_national_identity_number").html("NICOP");
+            try { //not working in IE11
+              $("#id_national_identity_number").inputmask("999999-999999-9")
+            } catch (e) {}
+
+
+          } else if (national_identity_type == 3) {
+            $("#id_national_identity_number").html("POC");
+            try { //not working in IE11
+              $("#id_national_identity_number").inputmask(" 999999999")
+            } catch (e) {}
+
+          }
+          else if (national_identity_type == ''){
+            $("#id_national_identity_number").attr("disabled","disabled");
+          }
+
+          
+        }
+
+
+        $("#id_national_identity_type").change(function () {
+          $("#id_national_identity_number").removeAttr("disabled");
+          national_identity_masking();
+
+        });
+
+
+        /**
+         * this section is for Radio Button which is getting values according to their Application Type Types
+         * applicant_type
+         */
+
+        $(document).ready(function(){
+        $(".applicant_type").click(function(){
+            var applicant_type_id = $(this).attr("id");
+            var applicant_type_radio = $("#"+applicant_type_id+"_radio").val();
+            if(applicant_type_radio == "tenant" )
+            {
+              $("#ms_number_block").hide();
+              $("#ms_number").removeAttr("required");
+
+              $("#consumer_id_block").show();
+              $("#consumer_id").attr("required","true");
+            }
+            else
+            {
+              $("#ms_number_block").show();
+              $("#ms_number").attr("required", "true");
+            
+              $("#consumer_id_block").hide();
+              $("#consumer_id").removeAttr("required");
+            }
+
+        });
+         
+
+
+      });
+
+            document.getElementById('scrollable_terms')
+            .addEventListener('scroll', function(event) {
+            // console.log(document.getElementById('scrollable_terms').scrollTop);
+            });
+            
+      </script>
+      
+      
+
+
+      {% endblock js %}

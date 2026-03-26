@@ -1,0 +1,91 @@
+ 
+<!-- Centered modal -->
+<div class="modal fade" id="modal_forward_tag" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content border-none radius-0 border-t-4 brc-warning-m1 px-3">
+      <div class="modal-header py-2">
+        <i class="bgc-white far fa-comment-dots  mb-n4 mx-auto fa-3x text-orange-m2"></i>
+      </div>
+      <div class="modal-body text-center py-3">
+        <div class="card card-body bg-white border-gray-300" id="modal_forward_tag_body1">
+            <div class="card shadow-sm p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="font-small">
+                        <a href="#">
+                            <span class="fw-bold">Remarks By <b id="remarks_by_tag_id">Shahbaz Ahmed</b></span>
+                        </a>
+                        <span class="ms-2" id='remark_date_id'>March 26, 19:25</span> &nbsp;
+                        <span></span><i id="remark_color" class="fa fa-flag mx-2"
+                            style="color: #0000;"></i>
+                    </span>
+                    <div class="d-none d-sm-block">
+                        <span class="fas fa-mobile-alt" aria-label="phone" data-bs-toggle="tooltip"
+                            data-bs-placement="bottom" title=""
+                            data-original-title="Sent from the phone"
+                            data-bs-original-title="Sent from the phone"></span>
+                        <span data-testid="forward-chat" data-icon="forward-chat"
+                            class="r83rrh3w"><svg viewBox="0 0 25 25" width="25" height="25"
+                                class="">
+                                <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor"
+                                    d="M14.248 6.973a.688.688 0 0 1 1.174-.488l5.131 5.136a.687.687 0 0 1 0 .973l-5.131 5.136a.688.688 0 0 1-1.174-.488v-2.319c-4.326 0-7.495 1.235-9.85 3.914-.209.237-.596.036-.511-.268 1.215-4.391 4.181-8.492 10.361-9.376v-2.22z">
+                                </path>
+                            </svg></span>
+                    </div>
+                </div>
+                <p class="m-0" id='message_area'>
+                </p>
+            </div>
+        </div>
+        <div class="col-12 mt-4">
+            <div class="card border-light shadow-sm components-section">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-lg-12 col-sm-12">
+
+                            <div class="mb-4">
+                                <input type="hidden" id="comment_id" value="">
+                                <label class="my-1 me-2" for="UserList">User</label>
+                                <select name="tag_user" class="ace-select text-dark-m1 bgc-default-l5 bgc-h-warning-l3 brc-default-m3 brc-h-warning-m1" id="tag_user_id">
+                                    <option value="">&nbsp;</option>
+                                    <option value="AL">Alabama</option>
+                                    <option value="AK">Alaska</option>
+                                    <option value="AZ">Arizona</option>
+                           
+                                  </select>
+                            </div>
+                            <!-- Form -->
+                            <div class="my-4">
+                                <label for="textarea">Reply</label>
+                                <textarea class="form-control" placeholder="Enter your message..."
+                                    id="modal_comment_textarea_id" rows="4"></textarea>
+                            </div>
+                            <div class="my-4">
+                                <div class="file-field">
+                                    <div class="d-flex justify-content-xl-center ms-xl-3">
+                                        <div class="d-flex">
+                                            <span class="icon icon-md"><span
+                                                    class="fas fa-paperclip me-3"></span></span>
+                                            <input id="modal_comment_attachment_id" type="file">
+                                            <div class="d-md-block text-left">
+                                                <div class="fw-normal text-dark mb-1">Choose Image
+                                                </div>
+                                                <div class="text-gray small">JPG, GIF or PNG</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="modal_reply_submit_id"
+                                class="btn btn-sm px-3 btn-secondary ms-3"
+                                onclick="registerCommentReply()">Submit</button>
+
+                            <!-- End of Form -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
+</div>

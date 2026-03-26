@@ -1,0 +1,325 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n static bootstrap_admin_template_tags  %}
+{% load i18n static housing_society_template_tags  %}
+{% load i18n %}
+{% block title %}{% trans "Log in" %}{% endblock %}
+{% block content %}
+
+
+            <style>
+              .arrow {
+                  border: solid black;
+                  border-width: 0 3px 3px 0;
+                  display: inline-block;
+                  padding: 3px;
+                }
+
+                .right {
+                  transform: rotate(-45deg);
+                  -webkit-transform: rotate(-45deg);
+                }
+ 
+                .icon-image{
+                  width: 50px;
+                  height: auto;
+                }
+            </style>
+           
+
+            <div class="row flex-grow-1" id="row-1 ">
+                {% if form.errors %}
+                {% if form.errors or form.non_field_errors %}
+                <div class="alert d-flex bgc-red-l3 brc-success-m4 border-0 p-0" role="alert" style="width: 100%">
+                    <div class="bgc-red px-3 py-1 text-center radius-l-1">
+                        <span class="fa-2x text-black">
+                            ⚠ 
+                        </span>
+                    </div>
+
+                    <span class="ml-3 align-self-center text-dark-tp3 text-110">
+                        {% if form.errors and not form.non_field_errors %}
+                        <p>
+                            <strong>
+                                {% blocktrans count form.errors.items|length as counter %}Please correct the error
+                                below.{% plural %}Please correct the errors below.{% endblocktrans %}
+                            </strong>
+                        </p>
+                        {% endif %}
+
+                        {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                        <p>
+                             {{ error }}
+                        </p>
+                        {% endfor %}
+                        {% endif %}
+
+                        {% if form.errors %}
+                        {% for field in form %}
+                        {% for error in field.errors %}
+                        <p class="border-decoration">
+                            <strong><span class="glyphicon glyphicon-asterisk"></span> {{ field.label }}:
+                            </strong>{{ error|escape }}
+                        </p>
+                        {% endfor %}
+                        {% endfor %}
+                        {% endif %}
+                    </span>
+                </div>
+                {% endif %}
+                {% endif %}
+1111
+
+                <div class="col-12  d-lg-flex bgc-white shadow radius-1 overflow-hidden" >
+                    <!-- style="height: 650px;" -->
+                    <div class="row flex-grow-1" id="row-2" >
+                        <!-- Including Into Page from admin/includes/intro.html -->
+                        <div id="id-col-intro" class="col-lg-6   d-lg-flex border-r-1 brc-default-l3 px-0 "  >
+                            {% include 'client/includes/__intro.html' %}
+                        </div>
+
+                        <div id="id-col-main" class="col-12 bgc-white px-0 col-lg-6 mx-auto d-flex align-items-center justify-content-center">
+
+                          
+                            <!-- you can also use these tab links -->
+                            <ul class="d-none mt-n4 mb-4 nav nav-tabs nav-tabs-simple justify-content-end bgc-black-tp11" role="tablist">
+                              <li class="nav-item mx-2">
+                                <a class="nav-link active px-2" data-toggle="tab" href="#id-tab-login" role="tab" aria-controls="id-tab-login" aria-selected="true">
+                                  Login
+                                </a>
+                              </li>
+                              <li class="nav-item mx-2">
+                                <a class="nav-link px-2" data-toggle="tab" href="#id-tab-signup" role="tab" aria-controls="id-tab-signup" aria-selected="false">
+                                  Signup
+                                </a>
+                              </li>
+                            </ul>
+        
+        
+                            <div class="tab-content tab-sliding border-0 p-0" data-swipe="right">
+        
+                              <div class="tab-pane active show mh-100 px-3 px-lg-0 pb-3" id="id-tab-login">
+                                <!-- show this in desktop -->
+                                <div class="d-none d-lg-block col-md-6 offset-md-3 mt-lg-4 px-0">
+                                  <!-- <h4 class="text-dark-tp4 border-b-1 brc-secondary-l2 pb-1 text-130">
+                                    <i class="fa fa-coffee text-orange-m1 mr-1"></i>
+                                    Sign In to Continue
+                                  </h4> -->
+                                </div>
+        
+                                <!-- show this in mobile device -->
+                                <div class="d-lg-none text-secondary-m1 my-4 text-center">
+                                    <a href="{% url 'auth_login' %}">
+                                    <!-- <i class="fa fa-leaf text-success-m2 text-200 mb-4"></i> -->
+                                    <img class="text-200 mb-4" src="{% display_favicon %}" width="100">
+                                  </a>
+                                  <h1 class="text-170">
+                                    <span class="text-blue-d1">
+                                         <span class="text-80 text-dark-tp3">{{ society }}</span>
+                                    </span>
+                                  </h1>
+        
+                                  Welcome back
+                                </div>
+        
+        
+                                <form autocomplete="off" class="form-row mt-4" id="login_form" method="post" action="">
+                                    <div id="sms_otp_msg_box" class="form-group col-sm-12 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3" style="display:none">
+                                                    <div class="alert alert-collapse alert-success brc-success rounded border-2 d-inline-flex"
+                                                        role="alert">
+                                                        <span class="mr-4 d-inline-block" id="sms_otp_msg">
+                                                        </span>
+        
+                                                        <button type="button" class="close align-self-center ml-auto text-success text-150" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+
+                                                {% csrf_token %}
+                                                {{form.step}}
+                                                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                                                        <progress style="display:none;width: 100%;height: 1.1rem;text-align: center;color: white;background-image: green;-webkit-appearance: none;-moz-appearance: none;appearance: none;" value="0" max="120" id="progressBar"></progress>
+                                                    </div>
+                                 <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                                                    <div class="d-flex align-items-center input-floating-label text-blue brc-blue-m2">
+                                                        {{ form.username|add_class:'form-control form-control-lg pr-4 shadow-none'}}
+                                                        <i class="fa fa-user text-grey-m2 ml-n4"></i>
+                                                        {{ form.username|get_label:'floating-label text-grey ml-n3'}}
+                                                    </div>    
+                                                    <span class="alert-danger" data-validate-for="email-validator" id="email-validator">{{form.username.errors}}</span>
+                                                </div>
+                                                <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-2 mt-md-1">
+                                                    <div class="d-flex align-items-center input-floating-label text-blue brc-blue-m2 ">
+                                                        {{ form.password|add_class:'form-control form-control-lg pr-4 shadow-none' }}
+                                                        <i class="fa fa-key text-grey-m2 ml-n4"></i>
+                                                        {{ form.password|get_label:'floating-label text-grey ml-n3'}}
+                                                    </div>
+                                                    <span class="alert-danger" data-validate-for="password" id="password-validator" onchange="checkbutton()"></span>
+                                                </div>               
+        
+                                                <div id="sms_otp_box"
+                                                class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-2 mt-md-1"
+                                                style="display:none">
+                                                <div
+                                                    class="d-flex align-items-center input-floating-label text-blue brc-blue-m2 ">
+                                                    {{ form.sms_otp|add_class:'form-control form-control-lg pr-4 shadow-none' }}
+                                                    <i class="fa fa-key text-grey-m2 ml-n4"></i>
+                                                    <!-- {{ form.sms_otp|get_label:'floating-label text-grey ml-n3'}} -->
+                                                    <label class="floating-label text-grey ml-n3" for="id_sms_otp">SMS OTP</label>
+                                                </div>
+                                                <span class="alert-danger" data-validate-for="id_sms_otp">{{form.sms_otp.errors}}</span>
+                                            </div>
+                                            <div id="email_otp_box"
+                                            class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-2 mt-md-1"
+                                            style="display:none">
+                                            <div
+                                                class="d-flex align-items-center input-floating-label text-blue brc-blue-m2 ">
+                                                {{ form.email_otp|add_class:'form-control form-control-lg pr-4 shadow-none' }}
+                                                <i class="fa fa-key text-grey ml-n4"></i>
+                                                <!-- {{ form.email_otp|get_label:'floating-label text-grey ml-n3'}} -->
+                                                <label class="floating-label text-grey ml-n3" for="id_email_otp">Email OTP</label>
+                                            </div>
+                                            <span class="alert-danger" data-validate-for="id_email_otp">{{form.email_otp.errors}}</span>
+                                        </div>
+
+                                        <!-- <script src='https://www.google.com/recaptcha/api.js'></script>
+                                        <div class="g-recaptcha" data-sitekey="6LdvJSwgAAAAAFRsR7LGvc8cLcjBkXg2DSNp-Zlk" style="margin-left:25.5%;"></div> -->
+                                    <div class="form-group col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                                    <button id="otp_resend" type="button" onclick="OTP.resend();" style="display:none" class="btn bgc-blue text-white btn-block px-4 btn-bold mt-2 mb-4"
+                                                     value="{% trans 'Resend OTP' %}" />{% trans 'Resend OTP' %} </button>
+
+                                    <button id="login" type="button" onclick="OTP.login();"class="btn bgc-blue text-white btn-block px-4 btn-bold mt-2 mb-4"
+                                                     value="{% trans 'Log in' %}" />{% trans 'Log in' %} </button> 
+                                  </div>
+                                </form>
+
+
+                              <div class="d-flex mb-15 pos-rel" style=" justify-content: center; ">
+                                <div class="mt-2px">
+                                  <div class="d-flex">
+                                    <div class="border-1 radius-2 mx-1 brc-primary-l1 shadow-sm d-style overflow-hidden"><img alt="visa" src="{% static 'assets/image/visa.png' %}" width="50" class="d-zoom-2"></div>
+                                    <div class="border-1 radius-2 mx-1 brc-primary-l1 shadow-sm d-style overflow-hidden"><img alt="mastercard" src="{% static 'assets/image/mastercard.png' %}" class="d-zoom-2" width="50"></div>
+                                    <div class="border-1 radius-2 mx-1 brc-primary-l1 shadow-sm d-style overflow-hidden"><img alt="roshan_difital" src="{% static 'assets/image/roshan_difital.png' %}" class="d-zoom-2" width="50"></div>
+                                    <div class="border-1 radius-2 mx-1 brc-primary-l1 shadow-sm d-style overflow-hidden"><img alt="onelink" src="{% static 'assets/image/one.png' %}" width="50" class="d-zoom-2"></div>
+                                    <div class="border-1 radius-2 mx-1 brc-primary-l1 shadow-sm d-style overflow-hidden"><img alt="online payment" src="{% static 'assets/image/online payment.png' %}" class="d-zoom-2" width="50"></div>
+                                  </div>
+                                </div>
+                              </div>
+
+                                  <div class="form-row w-100">
+                                    <div class="col-lg-12 ">
+                                      <hr class="brc-default-l2 mt-0 mb-2 w-100">
+
+                                      <div class="p-0 px-md-2 text-dark-tp4 my-3">
+                                          <div class="alert fade show bgc-white brc-secondary-l2 rounded" role="alert" style="padding-left: 12%; padding-right:12%;">
+                                              <div class="position-tl h-102 border-l-4 brc-blue m-n1px rounded-left"></div>
+                                              <!-- the big blue line on left -->
+                                              <h5 class="alert-heading text-blue-m1 font-bolder">
+                                                <i class="fas fa-info-circle text-blue mr-1 mb-1"></i>
+                                                Note
+                                              </h5>
+                                              <span style="font-size: 15px; font-weight: 600; line-height: 2fr;">In case of delayed OTP or account creation help</span>
+                                              <span class="alert-link text-blue-m2">
+                                                Please call us on
+                                              </span>.
+                                              <p class="mt-3 mb-0">
+                                                <span class="text-primary font-bolder py-0 px-2">
+                                                  <i class="fa fa-phone fa-flip-horizontal mr-1"></i> +92-51-111-555-400 (Dial 4) 
+                                                </span>
+                                              </p><br>
+                                               <span style="font-size: 13px; font-weight: 550; line-height: 2fr;"><i class="arrow right"></i> &nbsp; If you are a DHAI-R Mobile App user, Please use same login/password.<br><i class="arrow right"></i> &nbsp; Only for DHAI-R valid members</span> 
+                                            </div>
+                                      </div>
+                                    </div>    
+                                </div>
+
+
+                                <footer class="footer d-none d-sm-block">
+                                    <div class="footer-inner bgc-white-tp1">
+                                      <div class="pt-3 border-none border-t-3 brc-grey-l2 border-double">
+                                        <span class="text-primary-m1 font-bolder text-120">App</span>
+                                        <span class="text-grey">Version 10.0.6</span>
+                                      </div>
+                                    </div><!-- .footer-inner -->
+                                  </footer>
+                                  
+                              </div>
+                              </div>
+                          
+                            </div><!-- .tab-content -->
+                </div><!-- /.row -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+
+
+  
+
+    
+        
+        {% endblock %}
+        {% block js %}
+
+
+        <script src="{% static 'assets/module/OTP.js' %}"></script>
+      
+        <script src="{% static 'assets/js/validation/jquery.js' %}"></script>
+        <script src="{% static 'assets/js/validation/parsley.js' %}"></script>
+
+
+        <script>
+       $(document).ready(function () {
+        // Email
+         $('#id_username').attr("data-parsley-type","email");
+         $('#id_username').attr("data-parsley-trigger","focusout");
+         $('#id_username').attr("data-parsley-errors-container","#email-validator");
+         $('#id_username').parsley();
+
+        //  Password
+         $('#id_password').attr("data-parsley-minlength",8)
+         $('#id_password').attr("data-parsley-required")
+         $('#id_password').attr("data-parsley-trigger","focusout")
+         $('#id_password').attr("data-parsley-errors-container","#password-validator")
+         $('#id_password').attr("data-parsley-uppercase","1")
+         $('#id_password').parsley()
+
+    });
+
+   
+       function enabledisable(uppercase_len){
+            var button  = document.getElementById('login')
+            if (uppercase_len == true){
+                button.disabled = false
+            }
+            else{
+                button.disabled = true
+            }
+       }
+
+        //    Password Upper Case Validator 
+        a = window.Parsley.addValidator('uppercase', {
+            requirementType: 'number',
+            validateString: function(value, requirement) {
+            var uppercases = value.match(/[A-Z]/g) || [];
+            enabledisable(uppercases.length >= requirement) // function for enabling and disabling Login Button 
+            return uppercases.length >= requirement;
+            },
+            messages: {
+            en: 'Your password must contain at least %s uppercase letter.'
+        },  
+    });
+
+         $('#id_password').attr("data-bs-toggle","tooltip")
+         $('#id_password').attr("data-placement","right")
+         $('#id_password').attr("title","Yourpassword123")
+         var pas = $('#password-validator');
+</script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+            $(document).ready(function(){
+                $('[data-bs-toggle="tooltip"]').tooltip();   
+            });
+            </script>
+
+            {% endblock js %}

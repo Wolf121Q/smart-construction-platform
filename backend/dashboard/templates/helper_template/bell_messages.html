@@ -1,0 +1,22 @@
+{% for comment in comments %}
+<hr class="my-1px brc-grey-l3">
+<a onclick="getNotificationTaskAction('{{comment.id}}')" href="javascript:void(0);" class="bell_notification_link d-flex mb-0 border-0 list-group-item list-group-item-action btn-h-lighter-secondary">
+  <div>
+    <icon class="fa fa-flag text-120" style = "color:{{comment.task_action.status.color}}"></icon>
+    <span class="text-primary-m1 font-bolder">{{comment.tag_from}}:</span>
+    {% if comment.tag_seen == False %}<span class="badge text-75 border-l-3 brc-black-tp8 bgc-info-d2 text-white" style="margin-left: 1.8in;">Unseen</span><br>
+    {% else %}<span class="badge text-75 border-l-3 brc-black-tp8 bgc-success-d2 text-white" style="margin-left: 1.8in;">Seen</span><br>{% endif %}
+
+    <span class="text-grey text-90">{{comment.description.html|safe}}</span>
+    <br>
+    <span class="text-grey-m1 text-85">
+      <i class="far fa-clock"></i>
+      {{comment.tag_time}}
+    </span>
+  </div>
+</a>
+{% endfor %}
+
+
+
+

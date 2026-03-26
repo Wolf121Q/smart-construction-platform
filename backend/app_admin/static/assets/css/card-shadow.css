@@ -1,0 +1,16 @@
+.shadow-card:hover{
+
+    /* box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; */
+    /* box-shadow: 0 45px 100px rgba(14, 21, 47, 0.4), 0 16px 40px rgba(14, 21, 47, 0.4); */
+    
+    transition: all 0.6s ease-out;
+    box-shadow: 0 8px 30px rgba(14, 21, 47, 0.6);
+    /* box-shadow: 0 45px 100px rgba(14, 21, 47, 0.4), 0 16px 40px rgba(14, 21, 47, 0.4); */
+    
+    }
+
+    .btn-light:hover {
+        color: #000;
+        background-color: #eaecf0;
+        border-color: #cbcdd1;
+      }

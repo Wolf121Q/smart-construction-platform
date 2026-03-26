@@ -1,0 +1,29 @@
+{% load i18n admin_urls static admin_list %}
+{% load i18n static project_template_tags %}
+
+
+<!-- default example -->
+<div class="modal fade" id="modal_organization_chart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-primary-d3" id="exampleModalLabel">
+            Select Member
+            </h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div id="modal_organization_chart_body" class="modal-body">
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary px-4" data-dismiss="modal">
+            Close
+            </button>
+        </div>
+        </div>
+    </div>
+    </div>

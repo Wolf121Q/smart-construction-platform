@@ -1,0 +1,40 @@
+
+<!-- this section is for Auth Screen Responsive Design Butttons when Auth screen open in mobile View then this action is Shown -->
+
+
+<footer class="d-lg-none footer footer-lg footer-fixed">
+    <div class="footer-inner" style="left: 1px;">
+      <div class="btn-group d-flex h-100 mx-2 border-x-1 border-t-2 brc-primary-m3 bgc-white-tp1 radius-t-1 shadow">
+        <button class="btn btn-outline-primary btn-h-lighter-primary btn-a-lighter-primary border-0 mr-0" title="Home">
+            <span class="pos-rel">
+              <a href="{% url 'auth_login' %}">
+                <i class="fa fa-home text-black text-120"></i>
+              </a>
+            </span>
+          </button>
+       
+
+        <button class="btn btn-outline-primary btn-h-lighter-primary btn-a-lighter-primary border-0" title="Login">
+            <a href="{% url 'auth_login' %}">
+
+                <i class="fa fa-sign-in-alt text-black text-120"></i>
+            </a>
+        </button>
+
+        <button class="btn btn-outline-primary btn-h-lighter-primary btn-a-lighter-primary border-0" title="Sign up">
+            <a href="{% url 'registration_register' %}">
+                <i class="fa fa-file-alt text-black text-120"></i>
+            </a>
+        </button>
+
+        <button class="btn btn-outline-primary btn-h-lighter-primary btn-a-lighter-primary border-0" title="Reset Password">
+            <a href="{% url 'auth_password_reset' %}">
+               <i class="fa fa-key text-black text-120"></i>
+            </a>
+        </button>
+
+
+        
+      </div>
+    </div>
+  </footer>

@@ -1,0 +1,106 @@
+{% load i18n admin_urls static admin_list %}
+{% load i18n static project_template_tags %}
+
+ <form id="changelist-form" {% if request.GET %} class="mt-4" {% else %} class="mt-4 d-none" {% endif %} action="" method="post" {% if cl.formset.is_multipart %}
+  enctype="multipart/form-data" {% endif %} novalidate>{% csrf_token %}
+  <div class="card dcard">
+    {% if action_form and actions_on_top and cl.full_result_count %}
+    <div class="card-header text-white border-0">
+      {% admin_actions %}
+    </div>
+    {% endif %}
+
+    {% if cl.date_hierarchy %}
+    {% block date_hierarchy %}
+    <div class="card-header text-white border-0">
+      {% date_hierarchy cl %}
+      {% endblock %}
+    </div>
+    {% endif %}
+
+    <div class="card-body p-0 border-x-1 border-b-1 brc-default-m4 radius-0 overflow-hidden">
+      <div id="content-main" class="bootstrap-table bootstrap4">
+        {% if cl.formset.errors %}
+        <div role="alert" class="errornote alert alert-warning fade in">
+          <button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span>
+            <span class="sr-only">{% trans "Close" %}</span></button>
+          {% blocktrans count cl.formset.total_error_count as counter %}Please correct the error
+          below.{% plural %}Please correct the errors below.{% endblocktrans %}
+          {{ cl.formset.non_form_errors }}
+        </div>
+        {% endif %}
+        <div class="table-responsive">
+          <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+            <div class="panel panel-default">
+              {% if cl.formset %}
+              <div>{{ cl.formset.management_form }}</div>
+              {% endif %}
+              {% block result_list %}
+              <!-- Notice -->
+              {% if cl.result_count > cl.list_per_page or actions_on_bottom and cl.full_result_count %}
+              <div class="alert text-white bgc-purple-d1 radius-0 border-0 text-105 py-3 pos-rel" id="obsn_notice">
+                <div class="position-tl h-100 w-100 bgc-green-tp3 opacity-3 border-none border-l-4 brc-black-tp7"></div>
+                <div class="pos-rel">
+                  <i class="fa fa-exclamation-circle text-125 mr-2"></i>
+                  Click on flag count to see
+                  <span class="border-none border-b-3 border-double brc-white">
+                    related obsns
+                  </span>
+                  <i class="far fa-hand-point-down text-130 ml-2 d-none d-lg-inline-block"></i>
+                  <i class="far fa-hand-point-down text-130 ml-2 d-lg-none rotate-n45"></i>
+                </div>
+              </div>
+              {% endif %}
+              <!-- End Notice -->
+              {% result_list cl %}
+              {% if cl.result_count > cl.list_per_page or actions_on_bottom and cl.full_result_count %}
+              <div class="panel-body actions-bottom">
+                <div class="row">
+                  {% if action_form and actions_on_bottom and cl.full_result_count %}
+                  <div class="col-sm-4">
+                    {% admin_actions %}
+                  </div>
+                  {% endif %}
+                  <div
+                    class="{% if action_form and actions_on_bottom and cl.full_result_count %}col-sm-8{% else %}col-sm-12{% endif %}">
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+              {% endblock %}
+              <div class="panel-footer" id="panel-footer">
+                <span class="info pull-left">
+                </span>
+                <div class="right-buttons">
+                  {% if cl.formset and cl.result_count %}
+                  <input type="submit" name="_save" class="save btn btn-primary btn-xs" value="{% trans 'Save' %}" />
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="float-left pagination-detail pt-4 px-4"><span class="pagination-info">
+              {{ cl.result_count }}
+              {% ifequal cl.result_count 1 %}
+              Record
+              <!-- {{ cl.opts.verbose_name }} -->
+              {% else %}
+              Records
+              <!-- {{ cl.opts.verbose_name_plural }} -->
+              {% endifequal %}
+            </div>
+            <div class="float-right pagination pt-4 px-4">
+              <ul class="pagination">
+                {% block pagination %}{% pagination cl %}{% endblock %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</form>
+
+ 

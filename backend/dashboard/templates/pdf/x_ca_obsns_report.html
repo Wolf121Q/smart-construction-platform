@@ -1,0 +1,197 @@
+{% load static %}
+{% load i18n static housing_society_template_tags  %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+
+<tbody>
+   <tr>
+     <td>
+       {% if project.project_taskaction_related.all %}
+       <table>
+         <thead>
+           <tr>
+               <th style="font-weight: 500;">SER</th>
+               <th style="font-weight: 500;">FLAG</th>
+               <td style="font-weight: 500;">OBSN</th>
+               <th style="font-weight: 500;">OBSN DATE</th>
+               <th style="font-weight: 500;">OBSN BY</th>
+               <th style="font-weight: 500;">TYPE OF WORK</th>                    
+           </tr>
+         </thead>
+         <tbody>
+           {% for task_action in project.project_taskaction_related.all %}
+           <tr>
+               <td >{{forloop.counter}}</td>
+               <td >{{task_action.status}}</i></td>
+               <td >{{task_action.description.html|safe}}</td>
+               <td >{{task_action.created_on}}</td>
+               <td >{{task_action.task}}</td>                  
+           </tr>
+           {% for attach in task_action.project_taskfile_related.all %}
+           <tr>
+               <td colspan="2">
+                 <table>
+                   <tr>
+                     <td>{{attach.task_action_comment.description.html|safe}}</td>
+                   </tr>
+                 </table>
+               </td> 
+               <td colspan="5">
+                 <img src= "{% get_attachment_base64 attach.attachment.path %}" width="400px" height="500"  />
+               </td>                 
+           </tr>
+           {% endfor %}
+           {% endfor %}
+         </tbody>
+       </table>
+       {% endif %}
+
+     </td>
+   </tr>
+ </tbody>
+
+
+
+<html>
+<html lang="en">
+   <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+       <title>{{ title|default:"" }}</title>
+       <style>
+    @font-face {font-family: MyRightToLeftFont; src: url('https://fonts.google.com/specimen/Markazi+Text')}
+      p { font-family: MyRightToLeftFont }
+    </style>
+    
+      <style>
+      .bb td{
+       border-bottom: 1px dotted black !important;
+       padding-bottom: 10px;
+      }
+
+          th{
+            padding-top:5px;
+            background-color: #87868C;
+            color:#fff;
+            font-size: 12px;
+            font-weight: bold;
+          }
+          td{
+            padding-top:5px;
+            padding-left:2px;
+            padding-right:1px;
+            font-size: 12px;
+
+          }
+          @page  {size: a4;
+
+               @frame header_frame {
+                    -pdf-frame-content: header_content;
+                    left: 70pt;
+                    width: 700pt;
+                    top: 10pt;
+                    height:120pt;
+                }
+                @frame content_frame {          /*Content Frame*/
+                    left: 70pt; width: 500pt; top: 140pt; height: 640pt;
+                }
+                @frame footer_frame {           /*Another static Frame*/
+                    -pdf-frame-content: footer_content;
+                    left: 70pt;
+                    width: 500pt;
+                    top: 780pt;
+                    height: 66pt;
+                }
+          }
+
+         /* @page { size: a5 landscape; margin: 50px;}*/
+
+    </style>
+   </head>
+   <body>
+
+      <!-- Content for Static Frame 'header_frame' -->
+      <div id="header_content">
+           <table>
+             <tr class="bb">
+                <td style="width:120px">
+                  <img src = "https://www.askarihousing.com/complaints/images/logo.png" width="150px" height="130px">
+               </td>
+                <td style="text-align:center;width:445px">
+                    <b style="font-size:20px;font-weight:500;color:green"><br>{{heading_title}}</b><br>
+                    <b style="font-size:12px;font-weight:500;color:green">{% if organization %} {{organization.name}} ({{organization.code}}){% endif %}</b><br>
+                    <b style="font-size:10px;font-weight:500;color:green">{% if organization %} {{organization.phone}}<br>{{organization.email}} | {{organization.website}}<br>{{organization.address_1}} {{organization.city.name}}, {{organization.country.name}}{% endif %}</b><br>
+                </td>
+                <td style="width:120px">
+                  <img src = "https://www.askarihousing.com/complaints/images/logo.png" width="150px" height="130px">
+               </td>
+             </tr>
+          </table>
+
+
+      </div>
+      <!-- Content for Static Frame 'footer_frame' -->
+      <div id="footer_content">
+             <table>
+                 <tr>
+                     <td style="text-align:left;width: 100px;">
+                         Page <pdf:pagenumber> of <pdf:pagecount>
+                     </td>
+                     <td style="text-align:center; vertical-align: baseline;">
+                      {{heading_title}} Generated by: {{request.user.getFullName |capfirst }}, 
+                      <br>
+                      {% now "d M Y H:i" %}
+                      <br>
+                      Powered by: www.claystone.pk
+                      <td style="text-align:right;width: 66px;">
+                        <img height="66" width="66" src="{{qrcode_path}}">
+                     </td>
+                 </tr>
+             </table>
+      </div>
+    
+   {% for project in projects %}
+      {% if project.project_taskaction_related.all %}
+      <table border="1" repeat="1" autosize="1" style="overflow: wrap" class = "bb">
+        <thead>
+           <tr>
+              <th colspan="20" style="font-weight: 500;font-size:16px">Obsns Detail For CA : {{project.code}}</th>
+           </tr>
+        </thead>
+        <tbody>
+        	   <tr>
+              <td colspan="1" style="font-weight: 500;">SER</td>
+              <td colspan="2" style="font-weight: 500;">FLAG</td>
+              <td colspan="4" style="font-weight: 500;">OBSN</td>
+              <td colspan="3" style="font-weight: 500;">OBSN DATE</td>
+              <td colspan="3" style="font-weight: 500;">CA</td>
+              <td colspan="3" style="font-weight: 500;">CONTR</td>
+              <td colspan="4" style="font-weight: 500;">TYPE OF WORK</td>
+            </tr>
+            {% for task_action in project.project_taskaction_related.all %}
+            <tr>
+              <td colspan="1">{{forloop.counter}}</td>
+              <td colspan="2">{{task_action.status}}</i></td>
+              <td colspan="4">{{task_action.description.html|safe}}</td>
+              <td colspan="3">{{task_action.created_on}}</td>
+              <td colspan="3">{{task_action.project.code}}</td>
+              <td colspan="3">{{task_action.project.contractor_name}}</td>
+              <td colspan="4">{{task_action.task}}</td>
+            </tr>
+            <h1 style="color:green;font-weight: 500;font-size: 18px;">Attachment For Task: {{task_action.task}} of CA: {{task_action.project.code}}</h1>
+            {% for attach in task_action.project_taskfile_related.all %}
+               <div style="margin-left: 120px;"><img src= "{% get_attachment_base64 attach.attachment.path %}" width="500px" height="500px"/></div>
+               <hr class="dashed">
+            {% endfor %}
+           {% endfor %}
+        </tbody>
+     </table>
+     <hr class="dashed">
+     {% endif %}
+     {% endfor %}
+
+
+      </body>
+</html>
+

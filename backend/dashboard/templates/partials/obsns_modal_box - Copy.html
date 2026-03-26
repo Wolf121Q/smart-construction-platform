@@ -1,0 +1,108 @@
+{% load i18n admin_urls static admin_list %}
+{% load i18n static project_template_tags %}
+{% load i18n static housing_society_template_tags  %}
+
+<style>
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 150px) and (max-device-width : 480px) {
+  .card_heading_text{
+        font-size: 5vmin;
+        font-weight: 600;
+        font-weight: 600;
+       }
+
+  .heading_info_text{
+      font-size: 3vmin;
+      }
+
+  .thead_text{
+        font-size: 3vmin;
+        font-weight: 600 !important;
+       }
+
+
+  .rounded_box_text{ 
+    width: 37px;
+    height: 37px;
+    }
+    .tbody_text{
+        font-size: 3vmin;
+        }
+    }
+</style>
+
+<!-- Obsns Mk Timeline -->
+<div class="modal fade" id="obsns_mk_timeline_modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px;">
+    <div class="modal-content border-none radius-0 border-t-4 brc-warning-m1 px-3">
+      <div class="modal-body text-center">
+            <div class="table-responsive-md">
+              <table class="table table-bordered border-0 table-striped-secondary text-dark-m1 mb-0">
+                <thead class="thead_text">
+                  <tr class="text-white brc-black-tp10" style="background-color: #9d2f3b;">
+                    <th colspan="4">
+                        <div class="row d-flex align-items-center justify-content-center">
+                          <div class="img1 col-lg-12 col-md-6 col-sm-12 text-center">
+                            <img src="{% display_obsns_modal_logo %}" alt="" style="width: 60px;">
+                            <!-- <img src="{% static 'assets/image/Pakistan_Army.png' %}" alt="" style="width: 60px;"> -->
+                          </div>
+                          <div class="col-12 text-100 text-center card_heading_text">                        
+                            <b>VISIBILTY  CHECK</b><br>
+                            <small class="tbody_text">(Observation Mk Timeline)</small>
+                          </div>
+                          <!-- <div class="img2 col-lg-2 col-md-6 col-sm-12  text-center" >
+                            <img src="{% display_obsns_modal_logo %}" alt="" style="width: 65px;">
+                          </div> -->
+                      </div>
+                    </th>
+                  </tr>
+                  <tr class="text-white brc-black-tp10 text-90 text-left" style="background-color: #9d2f3b;">
+                    <th>Nature of Observation</th>
+                    <th>Colour Code</th>
+                    <th>Mark Upto</th>
+                    <th>Timeline</th>
+                  </tr>
+                </thead>
+
+                <tbody class="tbody_text">
+                  <tr class="text-90 text-left">
+                    <td>Critical Observation</td>
+                    <td class="text-110"><i class="fa fa-flag" aria-hidden="true" style="color: red;"></i></td>
+                    <td>DG</td>
+                    <td>AG (After 1 week)</td>
+                  </tr>
+                  <tr class="text-90 text-left">
+                    <td>Major Observation</td>
+                    <td class="text-110"><i class="fa fa-flag" aria-hidden="true" style="color: rgb(255, 128, 0);"></i></td>
+                    <td>Dir (W)</td>
+                    <td>DGH (After 1 week)</td>
+                  </tr>
+                  <tr class="text-90 text-left">
+                    <td>Minor Observation</td>
+                    <td class="text-110"><i class="fa fa-flag" aria-hidden="true" style="color: yellow;"></i></td>
+                    <td>PDH</td>
+                    <td>Dir (W) (After 1 week)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+         </div>
+      <div class="modal-footer flex-nowrap bgc-white justify-content-between px-0 py-3">
+      
+          <!-- <span  class="px-4 px-2 px-md-4 text-dark-m1">
+            <p>
+              <small class="tbody_text">* Sensitivity / Visibility matrix of various obsns are as under</small>
+            </p>
+          </span> -->
+ 
+
+        <button type="button" class="btn px-4 px-2 px-md-4 btn-light-danger btn-h-light-danger btn-a-light-danger tbody_text" data-dismiss="modal">
+          Close
+          <i class="fa fa-times ml-1"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+ 

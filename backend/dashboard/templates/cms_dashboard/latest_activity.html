@@ -1,0 +1,76 @@
+{% load i18n admin_urls static admin_list %}
+{% load i18n static bootstrap_admin_template_tags %}
+{% load i18n static project_template_tags %}
+
+
+  <!-- User Login Status/ History code start -->
+ 
+  <div class="row mb-5 mt-3">
+    <div class="col-12 col-lg-6 mt-2 mt-lg-0 pr-lg-2">
+      <div class="bcard card pt-1 pt-lg-2 h-100 shadow bg-white rounded">
+        <div class="card-header bg-transparent brc-default-l3">
+          <h5 class="card-title text-dark-m2 pl-1 text-100">
+            Last Logins
+          </h5>
+
+        </div>
+        <div class="card-body p-3 border-0">
+          <div class="flex-grow-1">
+            {% for user in last_five_logged_in_users %}
+            <div class="mb-4 text-grey-m1 text-90">
+              <div class="d-flex align-items-start">
+                <div class="w-5 h-5 text-center pt-2 radius-round mr-2px bgc-purple-tp1 text-white">
+                  {{user|getNameAvatar}}
+                </div>
+
+                <div class="mx-2">
+                  <div class="font-bolder text-dark-tp2">
+                    ({{user.type.name}}) {{user.full_name}}
+                  </div>
+                </div>
+
+                <span class="text-90 text-dark-l3 ml-auto text-nowrap">
+                    {{user.last_login}} 
+                  </span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6 mt-2 mt-lg-0 pr-lg-2">
+      <div class="bcard card pt-1 pt-lg-2 h-100 shadow bg-white rounded">
+        <div class="card-header bg-transparent brc-default-l3">
+          <h5 class="card-title text-dark-m2 pl-1 text-100">
+            Last Logouts
+          </h5>
+        </div>
+
+        <div class="card-body p-3 border-0">
+          <div class="flex-grow-1">
+            {% for user in last_five_logged_out_users %}
+            <div class="mb-4 text-grey-m1 text-90">
+              <div class="d-flex align-items-start">
+                <div class="w-5 h-5 text-center pt-2 radius-round mr-2px bgc-purple-tp1 text-white">
+                  {{user|getNameAvatar}}
+                </div>
+                <div class="mx-2">
+                  <div class="font-bolder text-dark-tp2">
+                    ({{user.type.name}}) {{user.full_name}}
+                  </div>
+                </div>
+
+                <span class="text-90 text-dark-l3 ml-auto text-nowrap">
+                    {{user.last_logout}}
+                  </span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- User Login Status/ History code end -->

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/cards_css.css' %}">
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="container"> 
+  <ul class="cards">
+    <li class="card">
+      <div>
+        <div class=" ">
+          <h3 class="card-title">By Flag Type</h3>
+        </div>
+        <div class="card-content">
+          <a href="" class="badge">All</a><br><br>
+          <p><a><span class="" style="float: left;">Material</span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+          <p><a><span class="" style="float: left;">Site</span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+        </div>
+      </div>
+    </li>
+    <li class="card">
+      <div>
+        <h3 class="card-title">By Region</h3>
+        <div class="card-content">
+          <a href="" class="badge">All</a><br><br>
+          <p><a><span class="" style="float: left;">South</span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+          <p><a><span class="" style="float: left;">North</span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+        </div>
+      </div>
+    </li>
+    <li class="card">
+      <div class="card-link-wrapper">
+        <span style="float: right;"><button class="card-link summ_btn">Summary</button></span>
+        <h3 class="card-title">By City</h3> 
+        <div class="card-content">
+          <a href="" class="badge">All</a><br><br>
+          <p><a><span class="" style="float: left;">Rawalpindi</span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+          <p><a><span class="" style="float: left;">Islamabad</span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+          <p><a><span class="" style="float: left;">Karachi</span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+        </div>
+      </div>
+    </li>
+    <li class="card">
+      <div class="card-link-wrapper">
+        <a href=""><span style="float: right;"><button class="card-link summ_btn">Summary</button></span></a>
+        <h3 class="card-title">By Material Flags</h3> 
+        <div class="card-content">
+           <a href="" class="badge">All</a><br><br>
+           <p><a><span class="" style="float: left;"><i class="fa fa-flag" aria-hidden="true"></i></span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+           <p><a><span class="" style="float: left;"><i class="fa fa-flag" aria-hidden="true"></i></span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+           <p><a><span class="" style="float: left;"><i class="fa fa-flag" aria-hidden="true"></i></span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+           <p><a><span class="" style="float: left;"><i class="fa fa-flag" aria-hidden="true"></i></span> <span class="w3-badge w3-green" style="float: right;">6</span></a></p><br>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+<!-- partial -->
+<br><br>
+<script>
+  setActiveTab = (e) => {
+    e.preventDefault();
+    console.log(e.target);
+}
+</script>
+</body>
+</html>

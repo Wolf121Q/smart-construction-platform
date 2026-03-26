@@ -1,0 +1,39 @@
+{% load i18n admin_urls %}
+
+<div class="submit-row">
+  {% if show_save %}
+    <button type="submit" title="{% trans 'Save' %}" class="btn px-4 btn-outline-success mb-1" name="_save">
+      <span class="fa fa-save text-140 align-text-bottom mr-1"></span>
+      {% trans 'Save' %}
+    </button>
+  {% endif %}
+
+  {% if show_save_as_new %}
+    <button type="submit" class="btn px-4 btn-outline-info mb-1" title="{% trans 'Save as new' %}" name="_saveasnew">
+      <span class="fa fa-plus text-140 align-text-bottom mr-1"></span>
+      {% trans 'Save as new' %}
+    </button>
+  {%endif%}
+
+  {% if show_save_and_add_another %}
+    <button type="submit" class="btn px-4 btn-outline-info mb-1" title="{% trans 'Save and add another' %}" name="_addanother">
+      <span class="fa fa-plus text-140 align-text-bottom mr-1"></span>
+      {% trans 'Save and add another' %}
+    </button>
+  {% endif %}
+
+  {% if show_save_and_continue %}
+    <button type="submit" class="btn px-4 btn-outline-secondary mb-1" title="{% trans 'Save and continue editing' %}" name="_continue">
+      <span class="fa fa-edit text-140 align-text-bottom mr-1"></span>
+      {% trans 'Save and continue editing' %}
+    </button>
+  {% endif %}
+
+  {% if show_delete_link %}
+    {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
+    <a title="{% trans "Delete" %}" class="btn px-4 btn-outline-danger mb-1 deletelink" href="{% add_preserved_filters delete_url %}">
+      <span class="far fa-trash-alt text-140 align-text-bottom mr-1"></span>
+      {% trans "Delete" %}
+    </a>
+  {% endif %}
+</div>

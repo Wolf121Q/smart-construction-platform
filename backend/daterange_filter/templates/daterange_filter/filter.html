@@ -1,0 +1,76 @@
+{% load i18n static %}
+<div class="card-header bgc-primary-d1">
+    <h5 class="card-title text-white">
+        <i class="fa fa-filter mr-2px"></i>
+        {% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}
+    </h5>
+</div>
+<style>
+    .calendarbox,
+    .clockbox {
+        /* Make sure the calendar widget popover displays in front of the sidebar */
+        z-index: 1100;
+        margin-left: -16em !important;
+        margin-top: 9em !important;
+    }
+
+    .datetimeshortcuts {
+        /* Hide "|" symbol */
+        font-size: 0;
+    }
+
+    .datetimeshortcuts a:before {
+        /* Restore deleted spaces */
+        content: " ";
+    }
+
+    .datetimeshortcuts a {
+        /* Make text for "Today" a bit smaller so it appears on one line. */
+        font-size: 7pt;
+    }
+
+    #changelist-filter a {
+        display: inline;
+    }
+</style>
+
+<script>
+    // reset button after submitting dates does not work, so 
+    // here is the solution which implements the fix.
+    django.jQuery(document).ready(function () {
+        django.jQuery("#resetBtn").click(function () {
+            var gte = django.jQuery("input[id^=id_drf__][id$=gte]")[0].defaultValue = "";
+            var lte = django.jQuery("input[id^=id_drf__][id$=lte]")[0].defaultValue = "";
+        });
+
+        django.jQuery("#date-range-filter").submit(function (event) {
+            var field1 = $("#id_drf__created_on__gte").val();
+            var field2 = $("#id_drf__created_on__lte").val();
+            if (!field1 || !field2) {
+                alert("{% trans 'Please fill both fields first' %}");
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+
+<div class="card border-0 shadow-sm radius-0 mt-2" id="card-2">
+    <div class="card-body bgc-transparent p-0 border-1 brc-primary-m3 border-t-0">
+        {% with choices.0 as i %}
+        <form id="date-range-filter" method="GET" action="" class="ml-2">
+            {{ spec.form.media }}
+            {{ spec.form.as_p }}
+            <p class="submit-row">
+                {#create hidden inputs to preserve values from other filters and search field#}
+                {% for k, v in i.get_query.items %}
+                <input type="hidden" name="{{ k }}" value="{{ v }}">
+                {% endfor %}
+                <input class="d-style btn btn-lighter-success btn-bgc-tp shadow-sm text-600 letter-spacing px-4 mb-1"
+                    type="submit" value="{% trans "Search" %}">
+                <input class="d-style btn btn-lighter-success btn-bgc-tp shadow-sm text-600 letter-spacing px-4 mb-1"
+                    type="reset" id="resetBtn" value="{% trans "Clear" %}">
+            </p>
+        </form>
+        {% endwith %}
+    </div><!-- /.card-body -->
+</div>

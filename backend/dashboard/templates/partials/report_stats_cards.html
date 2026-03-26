@@ -1,0 +1,99 @@
+<style>
+  .text-end{
+    text-align: end !important;
+  }
+</style>
+
+<div class="row">
+  <div class="col-sm-3 col-md-3 col-lg-3">
+    <figure class="highcharts-figure">
+      <div id="project-zone"></div> 
+  </figure>
+  </div>
+  <div class="col-sm-3 col-md-3 col-lg-3 mb-2">
+    <h5 class="text-center text-white text-right font-weight-bold text-100 heading-text-info pt-3" style=" background: linear-gradient(to left, #05e388, #0f3443); height: 50px; padding-top: 10px;">
+      Project Zones</h5>
+      <div class="radius-1 table-responsive table-height-scroll">
+      <table class="table table-striped-primary table-borderless text-dark-m1 mb-0 table-height" id="responsive-table">
+      <thead>
+        <tr class="bgc-primary-d2 text-white">
+          <th class="text-100 main-text-info ">Zone</th>
+          <th class="text-100 main-text-info text-end">Projects</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr class="text-black text-95 text-left">
+          <td class="text-danger-m2 text-95 table_body_text total-text-info pl-2"><b>Total</b></td>
+          <td class="text-95 table_body_text total-text-info text-end"> <a href="javascript:void(0);" class="text-danger-d2"><b> {{region_counts_total}}</b></td>
+        </tr>
+      </tfoot>
+      <tbody class="bgc-success-d2 data-text-info">
+        {% for data in region_counts %}
+        <tr>
+          <td class="text-95 "><span class="bt-content text-95">
+            <a class="text-black table_body_text" href="/dashboard/report/?region_id={{data.id}}">
+              {{data.region_name}}
+            </a>
+          </span></td>
+          <td class="text-95 text-end"><span class="bt-content text-95">
+            <a href="/dashboard/report/?region_id={{data.id}}" class="text-black table_body_text region_filter_link">
+              {{data.region_count}}
+            </a></span>
+          </td>
+        </tr>
+        {% endfor %}
+        <tr class="text-left">
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>      
+  </div>
+ 
+  
+    <div class="col-sm-3 col-md-3 col-lg-3 mb-2">
+      <h5 class="text-center text-white font-weight-bold text-100 heading-text-info pt-3" style="background: linear-gradient(to right, #1f1c2c, #928dab);  height: 50px; padding-top: 10px;">
+        Project Stations</h5>
+        <div class="radius-1 table-responsive table-height-scroll">
+        <table class="table table-striped-primary table-borderless text-dark-m1 mb-0 table-height" id="responsive-table">
+        <thead>
+          <tr class="bgc-primary-d2 text-white">
+            <th class="text-100 main-text-info">Station</th>
+            <th class="text-100 main-text-info text-end">Projects</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr class="text-black text-left text-95">
+            <td class="text-danger-m2 text-95 table_body_text total-text-info pl-2"><b>Total</b></td>
+            <td class="text-95 table_body_text total-text-info text-end"> <a href="javascript:void(0);" class="text-danger-d2"><b> {{city_counts_total}}</b></td>
+          </tr>
+        </tfoot>
+        <tbody class="bgc-primary-d2 data-text-info">
+          {% for data in cities_counts %}
+          <tr> 
+            <td class="text-95"><span class="bt-content text-90">
+                <a class="text-black table_body_text"
+                href="/dashboard/report/?city_id={{data.id}}">
+                {{data.city_name}}
+              </a></span>
+            </td>
+            <td  class="text-95 text-end">
+              <span class="bt-content"> 
+                <a class="text-black table_body_text city_filter_link"
+                href="/dashboard/report/?city_id={{data.id}}">{{data.city_count}}</a>
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>  
+      </div>
+    </div>
+
+    <div class="col-sm-3 col-md-3 col-lg-3">
+      <figure class="highcharts-figure">
+        <div id="project-station"></div> 
+    </figure>
+    </div>
+  </div>

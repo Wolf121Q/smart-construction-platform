@@ -1,0 +1,104 @@
+{% load i18n static bootstrap_admin_template_tags  %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+    <title>
+        Welcome to {% block title %}{% endblock %}
+    </title>
+    {% csrf_token %}
+    {% include 'includes/stylesheets.html' %}
+
+    {% block app_admin_css %}
+    {% endblock app_admin_css %}
+    <!-- Specific CSS goes HERE -->
+    {% block stylesheets %}{% endblock stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static 'admin/css/base.css' %}{% endblock %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/datetime_widget.css' %}" />
+    {% block extrastyle %}{% endblock %}
+
+    {% if LANGUAGE_BIDI %}
+        {# PUT HERE YOUR CUSTOM RTL STYLESHEET #}
+        {% comment %}
+        <link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />
+        {% endcomment %}
+    {% endif %}
+
+    {% block jquery %}
+        <script type="text/javascript" src="{% static "admin/js/vendor/jquery/jquery.js" %}"></script>
+        <script type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
+    {% endblock jquery %}
+
+        <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
+        <script type="text/javascript">window.__admin_utc_offset__ = "{% filter escapejs %}{% now "Z" %}{% endfilter %}";</script>
+
+    {% block extrahead %}{% endblock %}
+    {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+
+</head>
+{% load i18n %}
+{% display_sidebar_menu cl.has_filters as is_displaying_menu %}
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}{% if not is_displaying_menu %} no-sidebar{% endif %}" data-admin-utc-offset="{% now "Z" %}">
+    <div class="body-container">
+      
+        {% block content_container %} 
+        <!-- Top Bar -->
+        {% include 'includes/navigation.html' %}
+        <div class="main-container bgc-white">
+            <!-- SideBar -->
+            {% include 'includes/sidebar.html' %}
+            <!-- Main Content -->
+            <div class="main-content">
+              <div class="row">
+                <div class="col-xl-12">
+                    {% block breadcrumbs %}
+                      <ol class="breadcrumb">
+                        <li class="home">
+                          <a href="{% url 'admin:index' %}" title="{% trans 'Home' %}"><span class="glyphicon glyphicon-home"></span></a>
+                        </li>
+                        <li class="active">{% if title %}{{ title }}{% endif %}</li>
+                      </ol>
+                    {% endblock %}
+                </div>
+              </div>
+              <!-- Page Content -->
+              <div class="page-content">
+                <div class="card acard">
+                  <div class="card-body">
+
+
+
+                      {% block messages %}
+                        {% if messages %}
+                            {% for message in messages %}
+                              <div role="alert" class="messagelist alert alert-{% if message.tags == 'info' %}success{% else %}{{ message.tags }}{% endif %} fade in">
+                                <button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">{% trans "Close" %}</span></button>
+                                {{ message|capfirst }}
+                              </div>
+                            {% endfor %}
+                        {% endif %}
+                      {% endblock messages %}
+
+
+                      {% block content %}
+                        {% block object-tools %}{% endblock %}
+                        {{ content }}
+                      {% endblock %}
+                   </div>
+                </div>
+               </div>
+            </div>
+        </div>
+        {% endblock content_container %}
+    </div>
+    {% include 'includes/scripts.html' %}
+    {% block app_admin_js %}
+      <script>if (typeof jQuery === 'undefined' && django && django.jQuery) {jQuery = django.jQuery;}</script>
+    {% endblock app_admin_js %}
+
+    {% block js %}{% endblock js %}
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}{% endblock javascripts %}
+
+</body>
+</html>

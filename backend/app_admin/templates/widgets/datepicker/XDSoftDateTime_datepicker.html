@@ -1,0 +1,34 @@
+{% load i18n %}
+
+{% include "django/forms/widgets/input.html" %}
+{% get_current_language as LANGUAGE_CODE %}
+
+  <script>
+    (function ($) {
+      $(document).ready(function(){
+
+    const DATE_PICKER_OPTIONS = {
+      'en-us': {
+        format: 'yyyy-mm-dd',
+        language: ''
+      },
+      'es': {
+        format: 'dd/mm/yyyy',
+        language: 'es-ES'
+      }
+    };
+    let options = DATE_PICKER_OPTIONS['{{ LANGUAGE_CODE }}'];
+    
+/*    $("input[name='{{ widget.name }}']").datepicker({
+      format: options.format,
+      language: options.language
+    });*/
+
+    $(function () {
+      $("#id_{{ widget.name }}").datetimepicker({timepicker:false,format:'Y-m-d'});
+    });
+
+      });
+    })(django.jQuery);
+
+  </script>

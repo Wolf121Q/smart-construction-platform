@@ -1,0 +1,194 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_modify %}
+{% load i18n static project_template_tags %}
+
+
+{% block content %}
+
+
+<!-- 8/29/2022 -->
+
+<div class="row">
+    <div class="col">
+        <div class="card card-clean shadow position-relative">
+            <div class="card-body">
+                <h4 style="text-align: center;">
+                    {% if add %}
+                    {% blocktrans with name=opts.verbose_name %}Add {{ name }}{% endblocktrans %}
+                    {% else %}
+                    {{ original|truncatewords:"18" }}
+                    {% endif %}
+                </h4>
+
+            </div> 
+        </div>
+    </div>    
+</div>
+
+<p>&copy; 2023 Your Company Name. All rights reserved.</p>
+</footer>
+
+<link type="text/css" href="{% static 'dashboard/charts/css/pdh_dashboard.css' %}" rel="stylesheet">
+<div class="row justify-content-center mt-4">
+    <div class="col-12 col-xl-12">
+        <div class="card shadow-sm border-light p-4 p-md-0 position-relative">
+       
+            <!-- START CARD -->
+            <div class="col-12 col-lg-12">
+                <div class="bcard card h-100 pt-1 pt-lg-2">
+
+                  <div class="card-header border-0">
+                    <h5 class="card-title text-dark-m2 pl-1 text-110">
+                        Physical Progress Planned Vs Actual Activites
+                    </h5>
+                  </div>
+
+                  <div class="card-body p-0">
+                    <div class="table-responsive-md">
+                      <table class="table table-border-x brc-secondary-l3 mb-0">
+                        <thead>
+                          <tr class="text-80 text-default-d3 bgc-default-l4">
+                            <th class="pl-2 pl-lg-4">
+                              TASK
+                            </th>
+
+                            <th>
+                              PROGRESS PLANNED
+                            </th>
+
+                            <th>
+                              PROGRESS ACTUAL
+                            </th>
+
+                            <th>
+                              INSPECTION FLAGS
+                            </th>
+                            
+                            <th>
+                              MATERIAL FLAGS
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for task in tasks %}
+                            <tr class="bgc-h-secondary-l4">
+                            <td class="pl-2 pl-lg-4">
+                              <a class="text-black" href="{% url 'admin:dashboard_projectdirectorhousing_change' original.id %}?task_id={{task.id}}">{{task}}</a>
+                            </td>
+                            
+                            <td class=" text-dark-m2 text-85">
+                              {% if task.progress_planned %}{{task.progress_planned|floatformat}}{% else %} 0 {% endif%}% 
+                            </td>
+                            
+                            <td class=" text-dark-m2 text-85">
+                              {% if task.progress_actual %} {{task.progress_actual|floatformat}} {% else %} 0 {% endif%}% 
+                            </td>
+
+                            <td class="text-dark-m2 text-85">
+                              <span class="text-95">{{task|inspection_flag_per_task}}</span>
+                            </td>
+
+                            <td class=" text-dark-m2 text-85">
+                              {{task|material_flag_per_task}}
+                            </td>
+
+                          </tr>
+                          {% endfor %}
+                       
+                        </tbody>
+                      </table>
+                    </div><!-- /.table-responsive-md -->
+
+                  </div><!-- /.card-body -->
+                </div>
+            </div>
+            <!-- END CARD -->
+            
+          <hr>
+
+            <!-- START CARD -->
+            {% if task_actions %}
+            <div class="col-12 col-lg-12 mt-2">
+                <div class="bcard card h-100 pt-1 pt-lg-2">
+
+                  <div class="card-header border-0">
+                    <h5 class="card-title text-dark-m2 pl-1 text-110">
+                        Obsns Detail
+                    </h5>
+                  </div>
+
+                  <div class="card-body p-0">
+                    <div class="table-responsive-md">
+                      <table class="table table-border-x brc-secondary-l3 mb-0">
+                        <thead>
+                          <tr class="text-80 text-default-d3 bgc-default-l4">
+                            <th class="pl-2 pl-lg-4">
+                              FLAG
+                            </th>
+
+                            <th>
+                              OBSN
+                            </th>
+
+                            <th>
+                              OBSN DATE
+                            </th>
+
+                            <th>
+                              STATUS
+                            </th>
+                            
+                            <th>
+                              PROGRESS PLANNED
+                            </th>
+
+                            <th>
+                              PROGRESS ACTUAL
+                            </th>
+                          </tr>
+                        </thead>
+
+
+                        <tbody>
+                            {% for task_action in task_actions %}
+                            <tr class="bgc-h-secondary-l4">
+                            <td class="pl-2 pl-lg-4">
+                              <icon class="fa fa-flag text-180" style="color: {{task_action.status.color}};"></icon>
+                            </td>
+                            <td class="text-dark-m2 text-85">
+                              <span class="text-95">{{task_action.description.html|safe}}</span>
+                            </td>
+                            <td class=" text-dark-m2 text-85">
+                              {{task_action.created_on.date}}
+                            </td>
+                            <td class=" text-dark-m2 text-85">
+                                {{task_action.status}}
+                            </td>
+                            <td class=" text-dark-m2 text-85">
+                                {{task_action.progress_planned|floatformat}}%
+                            </td>
+                            <td class=" text-dark-m2 text-85">
+                                {{task_action.progress_actual|floatformat}}%
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div><!-- /.table-responsive-md -->
+                  </div><!-- /.card-body -->
+                </div>
+            </div>
+            {% endif %}
+            <!-- END CARD -->
+{% endblock %}
+
+            
+
+
+
+
+
+
+
+

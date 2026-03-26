@@ -1,0 +1,129 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrahead %}{{ block.super }}
+<script src="{% url 'admin:jsi18n' %}"></script>
+{{ media }}
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+    <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+	    <ul class="breadcrumb">
+	      <li>
+	        <i class="ace-icon fa fa-home home-icon"></i>
+	        <a href="{% url 'admin:index' %}" title="{% trans 'Home' %}">Home</a>
+	      </li>
+	      <li>
+	        <a href="{% url 'admin:app_list' app_label=opts.app_label %}">
+	          {{ opts.app_config.verbose_name }}
+	        </a>
+	      </li>
+	      <li>
+	        {% if has_view_permission %}
+	          <a href="{% url opts|admin_urlname:'changelist' %}">
+	            {{ opts.verbose_name_plural|capfirst }}
+	          </a>
+	        {% else  %}
+	            {{ opts.verbose_name_plural|capfirst }}
+	        {% endif %}
+	      </li>
+	      <li class="active">
+	        {% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
+	      </li>
+	    </ul><!-- /.breadcrumb -->
+  </div>
+{% endblock %}
+{% endif %}
+
+{% block content %}<div id="content-main">
+{% block object-tools %}
+{% if change %}{% if not is_popup %}
+  <ul class="object-tools">
+    {% block object-tools-items %}
+      {% change_form_object_tools %}
+    {% endblock %}
+  </ul>
+{% endif %}{% endif %}
+{% endblock %}
+<form {% if has_file_field %}enctype="multipart/form-data" {% endif %}{% if form_url %}action="{{ form_url }}" {% endif %}method="post" id="{{ opts.model_name }}_form" novalidate>{% csrf_token %}{% block form_top %}{% endblock %}
+<div>
+{% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1">{% endif %}
+{% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}">{% endif %}
+{% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+{% if errors %}
+    <p class="errornote">
+    {% if errors|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
+    </p>
+    {{ adminform.form.non_field_errors }}
+{% endif %}
+
+
+  	{% if django_tabbed_changeform_admin_tabs %}
+  	<div class="django-tabbed-changeform-admin-tabs">
+      <ul class="nav nav-justified nav-tabs nav-tabs-simple nav-tabs-static nav-tabs-faded flex-nowrap radius-0 px-2 pt-2 nav-tabs-scroll is-scrollable border-b-2 brc-purple-d2" role="tablist">
+        {% for tab in django_tabbed_changeform_admin_tabs %}
+        <li class="nav-item mr-1 {% if forloop.first %} active {% endif %}" >
+          <a class="btn btn-light-lightgrey btn-h-light-purple btn-h-text-black btn-a-purple py-2 border-1 border-b-0 radius-b-0 radius-t-2 {% if forloop.first %} active {% endif %}" id="django-tabbed-changeform-admin-tab-{{forloop.counter}}-tab-btn" data-toggle="tab" href="#django-tabbed-changeform-admin-tab-{{forloop.counter}}" role="tab" aria-controls="django-tabbed-changeform-admin-tab-{{forloop.counter}}" aria-selected="false">
+            {{tab.0}}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="tab-content bgc-white p-4 border-1 border-t-0 brc-purple-l2 radius-b-1">
+      	
+      	{% for tab in django_tabbed_changeform_admin_tabs %}
+         <div class="tab-pane fade text-95 django-tabbed-changeform-admin-content {% if forloop.first %} active show {% endif %}" id="django-tabbed-changeform-admin-tab-{{forloop.counter}}" role="tabpanel" aria-labelledby="django-tabbed-changeform-admin-tab-{{forloop.counter}}-tab-btn" data-content-classes="{% for c in tab.1 %}{{c}} {% endfor %}">
+          <!-- TO BE REMOVED IF NEEDED INCLUDED 8-22-2022 -->
+          {% block main_form %}
+          {% endblock %}
+          <!-- TILL HERE  -->
+          </div>
+	    {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+{% block field_sets %}
+{% for fieldset in adminform %}
+  {% include "admin/includes/fieldset.html" %}
+{% endfor %}
+{% endblock %}
+
+{% block after_field_sets %}{% endblock %}
+
+{% block inline_field_sets %}
+{% for inline_admin_formset in inline_admin_formsets %}
+    {% include inline_admin_formset.opts.template %}
+{% endfor %}
+{% endblock %}
+
+{% block after_related_objects %}{% endblock %}
+
+{% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+
+{% block admin_change_form_document_ready %}
+    <script id="django-admin-form-add-constants"
+            src="{% static 'admin/js/change_form.js' %}"
+            {% if adminform and add %}
+                data-model-name="{{ opts.model_name }}"
+            {% endif %}
+            async>
+    </script>
+{% endblock %}
+
+{# JavaScript for prepopulated fields #}
+{% block after_form %} {% endblock %}
+{% prepopulated_fields_js %}
+
+</div>
+</form>
+
+</div>
+{% endblock %}

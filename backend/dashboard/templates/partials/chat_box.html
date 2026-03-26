@@ -1,0 +1,102 @@
+{% load i18n admin_urls static admin_list %}
+{% load i18n static project_template_tags %}
+<!-- task_action_aside_support -->
+<style>
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 150px) and (max-device-width : 480px) {
+  .card_heading_text{
+    font-size: 5vmin;
+    font-weight: 600;
+    font-weight: 600;
+  }
+  .heading_info_text{
+    font-size: 3vmin;
+  }
+  .thead_text{
+    font-size: 3vmin;
+    font-weight: 600 !important;
+  }
+  .rounded_box_text{
+  width: 37px;
+  height: 37px;
+  }
+  .tbody_text{
+    font-size: 3vmin;
+  }
+}
+ </style>
+<div class="modal modal-nb ace-aside aside-bottom aside-r aside-fade aside-offset aside-shown-above-nav" id="task_action_aside_support" tabindex="-1" role="dialog" aria-hidden="false">
+  <div class="modal-dialog mr-2" style="width: 700px;" role="document">
+    <div class="modal-content border-0 mb-4 radius-1 shadow">
+      <div class="modal-body bg-transparent p-0">
+        <div class="card overflow-hidden border-0  ">
+          <div class="card-header bgc-info-d3">
+            <h6 class="card-title text-white">
+              <i class="far fa-comment-dots text-130 mr-1"></i>
+              <span class="text-110" id="chatbox_title">Live</span>
+            </h6>
+            <div class="mr-3">
+              <span class="text-white text-95">
+           
+            <span class="typing-dots text-white text-150">
+                <span class="typing-dot">.</span>
+              <span class="typing-dot">.</span>
+              <span class="typing-dot">.</span>
+              </span>
+              </span>
+              
+            </div>
+
+            <div class="card-toolbar align-self-center">
+              <a href="#" class="card-toolbar-btn text-white" data-dismiss="modal">
+                <i class="fas fa-window-minimize"></i>
+              </a>
+            </div>
+          </div>
+  
+          <div class="card-body bgc-white-tp1 border-x-1 brc-info-m1 px-1px py-0" id="task_action_aside_support_body" style="height:300px;overflow: auto;">
+          </div>
+
+        <form enctype="multipart/form-data" method="post" id="action_comment_form" novalidate>
+
+          <div class="card-footer p-0 brc-secondary-l2">
+            <div class="input-group input-group-fade py-2 px-3 bgc-white border-x-1 border-b-1 brc-info-m1 radius-b-1">
+              <textarea  id="comment_textbox" name="comment_textbox" class="form-control form-control-lg text-110 shadow-none border-0 thead_text" placeholder="Type something ...">{{task_action_comment.id}}</textarea>
+              <input type="hidden" id ='reply_id' name="reply_id">
+              <input type="file" id ='chat_attachment' name="chat_attachment" class="d-none">
+              <input type="hidden" id ='tagged_user' name="tagged_user" class="d-none">
+              <input type="hidden" id ='task_action_id' name="task_action_id" class="d-none">
+              
+              <div class="input-group-append align-self-center">
+                <button id="id_chat_box_operation" onclick="ChatBoxApi.ChatBoxOperation();" class="btn btn-outline-info btn-sm radius-3px p-2 ml-2" type="button">
+                  Send <i class="fa fa-paper-plane text-150 w-3"></i>
+                </button>
+
+                <!-- smiley button and menu -->
+                <div class="btn-group ml-2 dropdown">
+                  <button type="button" class="btn btn-xs btn-lighter-primary d-none" onclick="$('#chat_attachment').trigger('click');">
+                    <i class="fas fa-paperclip text-140"></i>
+                  </button>
+
+                  <a href="javascript:void(0);" class="btn btn-xs btn-lighter-primary" onclick="ChatBoxApi.ShowmOrganizationChartBoxTemplate()" >
+                  <i class='fas fa-sitemap'></i>
+                  </a>
+                </div>
+
+                <span id="tag_to_badge" class="d-none m-1 badge bgc-white border-1 border-l-4 radius-0 brc-danger-m2 btn-text-secondary">
+                </span>
+                <a href="javascript:void(0);"  id="remove_tag_to_badge" class="d-none card-toolbar-btn text-danger-d3">
+                  <i class="fa fa-times"></i>
+                </a>
+                 
+
+              </div>
+            </div>
+          </div>
+              </form>
+              </div><!-- /.input-group-append -->
+            </div><!-- /.input-group -->
+          </div>
+        </div><!-- /.card -->
+      </div>
+ 

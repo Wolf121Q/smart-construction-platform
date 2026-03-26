@@ -1,0 +1,28 @@
+<!-- Ace gallery code start -->
+<div class="py-3 mt-3" id="gallery">
+    <div class="row">
+      <div class="col-12 col-md-10 offset-md-1">
+        <div class="row mx-0 justify-content-center">
+          <!-- put images in 3 columns -->
+          <!-- column 1 -->
+          <div class="col-6 col-sm-4 col-md-3 text-center px-2">
+            
+             {% for attch in attachments %} 
+                <div class="pos-rel d-style my-3 radius-1 shadow-sm overflow-hidden bgc-brown-m3">
+                <a href="#" class="show-lightbox">
+                    <img alt="Gallery Image 1" src="{{attch.attachment.url}}" class="w-100 d-zoom-2 " data-size="1200x800" />
+                </a>
+                <div class="v-hover position-center h-100 w-100 bgc-dark-grad"></div>
+                <a href="#" class="btn btn-white btn-h-yellow btn-a-yellow v-hover position-tr mt-1 mr-1 py-0 radius-1 border-0">
+                    <span class="text-140 text-600">&plus;</span>
+                </a>
+                </div>
+              endfor %}
+
+          </div>
+        </div><!-- /.row -->
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.bcard -->
+
+<!-- Ace gallery code end -->

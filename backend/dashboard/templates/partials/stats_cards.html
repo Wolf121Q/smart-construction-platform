@@ -1,0 +1,272 @@
+{% load i18n admin_urls static admin_list %}
+{% load i18n static project_template_tags %}
+
+
+
+<style>
+  /* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 150px) and (max-device-width : 480px) {
+  .card_heading_text{
+        font-size: 5vmin;
+        font-weight: 600;
+        font-weight: 600;
+       }
+
+  .heading_info_text{
+      font-size: 3vmin;
+      }
+
+  .thead_text{
+        font-size: 3vmin;
+        font-weight: 600 !important;
+       }
+
+
+  .rounded_box_text{
+ 
+  width: 37px;
+  height: 37px;
+  }
+
+
+  .tbody_text{
+      font-size: 3vmin;
+      }
+}
+
+
+ @media only screen and (min-width: 900px) and (max-width: 1250px)  {
+ .table_text_size_title { 
+  font-size: 0.8em;
+  font-weight: bold;
+ }
+ .table_body_text{
+  font-size: 0.7em;
+ }
+ }
+ 
+</style>
+<!-- card code satrt -->
+<div class="row mt-2">
+  <div class="col-12 col-sm-6 col-lg-2 px-2 mb-2 mb-lg-0 cards-container" id="#">
+    <div class="card no-border shadow-sm " id="#">
+      <div class="card-header" style="background: linear-gradient(to left, #2EB62C, #65DD5B);">
+        <div class="text-left text-white font-weight-bold card_heading_text ml-2 table_text_size_title">Project Zones</div>
+      </div>
+      <div class="card-body bgc-transparent shadow border-t-0 p-0 no-border table-responsive-xl brc-primary-m3 border-t-0 table_height_station {% if region_extra_overflow == True %} table_height {% endif %}  mt-4 mt-lg-0   overflow-hidden shadow no-border">
+        <div class="table-responsive-md">
+        <table class="table text-dark-m1 brc-black-tp10 table-hover">
+          <thead class="thead_text"> 
+            <tr class="bgc-white text-secondary-d3 text-left table_text_size_title"> 
+              <th class="font-weight-bold" style="
+              border-right: 1px solid #c1c1c1;border-bottom: 1px solid #c1c1c1;">Zones</th>
+              <th class="text-left font-weight-bold" style="
+              border-right: 1px solid #c1c1c1;border-bottom: 1px solid #c1c1c1;">Projects</th>
+            </tr>
+          </thead>
+          <tbody class="tbody_text">
+            {% for region in project_regions %}
+            <tr class="text-90 text-left">
+              <td><a class="text-black table_body_text"
+                  href="/dashboard/projectdirectorhousing/?region_id={{region.id}}">
+                  {{region.name}}</a></td>
+              <td> <a href="#" class="text-black table_body_text">{% project_count_regionwise region qs %}</a></td>
+            </tr>
+            {% endfor %}
+             {% for region_extra_row in region_extra_rows %}
+              <tr class="text-90 text-left">
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+             {% endfor %}
+            <tr lass="text-black text-90 text-left">
+              <td class="text-danger-m2 text-90 table_body_text"><b>Total</b></td>
+              <td class="text-90 table_body_text"> <a href="javascript:void(0);" class="text-danger-d2"><b>{{total_projects}}</b></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  <!-- /.col -->
+  <div class="col-12 col-sm-6 col-lg-2 px-2 mb-2 mb-lg-0 cards-container" id="#">
+    <div class="card no-border shadow-sm" id="#">
+      <div class="card-header" style="background: linear-gradient(to left, #EA4C46, #DC1C13);">
+        <div class="text-left text-white font-weight-bold card_heading_text ml-2 table_text_size_title">Project Station</div>
+      </div>
+      <div class="card-body bgc-transparent shadow border-t-0 p-0 no-border table-responsive-xl brc-primary-m3 border-t-0 table_height_station {% if cities_extra_overflow == True %} table_height {% endif %}">
+       <div class="table-responsive-md">
+        <table class="table text-dark-m1 brc-black-tp10 table-hover">
+          <thead class="thead_text">
+            <tr class="bgc-white text-secondary-d3 text-left table_text_size_title">
+              <th class="py-3 pos-rel font-weight-bold" style="
+              border-right: 1px solid #c1c1c1;border-bottom: 1px solid #c1c1c1; right: 8px;">Station</th>
+              <th class="py-3 pos-rel mr-1 font-weight-bold" style="
+              border-right: 1px solid #c1c1c1;border-bottom: 1px solid #c1c1c1; right: 8px;">Projects </th>
+            </tr>
+          </thead>
+          <tbody class="tbody_text">
+            {% for project_city in project_cities %}
+            <tr class="text-90 text-left">
+              <td><a class="text-black table_body_text"
+                  href="/dashboard/projectdirectorhousing/?region_id={{project_city.region.id}}&city_id={{project_city.id}}">
+                  {{project_city.name}}</a></td>
+              <td> <a href="#"><a class="text-black table_body_text"
+                    href="/dashboard/projectdirectorhousing/?city_id={{project_city.id}}">{% project_count_citywise project_city qs %}</a></a>
+              </td>
+            </tr>
+            {% endfor %}
+             {% for cities_extra_row in cities_extra_rows %}
+              <tr class="text-90 text-left">
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+             {% endfor %}            
+            <tr class="text-black text-90 text-left">
+              <td class="text-danger-m2 text-90 table_body_text"><b>Total</b></td>
+              <td class="text-90 table_body_text"> <a href="javascript:void(0);" class="text-danger-d2"><b>{{total_projects}}</b></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+     </div>
+    <!-- /.card-body -->
+   </div>
+  <!-- /.card -->
+</div>
+  <!-- /.col -->
+ 
+ 
+  <div class="col-12 col-sm-6 col-lg-8 px-2  mb-lg-0 cards-container  " id="#">
+    
+    <div class="card-header mr-2" style="background: linear-gradient(to left,#0392d9, #42ccf4);">
+      <!-- date code start -->
+      <div id="id-daterange-wrapper" class="pos-rel tbody_text">
+        <!-- daterange -->
+        <div class="form-row">
+          <div class="col">
+            <input id="id-daterange-from" class="form-control ex-inputs-start tbody_text" placeholder="From date" />
+          </div>
+          <div class="text-grey-l2">_</div>
+          <div class="col">
+            <input id="id-daterange-to" class="form-control ex-inputs-end tbody_text" placeholder="To date" />
+          </div>
+        </div>
+        <div id="id-daterange-container" class="dp-daterange-picker dp-daterange-below"></div>
+      </div>
+      <!-- date code end -->
+
+      <!-- date save button code start -->
+ 
+        <a href="#" id="date-range-filter-submit" class="btn btn-sm btn-lighter-grey btn-bgc-white radius-round ml-2 tbody_text">
+          Submit
+        </a>
+ 
+ 
+      <!-- date save button code end -->
+      <div class="text-center text-white font-weight-bold" style="margin-left: 15px;">  </div>
+    </div>
+
+    <div class="card dcard h-auto overflow-hidden shadow border-t-0 mr-2 table_height_station">
+        <div class="card-body p-0 table-responsive-xl">
+          <div class="table-responsive-md" style="display: flex;">
+          <table class="table text-dark-m1 brc-black-tp10 table-hover " style='border-bottom: 1px solid #c1c1c1; border-left: 1px solid #c1c1c1;'>
+            <thead class="thead_text">
+            <tr class="text-100 text-center font-weight-bold">
+              <td class="table_text_size_title" rowspan="2" style='border-right: 1px solid #c1c1c1;'>Flags</td>
+              <td class="table_text_size_title" colspan="3" style='border-right: 1px solid #c1c1c1;'><i class="fa fa-check" aria-hidden="true"></i> Site Inspection</td>
+            </tr>
+            <tr class="text-left text-100 table_text_size_title">
+               <th class="table_text_size_title">Total Raised</th>
+               <th class="table_text_size_title">Total Cleared</th>
+               <th class="table_text_size_title" style='border-right: 1px solid #c1c1c1;'>Pending</th>
+              <!-- <th style="border-right: 1px solid #c1c1c1;"></th>
+              <th class="font-weight-bold" style='border-right: 1px solid #c1c1c1;'>Raised</th>
+              <th class="font-weight-bold" style='border-right: 1px solid #c1c1c1;'>Cleared</th>
+              <th class="font-weight-bold" style='border-right: 1px solid #c1c1c1;'>Balance</th> -->
+            </tr>
+            </thead>
+            <tbody class="tbody_text">
+              {% for inspection_flag in inspection_flags %}
+              {% if inspection_flag.system_code == 'system_status_task_status_inspection' %}
+              {% for status_flag in inspection_flag.get_children %} 
+              <tr class="text-center text-90" style='border-right: 1px solid #c1c1c1;'>
+                <td class='text-black table_body_text' style='border-right: 1px solid #c1c1c1';><icon class='fa fa-flag text-110' style='color:{{status_flag.color}};'></td>
+                {% if request.GET %}
+                <td class="table_body_text">{% raised_flags_status_count status_flag qs req %}</a></td>
+                <td class="table_body_text">{% cleared_flags_status_count status_flag qs req %}</a></td>
+                <td class="table_body_text" style='border-right: 1px solid #c1c1c1;'><a href="{{ request.build_absolute_uri }}&flag_id={{status_flag.id}}">
+                    {% balance_flags_status_count status_flag qs req %}</a></td>
+                {% else %}
+                  <td class="table_body_text">{% raised_flags_status_count status_flag qs req %}</a></td>
+                  <td class="table_body_text">{% cleared_flags_status_count status_flag qs req %}</a></td>
+                  <td class="table_body_text" style='border-right: 1px solid #c1c1c1;'><a class="text-black"
+                    href="{% url 'admin:dashboard_projectdirectorhousing_changelist' %}?flag_id={{status_flag.id}}">{% balance_flags_status_count status_flag qs req %}</a></td>
+                {% endif %}
+              
+                <!-- <td style = 'border-right: 1px solid #c1c1c1'><a href='javascript:void(0);'>{obsns_balance_1}</a></td>\ -->
+              </tr>
+              {% endfor %}
+              <tr class="text-center text-90" style='border-right: 1px solid #c1c1c1;'>
+                <td class="text-danger font-weight-bold text-90 text-center table_body_text" style='border-right: 1px solid #c1c1c1;'>Total</td>
+                <td class="text-danger font-weight-bold text-90 text-center table_body_text">{% total_inspection_flag_raised_status_count inspection_flag qs req %}</a></td>
+                <td class="text-danger font-weight-bold text-90 text-center table_body_text">{% total_inspection_flag_cleared_status_count inspection_flag qs req %}</a></td>
+                <td class="text-danger font-weight-bold text-90 text-center table_body_text" style='border-right: 1px solid #c1c1c1;'>{% total_inspection_flag_balance_status_count inspection_flag qs req %}</a></td>
+                  <!-- <td style = 'border-right: 1px solid #c1c1c1'><a href='javascript:void(0);'>{obsns_balance_1}</a></td>\ -->
+              </tr>
+              {% endif %}
+              {% endfor %}
+              <!-- another table -->
+            </tbody>
+          </table>
+          <table class="table text-dark-m1 brc-black-tp10 table-hover " style='border-bottom: 1px solid #c1c1c1;'>
+            <thead class="thead_text"> 
+            <tr class="text-100 text-center font-weight-bold table_text_size_title">
+              <td class="table_text_size_title" colspan="3" style='border-right: 1px solid #c1c1c1;'><i class="fa fa-check" aria-hidden="true"></i> Material Inspection</td>
+            </tr>
+            <tr class="text-center text-100 table_text_size_title" >
+               <th class="table_text_size_title">Total Raised</th>
+               <th class="table_text_size_title">Total Cleared</th>
+               <th class="table_text_size_title" style='border-right: 1px solid #c1c1c1;'>Pending</th>
+              <!-- <th style="border-right: 1px solid #c1c1c1;"></th>
+              <th class="font-weight-bold" style='border-right: 1px solid #c1c1c1;'>Raised</th>
+              <th class="font-weight-bold" style='border-right: 1px solid #c1c1c1;'>Cleared</th>
+              <th class="font-weight-bold" style='border-right: 1px solid #c1c1c1;'>Balance</th> -->
+            </tr>
+            </thead>
+            <tbody class="tbody_text">
+              <!-- another table -->
+              {% for inspection_flag in inspection_flags %}
+              {% if inspection_flag.system_code == 'system_status_task_status_material' %}
+              {% for status_flag in inspection_flag.get_children %} 
+              <tr class="text-center text-90" style='border-right: 1px solid #c1c1c1;'>
+                {% if request.GET %}
+                <td class="table_body_text">{% raised_flags_status_count status_flag qs req %}</td>
+                <td class="table_body_text">{% cleared_flags_status_count status_flag qs req %}</td>
+                <td class="table_body_text"><a href="{{ request.build_absolute_uri }}&flag_id={{status_flag.id}}">{% balance_flags_status_count status_flag qs req %}</a></td>
+                {% else %}
+                <td class="table_body_text">{% raised_flags_status_count status_flag qs req %}</td>
+                <td class="table_body_text">{% cleared_flags_status_count status_flag qs req %}</td>
+                <td class="table_body_text"><a href="{% url 'admin:dashboard_projectdirectorhousing_changelist' %}?flag_id={{status_flag.id}}">{% balance_flags_status_count status_flag qs req %}</a></td>
+               {% endif %}
+                <!-- <td style = 'border-right: 1px solid #c1c1c1'><a href='javascript:void(0);'>{obsns_balance_1}</a></td> -->
+              </tr>
+              {% endfor %}
+              <tr class="text-center text-90" style='border-right: 1px solid #c1c1c1;'>
+                <td class="text-danger font-weight-bold text-90 text-center table_body_text">{% total_inspection_flag_raised_status_count inspection_flag qs req %}</td>
+                <td class="text-danger font-weight-bold text-90 text-centertable_body_text">{% total_inspection_flag_cleared_status_count inspection_flag qs req %}</td>
+                <td class="text-danger font-weight-bold text-90 text-center table_body_text">{% total_inspection_flag_balance_status_count inspection_flag qs req %}</td>
+                  <!-- <td style = 'border-right: 1px solid #c1c1c1'><a href='javascript:void(0);'>{obsns_balance_1}</a></td> -->
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div><!-- /.card-body -->
+    </div>
+  </div>
+</div> 

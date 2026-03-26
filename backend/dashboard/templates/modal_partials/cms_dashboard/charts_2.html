@@ -1,0 +1,201 @@
+{% load i18n admin_urls static admin_list %}
+{% load i18n static project_template_tags %}
+ 
+    <!-- chart code start -->
+    <div class="row mt-3 mt-lg-4">
+    <!-- sale stats chart -->
+    <div class="col-12 col-lg-7">
+      <div class="bcard card h-100">
+        <div class="card-header border-b-1 brc-grey-l3 pb-2">
+          <h5 class="card-title font-normal text-120 text-dark-m1 pl-1">
+            Flage By Status
+          </h5>
+
+          <!-- the dropdowns -->
+          <div class="card-toolbar no-border">
+            <div class="dropdown dd-backdrop dd-backdrop-none-md">
+              <a class="btn btn-light-blue btn-bold btn-xs btn-brc-tp" href="#" role="button" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                Monthly
+              </a>
+              <div class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-animated dd-slide-up dd-slide-none-md">
+                <div class="dropdown-inner">
+                  <a class="dropdown-item btn btn-h-light-grey btn-a-lighter-blue text-grey-m1 mx-1" href="#">Weekly</a>
+                  <a class="dropdown-item active btn btn-h-light-grey btn-a-lighter-blue btn-a-bold mx-1" href="#">Monthly</a>
+                  <a class="dropdown-item btn btn-h-light-grey btn-a-lighter-blue text-grey-m1 mx-1" href="#">Quarterly</a>
+                  <a class="dropdown-item btn btn-h-light-grey btn-a-lighter-blue text-grey-m1 mx-1" href="#">Yearly</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown dd-backdrop dd-backdrop-none-md">
+              <a class="btn btn-light-green btn-bold btn-xs btn-brc-tp ml-1" href="#" role="button" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                USA
+              </a>
+              <div class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-animated dd-slide-up dd-slide-none-md">
+                <div class="dropdown-inner">
+                  <a class="dropdown-item active btn btn-h-light-grey btn-a-lighter-green btn-a-bold mx-1" href="#">Islamabad</a>
+                  <a class="dropdown-item btn btn-h-light-grey btn-a-lighter-green text-grey-m1 mx-1" href="#">Rawalpindi</a>
+                  <a class="dropdown-item btn btn-h-light-grey btn-a-lighter-green text-grey-m1 mx-1" href="#">Lahore</a>
+                  <a class="dropdown-item btn btn-h-light-grey btn-a-lighter-green text-grey-m1 mx-1" href="#">Peshawar</a>
+                </div>
+              </div>
+            </div>
+          </div><!-- /.card-toolbar -->
+        </div>
+
+        <div class="card-body h-100 d-flex flex-column justify-content-center py-3 px-2 px-md-4"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+          <canvas id="sales-chart" class="mx-n1 mx-md-0 mw-100 chartjs-render-monitor" style="height: 280px; display: block; width: 810px;" width="810" height="280"></canvas>
+        </div>
+      </div><!-- /.card -->
+    </div>
+
+    <div class="col-12 col-lg-5 mt-3 mt-lg-0 pl-lg-2">
+      <div class="bcard card pt-1 pt-lg-2 h-100">
+        <div class="card-header bg-transparent brc-default-l3">
+          <h5 class="card-title text-dark-m2 pl-1 text-110">
+            Latest Activity
+          </h5>
+
+          <div class="card-toolbar align-self-center no-border">
+            <a href="#" class="btn btn-xs btn-lighter-default btn-h-light-warning btn-a-light-warning text-600 px-3 radius-round">
+              See all
+            </a>
+          </div>
+
+          <div class="card-toolbar align-self-center">
+            <a href="#" data-action="reload" class="card-toolbar-btn text-blue text-110">
+              <i class="fa fa-sync-alt"></i>
+            </a>
+            <a href="#" data-action="close" class="card-toolbar-btn text-danger-m1 text-110 ml-25">
+              <i class="fa fa-times"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="card-body p-3 border-0">
+          <div class="text-grey-m1 text-95">
+            <div class="d-flex">
+              <div class="minh-100 pos-rel">
+                <!-- the vertical line connecting activity icons -->
+                <div class="position-tl ml-4 h-100 border-l-3 brc-secondary-l1"></div>
+
+                <!-- the icon with white border to cover the above line -->
+                <div class="pos-rel text-center pt-2 mx-2px w-6 h-6 border-4 brc-white radius-round bgc-purple text-white">
+                  <i class="fa fa-camera-retro"></i>
+                </div>
+              </div>
+
+              <div class="mx-2 flex-grow-1">
+                <div>
+                  <a href="#" class="font-bolder btn-text-dark btn-h-text-danger">
+                    Susan Dalek
+                  </a>
+                  <div class="text-85 text-secondary ml-auto text-nowrap">
+                    3 min ago
+                  </div>
+                </div>
+
+                <div class="text-grey-d3 text-95 mt-15 pos-rel">
+                  Uploaded a new photo
+                </div>
+
+                <hr class="brc-secondary-l3">
+              </div>
+            </div>
+          </div>
+          <div class="text-grey-m1 text-95">
+            <div class="d-flex">
+              <div class="minh-100 pos-rel">
+                <!-- the vertical line connecting activity icons -->
+                <div class="position-tl ml-4 h-100 border-l-3 brc-secondary-l1"></div>
+
+                <!-- the icon with white border to cover the above line -->
+                <div class="pos-rel text-center pt-2 mx-2px w-6 h-6 border-4 brc-white radius-round bgc-green text-white">
+                  <i class="fa fa-check-double"></i>
+                </div>
+              </div>
+
+              <div class="mx-2 flex-grow-1">
+                <div>
+                  <a href="#" class="font-bolder btn-text-dark btn-h-text-danger">
+                    Robin Hood
+                  </a>
+                  <div class="text-85 text-secondary ml-auto text-nowrap">
+                    4 min ago
+                  </div>
+                </div>
+
+                <div class="text-grey-d3 text-95 mt-15 pos-rel">
+                  Upgraded his membership plan
+                </div>
+
+                <hr class="brc-secondary-l3">
+              </div>
+            </div>
+          </div>
+          <div class="text-grey-m1 text-95">
+            <div class="d-flex">
+              <div class="minh-100 pos-rel">
+                <!-- the vertical line connecting activity icons -->
+                <div class="position-tl ml-4 h-100 border-l-3 brc-secondary-l1"></div>
+
+                <!-- the icon with white border to cover the above line -->
+                <div class="pos-rel text-center pt-2 mx-2px w-6 h-6 border-4 brc-white radius-round bgc-blue text-white">
+                  <i class="fa fa-shopping-cart"></i>
+                </div>
+              </div>
+
+              <div class="mx-2 flex-grow-1">
+                <div>
+                  <a href="#" class="font-bolder btn-text-dark btn-h-text-danger">
+                    River Song
+                  </a>
+                  <div class="text-85 text-secondary ml-auto text-nowrap">
+                    11 min ago
+                  </div>
+                </div>
+
+                <div class="text-grey-d3 text-95 mt-15 pos-rel">
+                  Reviewed a product
+                </div>
+
+                <hr class="brc-secondary-l3">
+              </div>
+            </div>
+          </div>
+          <div class="text-grey-m1 text-95">
+            <div class="d-flex">
+              <div class="minh-100 pos-rel">
+                <!-- the vertical line connecting activity icons -->
+
+
+                <!-- the icon with white border to cover the above line -->
+                <div class="pos-rel text-center pt-2 mx-2px w-6 h-6 border-4 brc-white radius-round bgc-warning text-white">
+                  <i class="fa fa-trophy"></i>
+                </div>
+              </div>
+
+              <div class="mx-2 flex-grow-1">
+                <div>
+                  <a href="#" class="font-bolder btn-text-dark btn-h-text-danger">
+                    Jack Alien
+                  </a>
+                  <div class="text-85 text-secondary ml-auto text-nowrap">
+                    20 min ago
+                  </div>
+                </div>
+
+                <div class="text-grey-d3 text-95 mt-15 pos-rel">
+                  Won a trophy
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+<!-- chart code end -->

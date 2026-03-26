@@ -1,0 +1,162 @@
+{% load i18n static bootstrap_admin_template_tags  %}
+{% load i18n static housing_society_template_tags  %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %}</title>
+
+  {% block bootstrap_admin_css %}
+
+  {% endblock bootstrap_admin_css %}
+
+
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/client_login_assets/css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/client_login_assets/fonts/font-awesome/css/font-awesome.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/client_login_assets/fonts/flaticon/font/flaticon.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/client_login_assets/css/style.css' %}">
+   <!-- Google fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  
+
+{% block extrastyle %}{% endblock %}
+
+{% if LANGUAGE_BIDI %}
+  {# PUT HERE YOUR CUSTOM RTL STYLESHEET #}
+  {% comment %}
+  <link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />
+  {% endcomment %}
+{% endif %}
+
+{% block jquery %}
+  
+  <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+{% endblock jquery %}
+  <script>
+    (function ($) {
+      $(document).ready(function(){
+        $("#overlay").delay(600).fadeOut(500);
+      });
+    })(django.jQuery);
+  </script>
+  <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
+  <script type="text/javascript">window.__admin_utc_offset__ = "{% filter escapejs %}{% now "Z" %}{% endfilter %}";</script>
+
+{% block extrahead %}{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+    <link rel="icon" type="image/x-icon" href="{% display_favicon %}">
+</head>
+{% load i18n %}
+{% display_sidebar_menu cl.has_filters as is_displaying_menu %}
+{% if '_popup' in request.GET %} {% with is_popup=1 %} {% endwith %} {% endif %}
+
+
+<body class="{% if '_popup' in request.GET %} __popup {% endif %}{% block bodyclass %}{% endblock %}{% if not is_displaying_menu %} no-sidebar{% endif %}" data-admin-utc-offset="{% now "Z" %}" >
+  <div id="loader" class="animated yt-loader" style="display: none;"></div>
+
+
+<div class="body-container"  >
+ 
+
+      <div class="main-container bgc-white">
+
+  {% if not '_popup' in request.GET %}
+    {% if is_displaying_menu %}
+      {% block sidebar_menu %}
+
+        <!-- Sidebar -->
+      
+      {% endblock sidebar_menu %}
+    {% endif %}
+  {% endif %}
+
+
+  <!-- <div class="body-container">
+       <div class="col-sm-3 col-md-2 sidebar"> -->
+
+
+      {% block content_container %}
+        {% comment %}<div id="content" class="{% if is_displaying_menu %}col-xs-8 col-xs-offset-4 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2{% else %}col-sm-12{% endif %} main {% block coltype %}colM{% endblock %}">{% endcomment %}
+        <div role="main" class="main-content" >
+          {% if not '_popup' in request.GET %}
+          {% block breadcrumbs %}
+          {% endblock %}
+          {% endif %}
+          <div class="body-container container-fluid" style="background-image: url('{% static 'assets/image/backgroun1.jpg' %}'); background-repeat: no-repeat;  background-size: cover;" >
+          {% block content %}
+            {% block object-tools %}{% endblock %}
+            {{ content }}
+          {% endblock %}
+            </div>
+        </div>
+      {% endblock content_container %}
+      {% if cl.has_filters %}
+      <div id="id-filters-modal" class="my-1 my-lg-2 modal modal-nb ace-aside aside-right aside-offset aside-below-nav" data-backdrop="false" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content w-auto flex-grow-1 pb-1px radius-0 radius-l-2 border-y-2 border-l-1 brc-default-m3 bgc-white-tp1 shadow">
+              <div class="modal-body" style="padding: 0.5rem;overflow: auto !important;">
+                {% block filters %}{% endblock filters %}
+              </div>
+            </div><!-- .modal-content -->
+            <div class="aside-header align-self-start mt-1 mt-lg-5 text-right d-style">
+              <button type="button" class="btn btn-warning btn-lg shadow-sm pl-2 radius-l-2 f-n-hover py-1 py-md-2" data-toggle="modal" data-target="#id-filters-modal">
+                <i class="fa fa-filter text-110 ml-1"></i>
+              </button>
+            </div>
+          </div><!-- .modal-dialog -->
+      </div><!-- .modal-aside -->
+      {% endif %}
+    </div>
+  </div>
+
+  
+
+{% block bootstrap_admin_js %}
+
+
+
+
+
+  <!-- External JS libraries -->
+  <script src="{% static 'assets/client_login_assets/js/jquery-3.6.0.min.js' %}"></script>
+  <script src="{% static 'assets/client_login_assets/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/client_login_assets/js/jquery.validate.min.js' %}"></script>
+  <!-- Custom JS Script -->
+  <script src="{% static 'assets/client_login_assets/js/app.js' %}"></script>
+  
+  <script src="{% static 'assets/node_modules/node-waves/dist/waves.js' %}"></script>
+  <script src="{% static 'assets/node_modules/inputmask/dist/jquery.inputmask.js' %}"></script>
+  <!-- login form validation js code start -->
+  <script src="{% static 'assets/module/OTP.js' %}"></script>
+ 
+  <!-- login form validation end -->
+  <script>
+    $(document).bind("ajaxStart", function(){
+  $("#loader").show();
+  }).bind("ajaxComplete", function(){
+   $("#loader").hide();
+  });
+  </script>
+  
+
+
+
+
+  
+  <!-- <script src="{% static 'assets/views/pages/buttons/page-script.js' %}"></script> -->
+
+{% endblock bootstrap_admin_js %}
+
+{% block js %}{% endblock js %}
+</body>
+</html>

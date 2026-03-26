@@ -1,0 +1,1627 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls static admin_list %}
+{% load i18n static project_template_tags %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css"
+  href="{% static 'assets/node_modules/tiny-date-picker/tiny-date-picker.css' %}" />
+<link rel="stylesheet" type="text/css"
+  href="{% static 'assets/node_modules/tiny-date-picker/date-range-picker.css' %}" />
+<link rel="stylesheet" type="text/css"
+  href="{% static 'assets/node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css' %}" />
+
+{% endblock %}
+
+{% block content %}
+
+<style type="text/css">
+  .elem,
+  .elem * {
+    box-sizing: border-box;
+    margin: 0 !important;
+  }
+
+  .elem {
+    display: inline-block;
+    font-size: 0;
+    width: 33%;
+    border: 20px solid transparent;
+    border-bottom: none;
+    background: #fff;
+    padding: 10px;
+    height: auto;
+    background-clip: padding-box;
+  }
+
+  .elem>span {
+    display: block;
+    cursor: pointer;
+    height: 0;
+    padding-bottom: 70%;
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .card-header-section {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    height: 60px;
+  }
+
+  /* table css by alex */
+  tfoot {
+    background: #f7f7f7;
+  }
+
+  tfoot {
+    position: sticky;
+    bottom: 0;
+    border-top: 2px solid #fafafa;
+  }
+
+  /* table css by alex */
+
+  .table-height-scroll {
+    height: 290px !important;
+    overflow-y: scroll;
+  }
+
+  .table-height {
+    height: 290px !important;
+  }
+
+  /* <!-- LIGHTBOX FADING SHOW/HIDE EFFECT (as explained in documentation) --> */
+
+  .lcl_fade_oc.lcl_pre_show #lcl_overlay,
+  .lcl_fade_oc.lcl_pre_show #lcl_window,
+  .lcl_fade_oc.lcl_is_closing #lcl_overlay,
+  .lcl_fade_oc.lcl_is_closing #lcl_window {
+    opacity: 0 !important;
+  }
+
+  .lcl_fade_oc.lcl_is_closing #lcl_overlay {
+    -webkit-transition-delay: .15s !important;
+    transition-delay: .15s !important;
+  }
+
+  /* .img1{
+        text-align: end;
+    }
+    .img2{
+        text-align: start;
+    } */
+  @media screen and (min-width: 280px) and (max-width: 510px) {
+    .main {
+      width: 400px;
+    }
+  }
+
+  .table_height {
+    height: 351px !important;
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+
+  .table_height_station {
+    height: 351px !important;
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .img-wrraper {
+    animation: myzoom 5s infinite;
+  }
+
+  @keyframes myzoom {
+    0% {
+      transform: scale(1.3);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+
+    100% {
+      transform: scale(1.3);
+    }
+  }
+
+  .map_icon {
+    animation: myzoom 2s infinite;
+  }
+
+  @keyframes myzoom {
+    0% {
+      transform: scale(1.3);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+
+    100% {
+      transform: scale(1.3);
+    }
+  }
+
+
+
+  .search_top {
+    position: relative;
+    margin-left: 11px;
+  }
+
+  .circular_icon {
+    top: 13px;
+  }
+
+  @media only screen and (min-width: 150px) and (max-width: 320px) {
+    .search_top {
+      width: 60px;
+    }
+
+    .circular_icon {
+      width: 80px;
+    }
+  }
+
+  @media only screen and (min-width: 320px) and (max-width: 500px) {
+    body title {
+      font-size: 12px;
+    }
+  }
+
+  @media only screen and (min-width: 500px) and (max-width: 900px) {
+    body title {
+      font-size: 14px;
+    }
+  }
+
+  @media only screen and (min-width: 900px) and (max-width: 1200px) {
+    body title {
+      font-size: 16px;
+    }
+  }
+
+
+  /* Smartphones (portrait and landscape) ----------- */
+  @media only screen and (min-device-width : 150px) and (max-device-width : 480px) {
+    .card_heading_text {
+      font-size: 5vmin;
+      font-weight: 600;
+      font-weight: 600;
+    }
+
+    .heading_info_text {
+      font-size: 3vmin;
+    }
+
+    .thead_text {
+      font-size: 3vmin;
+      font-weight: 600 !important;
+    }
+
+    .rounded_box_text {
+      width: 37px;
+      height: 37px;
+    }
+
+    .tbody_text {
+      font-size: 3vmin;
+    }
+
+    .heading-text-info {
+      font-size: 14px !important;
+    }
+
+    .main-text-info {
+      font-size: 13px !important;
+    }
+
+    .total-text-info {
+      font-size: 12px !important;
+    }
+
+    .data-text-info {
+      font-size: 11px !important;
+    }
+
+    .btn-outline-primary {
+      margin-left: 0 !important;
+    }
+  }
+</style>
+<!-- NEWER CARDS -->
+{% if cl.date_hierarchy %}
+{% block date_hierarchy %}
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12">
+    {% date_hierarchy cl %}
+  </div>
+</div>
+{% endblock %}
+{% endif %}
+<div class="row">
+  <div class="col-12 col-sm-12 mt-3 mt-sm-0 ">
+    <div class="card ccard">
+      <div class="card-progress">
+        <!-- the loading/progressing bar -->
+        <div class="card-progressbar bgc-blue-d2"></div>
+      </div>
+      {% include "partials/tag_modal_box.html" %}
+      <!-- HELPER -->
+      <div class="row">
+        <div class="col-sm"></div>
+      </div>
+
+      <div class="row m-1">
+
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
+          <div class="card-header" style="background: linear-gradient(to left,#0392d9, #42ccf4);">
+
+            <button
+              class="btn btn-bgc-white btn-lighter-danger btn-h-danger btn-a-info border-2 radius-round btn-lg px-25 mx-1"
+              title="Obsns Mk Timeline" data-toggle="modal" data-target="#obsns_mk_timeline_modal">
+              <i class="fas fa-exclamation-circle text-110"></i>
+            </button>
+            <a href="{% url 'admin:index' %}"
+              class=" btn btn-bgc-white btn-lighter-info btn-h-info btn-a-info border-2 radius-round btn-lg px-25 mx-1">
+              <i class="fas fa-sync-alt "></i></a>
+            <span style="color:white;font-weight: bold;margin-top: 12px;font-size: 18px;">{%if selected_filters
+              %}{{selected_filters}} {% endif %}</span>
+
+            <h5 class="card-title text-white mr-2">
+            </h5>
+            <!-- date code start -->
+            <div id="id-daterange-wrapper" class="pos-rel tbody_text">
+              <!-- daterange -->
+              <div class="form-row">
+                <div class="col">
+                  <input id="id-daterange-from" class="form-control ex-inputs-start tbody_text"
+                    placeholder="From date" />
+                </div>
+                <div class="text-grey-l2">_</div>
+                <div class="col">
+                  <input id="id-daterange-to" class="form-control ex-inputs-end tbody_text" placeholder="To date" />
+                </div>
+              </div>
+              <div id="id-daterange-container" class="dp-daterange-picker dp-daterange-below"></div>
+            </div>
+            <!-- date code end -->
+            <!-- date save button code start -->
+            <a href="#" id="date-range-filter-submit"
+              class="btn btn-sm btn-lighter-grey btn-bgc-secondary ml-2 tbody_text text-center"
+              style="background-color: #9f3d2a;color: white;height: 36px;">
+              Go
+            </a>
+            <!-- date save button code end -->
+            <div class="text-center text-white font-weight-bold" style="margin-left: 15px;"> </div>
+          </div>
+        </div>
+      </div>
+      <!-- HELPER -->
+      <!-- tables -->
+
+      <div class="row m-1">
+        <div class="col-sm-12 col-md-12 col-lg-2 mb-2">
+          <h5 class="text-center text-white text-right font-weight-bold text-100 heading-text-info pt-3"
+            style=" background: linear-gradient(to left, #05e388, #0f3443); height: 50px; padding-top: 10px;">
+            Zones</h5>
+          <div class="radius-1 table-responsive table-height-scroll">
+            <table class="table table-striped-primary table-borderless text-dark-m1 mb-0 table-height"
+              id="responsive-table">
+              <thead>
+                <tr class="bgc-primary-d2 text-white">
+                  <th class="text-100 main-text-info">Zone</th>
+                  <th class="text-100 main-text-info">Flags</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr class="text-black text-95 text-left">
+                  <td class="text-danger-m2 text-95 table_body_text total-text-info pl-2"><b>Total</b></td>
+                  <td class="text-95 table_body_text total-text-info"> <a href="javascript:void(0);"
+                      class="text-danger-d2"><b> {{region_counts_total}}</b></td>
+                </tr>
+              </tfoot>
+              <tbody class="bgc-success-d2 data-text-info">
+                {% for data in region_counts %}
+                <tr>
+                  <td><span class="bt-content text-90">
+                      <a class="text-black table_body_text"
+                        href="/dashboard/projectdirectorhousing/?project__region_id={{data.id}}">
+                        {{data.region_name}}
+                      </a>
+                    </span></td>
+                  <td><span class="bt-content text-90">
+                      <a href="/dashboard/projectdirectorhousing/?project__region_id={{data.id}}"
+                        class="text-black table_body_text region_filter_link">
+                        {{data.region_count}}
+                      </a></span>
+                  </td>
+                </tr>
+                {% endfor %}
+                <tr class="text-left">
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <div class="col-sm-12 col-md-12 col-lg-2 mb-2">
+          <h5 class="text-center text-white font-weight-bold text-100 heading-text-info pt-3"
+            style="background: linear-gradient(to right, #1f1c2c, #928dab);  height: 50px; padding-top: 10px;">
+            Stations</h5>
+          <div class="radius-1 table-responsive table-height-scroll">
+            <table class="table table-striped-primary table-borderless text-dark-m1 mb-0 table-height"
+              id="responsive-table" cellpadding=0 cellspacing=0>
+              <thead>
+                <tr class="bgc-primary-d2 text-white">
+                  <th class="text-100 main-text-info">Station</th>
+                  <th class="text-100 main-text-info">Flags</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr class="text-black text-95 text-left">
+                  <td class="text-danger-m2 text-95 table_body_text total-text-info pl-2"><b>Total</b></td>
+                  <td class="text-95 table_body_text total-text-info"> <a href="javascript:void(0);"
+                      class="text-danger-d2"><b> {{city_counts_total}}</b></td>
+                </tr>
+              </tfoot>
+              <tbody class="bgc-primary-d2 data-text-info">
+                {% for data in cities_counts %}
+                <tr>
+                  <td><span class="bt-content text-90">
+                      <a class="text-black table_body_text"
+                        href="/dashboard/projectdirectorhousing/?project__region_id={{data.region_id}}&project__city_id={{data.id}}">
+                        {{data.city_name}}
+                      </a></span>
+                  </td>
+                  <td class="text-90">
+                    <span class="bt-content">
+                      <a class="text-black table_body_text city_filter_link"
+                        href="/dashboard/projectdirectorhousing/?project__region_id={{data.region_id}}&project__city_id={{data.id}}">{{data.city_count}}</a>
+                    </span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <div class="col-sm-12 col-md-12 col-lg-4 mb-2">
+          <h5 class="text-center text-white font-weight-bold text-100 heading-text-info pt-3"
+            style="background: linear-gradient(to left, #A71D31, #3F0D12); height: 50px; padding-top: 10px;">
+            Site Inspection</h5>
+          <div class="radius-1 table-responsive table-height-scroll">
+            <table class="table table-striped-primary table-borderless text-dark-m1 mb-0 table-height"
+              id="responsive-table" cellpadding=0 cellspacing=0>
+              <thead>
+                <tr class="bgc-primary-d2 text-white">
+                  <th class="text-100 main-text-info">Flags</th>
+                  <th class="text-100 main-text-info">Total Raised</th>
+                  <th class="text-100 main-text-info">Total Cleared</th>
+                  <th class="text-100 main-text-info">Pending</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr class="text-black text-95 text-left">
+                  <td class="text-danger-m2 text-95 table_body_text total-text-info pl-2"><b>Total</b></td>
+                  <td class="text-95 table_body_text total-text-info text-center"> <a href="javascript:void(0);"
+                      class="text-danger-d2"><b>{{inspection_flags_counts_raised}}</b></td>
+                  <td class="text-danger-m2 text-95 table_body_text total-text-info pl-1 text-center">
+                    <b>{{inspection_flags_counts_cleared}}</b>
+                  </td>
+                  <td class="text-95 table_body_text total-text-info text-center"> <a href="javascript:void(0);"
+                      class="text-danger-d2"><b>{{inspection_flags_counts_balance}}</b></td>
+                </tr>
+              </tfoot>
+              <tbody class="bgc-primary-d2 data-text-info">
+                {% for data in ins_flag_counts %}
+                <tr>
+                  <td><span class="bt-content text-90">
+                      <icon class='fa fa-flag text-110' style="color:{{data.flag_color}};"></icon>
+                    </span></td>
+                  <td class="text-center"><span class="bt-content text-90">{{data.raised_count}}</span></td>
+                  <td class="text-center"><span class="bt-content text-90">{{data.cleared_count}}</span></td>
+                  <td class="text-center"><span class="bt-content text-90"><a href='/dashboard{{data.url}}'
+                        class="site_filter_link">{{data.pending_count}}</a></span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-4 mb-2">
+          <h5 class="text-center text-white font-weight-bold text-100 heading-text-info pt-3"
+            style="background: linear-gradient(to right, #373b44, #4286f4); height: 50px; padding-top: 10px;">
+            Material Inspection</h5>
+          <div class="radius-1 table-responsive table-height-scroll">
+            <table class="table table-striped-primary table-borderless text-dark-m1 mb-0 table-height"
+              id="responsive-table" cellpadding=0 cellspacing=0>
+              <thead>
+                <tr class="bgc-primary-d2 text-white">
+                  <th class="text-100 main-text-info">Flags</th>
+                  <th class="text-100 main-text-info">Total Raised</th>
+                  <th class="text-100 main-text-info">Total Cleared</th>
+                  <th class="text-100 main-text-info">Pending</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr class="text-black text-95 text-left">
+                  <td class="text-danger-m2 text-95 table_body_text total-text-info pl-2"><b>Total</b></td>
+                  <td class="text-95 table_body_text total-text-info text-center"> <a href="javascript:void(0);"
+                      class="text-danger-d2"><b>{{material_flags_counts_raised}}</b></td>
+                  <td class="text-danger-m2 text-95 table_body_text total-text-info pl-1 text-center">
+                    <b>{{material_flags_counts_cleared}}</b>
+                  </td>
+                  <td class="text-95 table_body_text total-text-info text-center"> <a href="javascript:void(0);"
+                      class="text-danger-d2"><b>{{material_flags_counts_balance}}</b></td>
+                </tr>
+              </tfoot>
+              <tbody class="bgc-primary-d2 data-text-info">
+                {% for data in mat_flag_counts %}
+                <tr>
+                  <td class="text-90"><span class="bt-content">
+                      <icon class='fa fa-flag text-110' style='color:{{data.flag_color}};'></icon>
+                    </span></td>
+                  <td class="text-90 text-center"><span class="bt-content">{{data.raised_count}}</span></td>
+                  <td class="text-90 text-center"><span class="bt-content">{{data.cleared_count}}</span></td>
+                  <td class="text-90 text-center"><span class="bt-content"> <a href="{{data.url}}"
+                        class="material_filter_link">{{data.pending_count}} </a></span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <!-- HSE & SCM start -->
+      <div class="row m-1">
+        <div class="col-sm-12 col-md-12 col-lg-6 mb-2">
+          <h5 class="text-center text-white font-weight-bold text-100 heading-text-info pt-3"
+            style="background: linear-gradient(to left, #A71D31, #3F0D12); height: 50px; padding-top: 10px;">
+            HSE</h5>
+          <div class="radius-1 table-responsive table-height-scroll">
+
+            <!-- <table class="table table-striped-primary table-borderless text-dark-m1 mb-0 table-height" id="responsive-table" cellpadding=0 cellspacing=0>
+            <thead>
+              <tr class="bgc-primary-d2 text-white">
+                <th class="text-100 main-text-info">Flags</th>
+                <th class="text-100 main-text-info">Total Raised</th>
+                <th class="text-100 main-text-info">Total Cleared</th>
+                <th class="text-100 main-text-info">Pending</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr class="text-black text-95 text-left">
+                <td class="text-danger-m2 text-95 table_body_text total-text-info pl-2"><b>Total</b></td>
+                <td class="text-95 table_body_text total-text-info text-center"> <a href="javascript:void(0);" class="text-danger-d2"><b>{{inspection_flags_counts_raised}}</b></td>
+                <td class="text-danger-m2 text-95 table_body_text total-text-info pl-1 text-center"><b>{{inspection_flags_counts_cleared}}</b></td>
+                <td class="text-95 table_body_text total-text-info text-center"> <a href="javascript:void(0);" class="text-danger-d2"><b>{{inspection_flags_counts_balance}}</b></td>
+              </tr>
+            </tfoot>
+            <tbody class="bgc-primary-d2 data-text-info">
+              {% for data in ins_flag_counts %}
+              <tr>
+                <td><span class="bt-content text-90"><icon class='fa fa-flag text-110' style="color:{{data.flag_color}};"></icon></span></td>
+                  <td class="text-center"><span class="bt-content text-90">{{data.raised_count}}</span></td>
+                  <td class="text-center"><span class="bt-content text-90">{{data.cleared_count}}</span></td>
+                  <td class="text-center"><span class="bt-content text-90"><a href='/dashboard{{data.url}}' class="site_filter_link">{{data.pending_count}}</a></span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>  -->
+
+            <table class="table table-striped-primary table-borderless text-dark-m1 mb-0 table-height"
+              id="responsive-table" cellpadding=0 cellspacing=0>
+              <thead>
+                <tr class="bgc-primary-d2 text-white">
+                  <th class="text-100 main-text-info">Flags</th>
+                  <th class="text-100 main-text-info">Total Raised</th>
+                  <th class="text-100 main-text-info">Total Cleared</th>
+                  <th class="text-100 main-text-info">Pending</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr class="text-black text-95 text-left">
+                  <td class="text-danger-m2 text-95 table_body_text total-text-info pl-2"><b>Total</b></td>
+                  <td class="text-95 table_body_text total-text-info text-center"> <a href="javascript:void(0);"
+                      class="text-danger-d2"><b>{{inspection_flags_counts_raised}}</b></td>
+                  <td class="text-danger-m2 text-95 table_body_text total-text-info pl-1 text-center">
+                    <b>{{inspection_flags_counts_cleared}}</b>
+                  </td>
+                  <td class="text-95 table_body_text total-text-info text-center"> <a href="javascript:void(0);"
+                      class="text-danger-d2"><b>{{inspection_flags_counts_balance}}</b></td>
+                </tr>
+              </tfoot>
+              <tbody class="bgc-primary-d2 data-text-info">
+                {% for data in ins_flag_counts %}
+                <tr>
+                  <td><span class="bt-content text-90">
+                      <icon class='fa fa-flag text-110' style="color:{{data.flag_color}};"></icon>
+                    </span></td>
+                  <td class="text-center"><span class="bt-content text-90">{{data.raised_count}}</span></td>
+                  <td class="text-center"><span class="bt-content text-90">{{data.cleared_count}}</span></td>
+                  <td class="text-center"><span class="bt-content text-90"><a href='/dashboard{{data.url}}'
+                        class="site_filter_link">{{data.pending_count}}</a></span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-6 mb-2">
+          <h5 class="text-center text-white font-weight-bold text-100 heading-text-info pt-3"
+            style="background: linear-gradient(to right, #373b44, #4286f4); height: 50px; padding-top: 10px;">
+            SCM</h5>
+          <div class="radius-1 table-responsive table-height-scroll">
+            <table class="table table-striped-primary table-borderless text-dark-m1 mb-0 table-height"
+              id="responsive-table" cellpadding=0 cellspacing=0>
+              <thead>
+                <tr class="bgc-primary-d2 text-white">
+                  <th class="text-100 main-text-info">Flags</th>
+                  <th class="text-100 main-text-info">Total Raised</th>
+                  <th class="text-100 main-text-info">Total Cleared</th>
+                  <th class="text-100 main-text-info">Pending</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr class="text-black text-95 text-left">
+                  <td class="text-danger-m2 text-95 table_body_text total-text-info pl-2"><b>Total</b></td>
+                  <td class="text-95 table_body_text total-text-info text-center"> <a href="javascript:void(0);"
+                      class="text-danger-d2"><b>{{material_flags_counts_raised}}</b></td>
+                  <td class="text-danger-m2 text-95 table_body_text total-text-info pl-1 text-center">
+                    <b>{{material_flags_counts_cleared}}</b>
+                  </td>
+                  <td class="text-95 table_body_text total-text-info text-center"> <a href="javascript:void(0);"
+                      class="text-danger-d2"><b>{{material_flags_counts_balance}}</b></td>
+                </tr>
+              </tfoot>
+              <tbody class="bgc-primary-d2 data-text-info">
+                {% for data in mat_flag_counts %}
+                <tr>
+                  <td class="text-90"><span class="bt-content">
+                      <icon class='fa fa-flag text-110' style='color:{{data.flag_color}};'></icon>
+                    </span></td>
+                  <td class="text-90 text-center"><span class="bt-content">{{data.raised_count}}</span></td>
+                  <td class="text-90 text-center"><span class="bt-content">{{data.cleared_count}}</span></td>
+                  <td class="text-90 text-center"><span class="bt-content"> <a href="{{data.url}}"
+                        class="material_filter_link">{{data.pending_count}} </a></span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+      <br>
+      <!-- SE & SCM end -->
+
+    </div>
+  </div>
+</div>
+<br>
+{% include "partials/obsns_modal_box.html" %}
+
+
+<!-- NEWER CARDS -->
+
+<!-- Graphs -->
+
+
+<div class="row mb-5">
+  <div class="col-sm-12 col-md-4 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="bcard card h-100 shadow-lg">
+      <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+        <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+          Inspection Pending Flags
+        </h5>
+        <!-- the dropdowns -->
+        <div class="card-toolbar no-border">
+        </div><!-- /.card-toolbar -->
+      </div>
+      <figure class="highcharts-figure">
+        <div id="container-inspection-flags"></div>
+      </figure>
+    </div><!-- /.card -->
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="bcard card h-100 shadow-lg">
+      <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+        <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+          Material Pending Flags
+        </h5>
+        <!-- the dropdowns -->
+        <div class="card-toolbar no-border">
+        </div><!-- /.card-toolbar -->
+      </div>
+      <figure class="highcharts-figure">
+        <div id="container-material-flags"></div>
+      </figure>
+    </div><!-- /.card -->
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="bcard card h-100 shadow-lg">
+      <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+        <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+          Region-wise - Generation
+        </h5>
+        <!-- the dropdowns -->
+        <div class="card-toolbar no-border">
+        </div><!-- /.card-toolbar -->
+      </div>
+      <figure class="highcharts-figure">
+        <div id="container1"></div>
+      </figure>
+    </div><!-- /.card -->
+  </div>
+
+</div>
+
+
+<div class="row mb-5">
+
+  <div class="col-sm-12 col-md-4 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="bcard card h-100 shadow-lg">
+      <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+        <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+          Inspection Pending Flags
+        </h5>
+        <div class="card-toolbar no-border">
+        </div>
+      </div>
+      <figure class="highcharts-figure">
+        <div id="3d_pi_chart-1"></div>
+      </figure>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="bcard card h-100 shadow-lg">
+      <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+        <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+          Material Pending Flags
+        </h5>
+        <div class="card-toolbar no-border">
+        </div>
+      </div>
+      <figure class="highcharts-figure">
+        <div id="3d_pi_chart-2"></div>
+      </figure>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="bcard card h-100 shadow-lg">
+      <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+        <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+          Region-wise - Generation
+        </h5>
+        <div class="card-toolbar no-border">
+        </div>
+      </div>
+      <figure class="highcharts-figure">
+        <div id="3d_pi_chart-3"></div>
+      </figure>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="row mb-5">
+
+  <div class="col-sm-12 col-md-4 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="bcard card h-100 shadow-lg">
+      <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+        <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+          Month Wise Report
+        </h5>
+        <div class="card-toolbar no-border">
+        </div>
+      </div>
+      <figure class="highcharts-figure">
+        <div id="monthWise"></div>
+      </figure>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="bcard card h-100 shadow-lg">
+      <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+        <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+          Year Wise Report
+        </h5>
+        <div class="card-toolbar no-border">
+        </div>
+      </div>
+      <figure class="highcharts-figure">
+        <div id="yearWise"></div>
+      </figure>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4 mt-2 mt-lg-0 pr-lg-2">
+    <div class="bcard card h-100 shadow-lg">
+      <div class="card-header card-header-section border-b-1 brc-grey-l3 pb-2">
+        <h5 class="card-title font-weight-bold text-100 text-dark-m1 heading-text-info pl-1 pt-2">
+          Zone Wise Report
+        </h5>
+        <div class="card-toolbar no-border">
+        </div>
+      </div>
+      <figure class="highcharts-figure">
+        <div id="zonewise"></div>
+      </figure>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+{% block js %}
+
+<!-- <script src="{% static 'assets/js/high_chart_js/highcharts.js' %}"></script>
+<script src="{% static 'assets/js/high_chart_js/exporting.js' %}"></script> 
+<script src="{% static 'assets/js/high_chart_js/export-data.js' %}"></script>
+<script src="{% static 'assets/js/high_chart_js/accessibility.js' %}"></script> -->
+
+<!-- new cdn -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+<!-- <script src="{% static 'assets/node_modules/tiny-date-picker/tiny-date-picker.css' %}"></script> -->
+<script>
+  // data.forEach((d) => { d.x = new Date(d.x); });
+  Highcharts.setOptions({
+    chart: {
+      options3d: {
+        enabled: true,
+        alpha: 15,
+        beta: 15,
+        depth: 50,
+        viewDistance: 25
+      }
+    },
+    colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
+      return {
+        radialGradient: {
+          cx: 0.5,
+          cy: 0.3,
+          r: 0.7
+        },
+        stops: [
+          [0, color],
+          [1, Highcharts.color(color).brighten(-0.3).get('rgb')] // darken
+        ]
+      };
+    })
+  });
+
+  // Build the chart
+  // Build the chart
+
+  Highcharts.chart('container-inspection-flags', {
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie',
+      options3d: {
+        // Override the default options for this chart
+        alpha: 10,
+        beta: 20,
+        depth: 100,
+        viewDistance: 35
+      }
+    },
+    title: {
+      text: ''
+    },
+    options3d: {
+      enabled: true,
+      alpha: 45,
+      beta: 0
+    },
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.y}</b>'
+    },
+    accessibility: {
+      point: {
+        valueSuffix: ''
+      }
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.status__name}</b>: {point.y}',
+          connectorColor: 'silver'
+        },
+        colors: {{ dataset_inspection_flag_pie_color| safe}},
+        }
+    },
+    series: [{
+      name: 'Flags',
+      data: {{ dataset_inspection_flag_pie| safe}}
+    }]
+});
+
+  // Build the chart
+  Highcharts.chart('container-material-flags', {
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie',
+    },
+    title: {
+      text: ''
+    },
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.y}</b>'
+    },
+    accessibility: {
+      point: {
+        valueSuffix: ''
+      }
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.status__name}</b>: {point.y}',
+          connectorColor: 'silver'
+        },
+        colors: {{ dataset_material_flag_pie_color| safe}},
+        }
+    },
+    series: [{
+      name: 'Flags',
+      data: {{ dataset_material_flag_pie| safe}}
+    }]
+});
+
+
+  // chart 1
+  Highcharts.chart('container1', {
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie'
+    },
+    title: {
+      text: ''
+    },
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.y}</b>'
+    },
+    accessibility: {
+      point: {
+        valueSuffix: '%'
+      }
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.name}</b>: {point.y}',
+          connectorColor: 'silver'
+        },
+        colors: [
+          '#22db9b',
+          '#642d42',
+          '#f44336',
+        ],
+
+      }
+    },
+    series: [{
+      name: 'Projects',
+      data: {{ dataset_region| safe}}
+    }]
+});
+  // chart js code added by Alex start
+
+
+
+  // 3D charts 14 march, 2024
+  Highcharts.chart('3d_pi_chart-1', {
+    chart: {
+      type: 'pie',
+      options3d: {
+        enabled: true,
+        alpha: 45,
+        beta: 0
+      }
+    },
+    title: {
+      text: '',
+      align: 'left'
+    },
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+    subtitle: {
+      text: '',
+      align: 'left'
+    },
+    accessibility: {
+      point: {
+        valueSuffix: '%'
+      }
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.y}</b>'
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        depth: 35,
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.status__name}</b>: {point.y}',
+          connectorColor: 'silver'
+        },
+        colors: {{ dataset_inspection_flag_pie_color| safe}}
+        }
+    },
+    series: [{
+      type: 'pie',
+      name: 'Flages',
+      data: {{ dataset_inspection_flag_pie| safe}}
+    }]
+});
+
+
+
+
+  // 3D charts 14 march, 2024
+  Highcharts.chart('3d_pi_chart-2', {
+    chart: {
+      type: 'pie',
+      options3d: {
+        enabled: true,
+        alpha: 45,
+        beta: 0
+      }
+    },
+    title: {
+      text: '',
+      align: 'left'
+    },
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+    subtitle: {
+      text: '',
+      align: 'left'
+    },
+    accessibility: {
+      point: {
+        valueSuffix: '%'
+      }
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.y}%</b>'
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        depth: 35,
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.status__name}</b>: {point.y}'
+        },
+        colors: {{ dataset_material_flag_pie_color| safe}}
+        }
+    },
+    series: [{
+      type: 'pie',
+      name: 'Flags',
+      data: {{ dataset_material_flag_pie| safe}}
+    }]
+});
+
+
+
+  // 3D charts 14 march, 2024
+  Highcharts.chart('3d_pi_chart-3', {
+    chart: {
+      type: 'pie',
+      options3d: {
+        enabled: true,
+        alpha: 45,
+        beta: 0
+      }
+    },
+    title: {
+      text: '',
+      align: 'left'
+    },
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+    subtitle: {
+      text: '',
+      align: 'left'
+    },
+    accessibility: {
+      point: {
+        valueSuffix: '%'
+      }
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.y}</b>'
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        depth: 35,
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.name}</b>: {point.y}',
+          connectorColor: 'silver'
+        },
+        colors: [
+          '#38761D',
+          '#4C1130',
+          '#FF0000'
+        ]
+      }
+    },
+    series: [{
+      type: 'pie',
+      name: 'Share',
+      data: {{ dataset_region| safe}}
+    }]
+});
+
+
+
+  // month wise  monthWise
+  function monthWise() {
+    const chart = Highcharts.chart('monthWise', {
+      title: {
+        text: '',
+        align: 'left'
+      },
+      credits: {
+        enabled: false
+      },
+      exporting: {
+        enabled: false
+      },
+      subtitle: {
+        text: ' ' +
+          ' ',
+        align: 'left'
+      }, colors: [
+        '#FF0000',
+        '#4C1130',
+        '#FFFF00',
+        '#38761D'
+      ],
+      xAxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      series: [{
+        type: 'column',
+        name: ' ',
+        borderRadius: 5,
+        colorByPoint: true,
+        data: [87, 77, 30, 37, 47, 07, 43, 09, 11, 72, 99, 87],
+        showInLegend: true
+      }], colors: [
+        '#FF0000',
+        '#4C1130',
+        '#FFFF00',
+        '#38761D'
+      ],
+    });
+
+  } monthWise();
+
+
+  // year wise 
+  Highcharts.chart('yearWise', {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: ' ',
+      align: 'left'
+    },
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+    subtitle: {
+      text: ' ',
+      align: 'left'
+    },
+    xAxis: {
+      categories: ['2019', '2020', '2021']
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Percent'
+      }
+    },
+    tooltip: {
+      pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+      shared: true
+    },
+    plotOptions: {
+      column: {
+        stacking: 'percent',
+        dataLabels: {
+          enabled: true,
+          format: '{point.percentage:.0f}%'
+        }
+      }
+    },
+    series: [{
+      name: 'Read',
+      data: [434, 290, 307]
+    }, {
+      name: 'Yellow',
+      data: [272, 153, 156]
+    }, {
+      name: 'Brown',
+      data: [189, 197, 80]
+    }, {
+      name: 'Green',
+      data: [155, 152, 181]
+    }],
+    colors: [
+      '#FF0000',
+      '#4C1130',
+      '#FFFF00',
+      '#38761D'
+    ]
+  });
+
+
+
+
+  // zone wise report  zonewise
+
+  // Data retrieved from https://www.ssb.no/statbank/table/10467/
+  const chart = Highcharts.chart('zonewise', {
+
+    chart: {
+      type: 'column'
+    },
+
+    title: {
+      text: ' '
+    },
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+
+    subtitle: {
+      text: ' '
+    },
+
+    legend: {
+      align: 'right',
+      verticalAlign: 'middle',
+      layout: 'vertical'
+    },
+
+    xAxis: {
+      categories: ['2019', '2020', '2021'],
+      labels: {
+        x: -10
+      }
+    },
+
+    yAxis: {
+      allowDecimals: false,
+      title: {
+        text: 'Amount'
+      }
+    },
+
+    series: [{
+      name: 'PDH (NORTH)',
+      data: [80, 75, 94]
+    }, {
+      name: 'PDH (CN)',
+      data: [31, 26, 27]
+    }, {
+      name: 'PDH (South)',
+      data: [38, 42, 41]
+    }, {
+      name: 'PDH (Mtn/Bwp)',
+      data: [28, 39, 41]
+    }, {
+      name: 'SP',
+      data: [28, 39, 41]
+    }],
+    colors: [
+      '#5c5ced',
+      '#4C1130',
+      '#FFFF00',
+      // '#38761D'
+    ],
+
+    responsive: {
+      rules: [{
+        condition: {
+          maxWidth: 500
+        },
+        chartOptions: {
+          legend: {
+            align: 'center',
+            verticalAlign: 'bottom',
+            layout: 'horizontal'
+          },
+          yAxis: {
+            labels: {
+              align: 'left',
+              x: 0,
+              y: -5
+            },
+            title: {
+              text: null
+            }
+          },
+          subtitle: {
+            text: null
+          },
+          credits: {
+            enabled: false
+          }
+        }
+      }]
+    }
+  });
+
+  document.getElementById('small').addEventListener('click', function () {
+    chart.setSize(400);
+  });
+
+  document.getElementById('large').addEventListener('click', function () {
+    chart.setSize(600);
+  });
+
+  document.getElementById('auto').addEventListener('click', function () {
+    chart.setSize(null);
+  });
+
+</script>
+<script src="{% static 'assets/module/DashboardApi.js' %}"></script>
+<script src="{% static 'assets/module/ChatBoxApi.js' %}"></script>
+<script>
+  // LOCATION RELOAD IF IDLE FOR 5 MIN
+
+  var inactivityTime = 0;
+  var refreshTime = 300000; // 5 minute in milliseconds
+
+  // Increment inactivityTime every second
+  setInterval(function () {
+    inactivityTime += 1000;
+  }, 1000);
+
+  // Reset inactivityTime when user interacts with the page
+  $(document).on('mousemove keydown scroll', function () {
+    inactivityTime = 0;
+  });
+
+  // Refresh page if inactivityTime exceeds refreshTime
+  setInterval(function () {
+    if (inactivityTime >= refreshTime) {
+      location.reload();
+    }
+  }, refreshTime);
+
+  $(window).on('load', function () {
+    var urlParams = new URLSearchParams(window.location.search); //get all parameters
+
+    var drf_gte = urlParams.get('drf__created_on__gte');
+    var drf_lte = urlParams.get('drf__created_on__lte');
+    if (drf_gte && drf_lte) {
+      $('#id-daterange-from').val(drf_gte)
+      $('#id-daterange-to').val(drf_lte)
+      $('.region_filter_link,.city_filter_link,.site_filter_link,.material_filter_link').each(function () {
+        var hrefValue = $(this).attr("href");
+        hrefValue += "&drf__created_on__gte=" + drf_gte + "&drf__created_on__lte=" + drf_lte;
+        $(this).attr("href", hrefValue);
+      });
+    }
+  });
+
+  function getModelBox(task_action_comment_id = '', comment = '', remarks_by_tag = '', remark_date = '', flag_color =
+    '') {
+    if (task_action_comment_id != '') {
+
+      $("#comment_id").val(task_action_comment_id);
+      users_list = DashboardApi.getUsers();
+
+      var options, index, select, option;
+
+      // Get the raw DOM object for the select box
+      select = document.getElementById('tag_user_ids');
+      // Clear the old options
+      select.options.length = 0;
+
+      // Load the new options
+      options = users_list; // Or whatever source information you're working with
+      for (index = 0; index < users_list.length; ++index) {
+        option = options[index];
+        select.options.add(new Option(option.name, option.value));
+      }
+
+      $("#remarks_by_tag_id").text(remarks_by_tag);
+      $("#remark_date_id").text(remark_date);
+      $("#remark_color").css("color", flag_color)
+      $("#message_area").text(comment)
+      $('#modal_forward_tag').modal('show');
+    }
+  }
+
+  function registerCommentReply() {
+    var comment_id = $('#comment_id').val();
+    var user_id = $("#tagged_user").val();
+    var comment = $('#modal_comment_textarea_id').val();
+    var attachments = $('#modal_comment_attachment_id').prop('files');
+
+    var fd = new FormData();
+
+    if (attachments.length > 0) {
+      fd.append('attachments', attachments[0]);
+      fd.append('comment_id', comment_id)
+      fd.append('user_id', user_id)
+      fd.append('comment', comment)
+    }
+
+    // $('#comment_bell_body').load();
+
+    if (comment_id != "" && user_id != "" && comment != "" && attachments != "") {
+      $.ajax({
+        url: '/dashboard/projectdirectorhousing/comment_reply/',
+        method: 'POST',
+        data: fd,
+        contentType: false,
+        processData: false, // added data type
+
+        success: function (res) {
+          location.reload(true);
+        }
+      }); // new script code
+
+    } else {
+      alert("Please Provide All Required Data")
+    }
+
+  }
+</script>
+<script>
+  $('.ins_flag').click(function () {
+    //selector where from images detect for light box
+    $(".intro").AutoLightbox(); //auto lightbox with default settings
+    $("article").AutoLightbox({
+      dimBackground: false
+    }); //lightbox with custom setting, dim background off
+  });
+
+  $('#modal_attachment_close').click(function () {
+    $("#modal_obsns_attachment_body").empty();
+  })
+
+  $('#bell_notifications').click(function () {
+    $('#navbar-notif-tab-2').empty();
+    DashboardApi.getBellNotifications();
+  })
+
+  function getTaskActions(ca_id = "", flag_id = "") {
+    event.preventDefault();
+    if ($("#task_response:not(:empty)").length) {
+      $("#task_response").empty();
+    }
+
+    DashboardApi.getTaskActions(ca_id, flag_id)
+    $("#top_cards").hide();
+  }
+
+  function getNotificationTaskAction(comment_id = "") {
+    event.preventDefault();
+    if ($("#task_response:not(:empty)").length) {
+      $("#task_response").empty();
+    }
+    DashboardApi.getNotificationTaskAction(comment_id)
+    $("#top_cards").hide();
+  }
+
+  function getTaskActionAttachments(task_action_id = "") {
+    event.preventDefault();
+    if ($("#modal_obsns_attachment_body:not(:empty)").length) {
+      $("#modal_obsns_attachment_body").empty();
+    }
+
+    DashboardApi.getTaskActionAttachmentsJs(task_action_id)
+    $('#lightbox_modal_task_action_attachment').modal('show');
+  }
+
+
+
+  // date code start
+
+  // date range picker example
+  var daterange_container = document.querySelector('#id-daterange-container')
+  // Inject DateRangePicker into our container
+  DateRangePicker.DateRangePicker(daterange_container, {
+    mode: 'dp-below',
+    format: function (dt) {
+      return (dt.getMonth() + 1) + '/' + dt.getDate() + '/' + dt.getFullYear();
+    },
+  })
+    .on('statechange', function (_, rp) {
+      // Update the inputs when the state changes
+      var range = rp.state
+      $('#id-daterange-from').val(range.start ? range.start.toDateString() : '')
+      $('#id-daterange-to').val(range.end ? range.end.toDateString() : '')
+      daterange_container.classList.remove('visible')
+    })
+
+  $('#id-daterange-from, #id-daterange-to').on('focus', function () {
+    daterange_container.classList.add('visible')
+  })
+
+  var daterange_wrapper = document.querySelector('#id-daterange-wrapper')
+  var previousTimeout = null;
+  $(daterange_wrapper).on('focusout', function () {
+    if (previousTimeout) clearTimeout(previousTimeout)
+    previousTimeout = setTimeout(function () {
+      if (!daterange_wrapper.contains(document.activeElement)) {
+        daterange_container.classList.remove('visible')
+      }
+    }, 10)
+  })
+
+
+  // date code end
+
+  function formatDate(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
+  $('#date-range-filter-submit').click(function (event) {
+
+    if ($('#id-daterange-to').val() != "" && $('#id-daterange-from').val() != "") {
+      var daterange_from = formatDate($('#id-daterange-from').val());
+      var daterange_to = formatDate($('#id-daterange-to').val());
+      if (daterange_from != "" && daterange_to != "") {
+        var queryparams = {
+          drf__created_on__gte: daterange_from,
+          drf__created_on__lte: daterange_to
+        };
+        var url = '{% url "admin:dashboard_projectdirectorhousing_changelist" %}' + '?' + $.param(queryparams);
+        window.location.href = url;
+        $('#id_drf__created_on__gte').val(daterange_from)
+        $('#id_drf__created_on__lte').val(daterange_to)
+      }
+    }
+    else {
+      alert("Please fill both fields first");
+    }
+  });
+
+  function allow_click(item) {
+    if (item.innerText == 0) {
+      item.setAttribute("href", "javascript:void(0);")
+    }
+  }
+
+  // modal closing code
+  $("#hide").click(function () {
+    $('#modal_obsns_attachment').modal('hide');
+    $(".lightbox").each(function () {
+      $(this).addClass("d-none");
+    });
+  });
+
+  // Tag User Comment Reply
+  $('#modal_organization_chart_body').on('change', '#tag_user1', function () {
+    var $option = $(this).find('option:selected');
+    $('#tagged_user').val($option.val());
+    $("#tag_to_badge").text("@" + String($option.text()));
+    $("#tag_to_badge").removeClass('d-none');
+    $("#remove_tag_to_badge").removeClass('d-none');
+    $("#modal_organization_chart").modal('hide');
+  });
+
+  $('#remove_tag_to_badge').on('click', function () {
+    $('#tagged_user').val('');
+    $("#tag_to_badge").addClass('d-none');
+    $("#remove_tag_to_badge").addClass('d-none');
+  });
+</script>
+{% endblock %}

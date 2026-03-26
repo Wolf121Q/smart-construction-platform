@@ -1,0 +1,62 @@
+<!-- the left side section is carousel in this demo, to show some example variations -->
+{% load i18n %}
+{% load i18n static housing_society_template_tags  %}
+
+{% load static %}
+<style>
+  .carousel-item>div {
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+</style>
+
+
+<div id="loginBgCarousel" class="carousel slide minw-100 h-100 carousel-inner minw-100 h-100 carousel-item active minw-100 h-100" style="position: relative; height: 100vh;">
+  <div class="px-3 bgc-blue-l4 d-flex flex-column align-items-center justify-content-center"
+    style="background-image: url({% static 'assets/image/dha_building-2.jpg' %});  padding-bottom: 65%;">
+
+    <a class="mt-5 mb-2" href="{% url 'auth_login' %}">
+      <!-- <i class="fa fa-leaf text-success-m2 fa-3x"></i> -->
+      <img src="{% display_favicon %}" alt="" style="width: 100px;">
+    </a>
+    <h2>
+      <span class="text-80 text-white-tp2">{{ society.name }}</span>
+    </h2>
+
+    <div class="mt-auto text-white-tp2 text-center pt-1 pl-1" style=" position: absolute; top: 0.em; left: 0;  width: 100%;  margin: 0;  ">
+      <div style="margin-top: 100%;">
+        <div class="mt-0 mx-12 text-white-tp3">
+          <span class="text-120">
+            <!-- Where you live your dream  -->
+          </span>
+          <br>
+          <br>
+          <span class="text-100">
+            UAN: {{ society.phone }}
+            <br>
+            <i class="fa fa-envelope" aria-hidden="true"></i> {{ society.email }} | <i class="fa fa-globe"></i>
+            {{ society.website }}
+            <br>
+          </span>
+          <!-- <hr class="mb-1 brc-black-tp10" /> -->
+        </div>
+
+        <div class=" mb-3 text-white-tp2" style="  padding-top: 42px;">
+          <a id="id-start-carousel" href="{% url 'auth_login' %}" class="text-95 text-white  btn bgc-blue mt-3">Log
+            In</a>
+          <a id="id-start-carousel" href="{% url 'registration_register' %}"
+            class="text-95 text-white  btn bgc-blue mt-3">Sign up</a>
+          <a id="id-start-carousel" href="{% url 'auth_password_reset' %}"
+            class="text-95 text-white  btn bgc-blue mt-3">Forgot Password</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+ 
+</div>
+
+
+ 

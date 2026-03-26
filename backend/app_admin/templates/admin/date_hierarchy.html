@@ -1,0 +1,25 @@
+{% if show %}
+<div class="btn-toolbar">
+        {% if back %}
+   
+        <span class="m-1 badge bgc-white border-1 border-x-3 brc-blue-m2 btn-text-blue text-90 px-2">
+            <i class="fa fa-calendar-alt"></i>
+        </span>
+        
+        
+        <a class="btn btn-sm btn-outline-default px-4 mb-1 text-125" href="{{ back.link }}">&lsaquo; {{ back.title }}</a>
+    
+    {% endif %}
+    {% for choice in choices %}
+        {% if choice.link %}
+        
+        <a class="btn btn-sm btn-outline-default px-4 mb-1 text-125" href="{{ choice.link }}">{% endif %}{{ choice.title }}{% if choice.link %}</a>{% endif %}
+        
+    {% endfor %} 
+
+    <a class="btn btn-app btn-primary ml-1 btn-xs radius-3" href="javascript:void(0)" hidden id="obsnFlagPage">
+        OBSN
+        <span class="badge bgc-danger text-white badge-sm position-tr m-n2 badge-pill text-70 border-1 brc-black-tp8">4586</span>
+    </a>
+</div>
+{% endif %}

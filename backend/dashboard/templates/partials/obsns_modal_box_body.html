@@ -1,0 +1,184 @@
+{% load i18n admin_urls static admin_list %}
+{% load i18n static project_template_tags %}
+
+<!-- {{id}} -->
+
+{% if task_action_comment.task_action.parent %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card acard">
+      <div class="card-body p-0">
+        <div class="table-responsive-md">
+          <table class="table table-bordered border-1	table-striped-secondary text-dark-m1 mb-0">
+            <thead>
+              <tr class="text-white text-140 text-center font-weight-bold brc-black-tp10" style="background-image: linear-gradient(to top, #1e3c72 0%, #1e3c72 1%, #2a5298 100%);">
+                <th colspan="8">Project: <small class="d-inline text-70">{{ task_action_comment.task_action.parent.project.name}} ({{ task_action_comment.task_action.parent.project.reference_number}})</small> </th>
+              </tr>
+              <tr class="text-white text-110 text-center font-weight-bold brc-black-tp10" style="background-image: linear-gradient(to top, #a3bded 0%, #6991c7 100%);">
+                <th class="tableHeading">Task</th>
+                <th class="tableHeading">Flag ID</th>
+                <th>Start Date</th>
+                <th>Completion Date</th>
+                <th>Inspection Type</th>
+                <th>Inspection Date</th>
+                <th>Inspection Flag</th>
+                <th>Created By</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr class="text-black text-center text-90 brc-black-tp10">
+                <td>{{ task_action_comment.task_action.parent.task.name }}</td>
+                <td>{{ task_action_comment.task_action.parent.serial_number }}</td>
+                <td>{{ task_action_comment.task_action.project.start_date }}</td>
+                <td>{{ task_action_comment.task_action.project.end_date|default:"N/A" }}</td>
+                <td>{{ task_action_comment.task_action.parent.status.parent.name }}</td>
+                <td>{{ task_action_comment.task_action.parent.created_on }}</td>
+                <td style="color:{{task_action_comment.task_action.parent.status.color}} ;"><i class="fa fa-flag text-130" aria-hidden="true" style="color:{{task_action_comment.task_action.parent.status.color}};"></i></td>
+                <td>{{ task_action_comment.task_action.parent.created_by.full_name }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>  
+
+<div class="row mt-1">
+  <div class="col-lg-12">
+    <div class="card acard">
+      <div class="card-body p-0">
+        <div class="table-responsive-md">
+          <table class="table table-bordered border-1	table-striped-secondary text-dark-m1 mb-0">
+            <thead>
+              <tr class="text-white text-110 text-center font-weight-bold brc-black-tp10" style="background-image: linear-gradient(to top, #a3bded 0%, #6991c7 100%);">
+                <th>Observation</th>
+                <th>Map</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr class="text-black text-center text-90 brc-black-tp10">
+                <td class="text-left">
+                  {% with description=task_action_comment.task_action.parent.project_taskactioncomment_related.all.first.description %}
+                    {{ description|slice:"0:1"|upper }}{{ description|slice:"1:" }}
+                  {% endwith %}
+                </td>
+                <td><a type="button" target="popup" onclick="window.open('https://maps.google.com/maps?q=loc:{{task_action_comment.latitude}},{{task_action_comment.longitude}}','popup','width=600,height=300'); return false;"><i class="fa fa-map text-140 mt-3 mr-2"></i></a></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="table table-bordered border-1	table-striped-secondary text-dark-m1 mb-0">
+            <thead>
+              <tr class="text-white text-110 text-center font-weight-bold brc-black-tp10" style="background-image: linear-gradient(to top, #a3bded 0%, #6991c7 100%);">
+                <th>Images</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-black text-center text-90 brc-black-tp10">
+                <td>
+                    {% for task_action_file in task_action_comment.task_action.parent.project_taskfile_related.all %}
+                    <a style="margin-right: 10px;" class ="img" type="button" target="popup" onclick="window.open('{{task_action_file.attachment.url}}','popup','width=600,height=300'); return false;"><img src="{{task_action_file.attachment.url}}" style="width: 220px;height:120px;"  alt="{{task_action_file.task_action_comment.description.html|safe}}"></a>
+                    {% endfor %}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card acard">
+      <div class="card-body p-0">
+        <div class="table-responsive-md">
+          <table class="table table-bordered border-1	table-striped-secondary text-dark-m1 mb-0">
+            <thead>
+              <tr class="text-white text-140 text-center font-weight-bold brc-black-tp10" style="background-image: linear-gradient(to top, #1e3c72 0%, #1e3c72 1%, #2a5298 100%);">
+                <th colspan="8">Project: <small class="d-inline text-70">{{ task_action_comment.task_action.project.name }} ({{ task_action_comment.task_action.project.reference_number }})</small> </th>
+              </tr>
+              <tr class="text-white text-110 text-center font-weight-bold brc-black-tp10" style="background-image: linear-gradient(to top, #a3bded 0%, #6991c7 100%);">
+                <th>Task</th>
+                <th>Flag ID</th>
+                <th>Start Date</th>
+                <th>Completion Date</th>
+                <th>Inspection Type</th>
+                <th>Inspection Date</th>
+                <th>Inspection Flag</th>
+                <th>Created By</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr class="text-black text-center text-90 brc-black-tp10">
+                <td>{{ task_action_comment.task.name }}</td>
+                <td>{{ task_action_comment.task_action.serial_number }}</td>
+                <td>{{ task_action_comment.task_action.project.start_date }}</td>
+                <td>{{ task_action_comment.task_action.project.end_date|default:"N/A" }}</td>
+                <td>{{ task_action_comment.status.parent.name }}</td>
+                <td>{{ task_action_comment.task_action.created_on }}</td>
+                <td style="color:{{task_action_comment.task_action.status.color}} ;"><i class="fa fa-flag text-130" aria-hidden="true" style="color:{{status_flag.color}};"></i></td>
+                <td>{{ task_action_comment.task_action.created_by.full_name }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-1">
+  <div class="col-lg-12">
+    <div class="card acard">
+      <div class="card-body p-0">
+        <div class="table-responsive-md">
+          <table class="table table-bordered border-1	table-striped-secondary text-dark-m1 mb-0">
+            <thead>
+              <tr class="text-white text-110 text-center font-weight-bold brc-black-tp10" style="background-image: linear-gradient(to top, #a3bded 0%, #6991c7 100%);">
+                <th>Observation</th>
+                <th>Map</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr class="text-black text-center text-90 brc-black-tp10">
+                <td class="text-left">
+                  {% with description=task_action_comment.task_action.description %}
+                    {{ description|slice:"0:1"|upper }}{{ description|slice:"1:" }}
+                  {% endwith %}
+                </td>
+                <td><a type="button" target="popup" onclick="window.open('https://maps.google.com/maps?q=loc:{{task_action_comment.latitude}},{{task_action_comment.longitude}}','popup','width=600,height=300'); return false;"><i class="fa fa-map text-140 mt-2 mr-2"></i></a></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="table table-bordered border-1	table-striped-secondary text-dark-m1 mb-0">
+            <thead>
+              <tr class="text-white text-110 text-center font-weight-bold brc-black-tp10" style="background-image: linear-gradient(to top, #a3bded 0%, #6991c7 100%);">
+                <th>Images</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-black text-center text-90 brc-black-tp10">
+                <td>
+                    {% for task_action_file in task_action_files %}
+                    <a style="margin-right: 10px;" class ="img" type="button" target="popup" onclick="window.open('{{task_action_file.attachment.url}}','popup','width=600,height=300'); return false;"><img src="{{task_action_file.attachment.url}}" style="width: 220px;height:120px;"  alt="{{task_action_file.task_action_comment.description.html|safe}}"></a>
+                    {% endfor %}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

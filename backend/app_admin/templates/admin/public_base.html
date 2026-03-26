@@ -1,0 +1,234 @@
+{% load i18n static bootstrap_admin_template_tags  %}
+{% load i18n static housing_society_template_tags  %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl" {% endif %}>
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %}</title>
+
+  {% block bootstrap_admin_css %}
+  {% endblock bootstrap_admin_css %}
+
+  <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static 'admin/css/base.css' %}{% endblock %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/datetime_widget.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/bootstrap/dist/css/bootstrap.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/fontawesome.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/regular.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/brands.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/@fortawesome/fontawesome-free/css/solid.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/node_modules/basictable/basictable.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ace-font.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ace.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/custom.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/loader.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/card-shadow.css' %}" />
+
+<style>
+  .sidebar-light .submenu .nav-text::before {
+  display: none;
+  position: absolute;
+  left: 3em;
+  z-index: 1;
+  opacity: 0.65;
+  top: calc(50% - 0.1875rem);
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 0.75rem;
+  background-color: currentColor;
+  left: 10px;
+}
+</style>
+
+
+  {% block extrastyle %}{% endblock %}
+
+  {% if LANGUAGE_BIDI %}
+  {# PUT HERE YOUR CUSTOM RTL STYLESHEET #}
+  {% comment %}
+  <link rel="stylesheet" type="text/css"
+    href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />
+  {% endcomment %}
+  {% endif %}
+
+  {% block jquery %}
+  <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+
+  {% endblock jquery %}
+  <script>
+    (function ($) {
+      $(document).ready(function () {
+        $("#overlay").delay(600).fadeOut(500);
+      });
+    })(django.jQuery);
+  </script>
+  <script type="text/javascript">
+    window.__admin_media_prefix__ = "{% filter escapejs %}{% static "
+    admin / " %}{% endfilter %}";
+  </script>
+  <script type="text/javascript">
+    window.__admin_utc_offset__ = "{% filter escapejs %}{% now "
+    Z " %}{% endfilter %}";
+  </script>
+
+  {% block extrahead %}{% endblock %}
+  {% block blockbots %}
+  <meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <link rel="icon" type="image/x-icon" href="{% display_favicon %}">
+</head>
+{% load i18n %}
+{% display_sidebar_menu cl.has_filters as is_displaying_menu %}
+{% if '_popup' in request.GET %} {% with is_popup=1 %} {% endwith %} {% endif %}
+
+<body
+  class="{% if '_popup' in request.GET %} __popup {% endif %}{% block bodyclass %}{% endblock %}{% if not is_displaying_menu %} no-sidebar{% endif %}"
+  data-admin-utc-offset="{% now "Z" %}">
+  <div id="loader" class="animated yt-loader" style="display: none;"></div>
+
+
+  <div class="body-container">
+
+    <div class="main-container bgc-white">
+
+
+      <!--<div class="body-container">
+       <div class="col-sm-3 col-md-2 sidebar"> -->
+
+
+      {% block content_container %}
+
+
+        <div role="main" class="main-content bgc-white">
+          <div class=" container-fluid mt-3" >
+            
+            {% block messages %}
+            
+            {% if messages %}
+            {% for message in messages %}
+            {% if message.tags == 'success' %}
+            <div
+              class="alert fade show bgc-white text-dark-tp3 border-1 brc-secondary-l2 shadow-sm radius-0 py-3 d-flex align-items-start">
+              <div class="position-tl w-102 m-n1px border-t-4 brc-success"></div>
+              <div class="bgc-success-l4 px-3 py-3 radius-round mr-4 border-2 brc-success-m2">
+                <i class="fa fa-check text-140 text-success mx-2px"></i>
+              </div>
+
+              <div class="text-dark-tp3">
+                <h3 class="text-success-d1 text-130">Alert Message!</h3>
+                {{ message|capfirst }}
+              </div>
+
+              <button type="button"
+                class="close align-self-start ml-auto mt-n25 mr-n2 text-success-d2 text-150 opacity-2 bgc-h-success-l2 radius-round px-15 pt-1px pb-3px"
+                data-dismiss="alert" aria-label='{% trans "Close" %}'>
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            {% else %}
+            <div role="alert"
+              class="alert alert-warning bgc-warning-l4 brc-warning-m3 border-2 d-flex align-items-center">
+              <i class="fas fa-exclamation-circle mr-3 fa-2x text-orange"></i>
+
+              <div class="text-dark-tp2">
+                {{ message|capfirst }}
+              </div>
+
+              <button type="button" class="close align-self-start ml-auto text-danger-d2 text-150" data-dismiss="alert"
+                aria-label='{% trans "Close" %}'>
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+          
+            {% endif %}
+
+
+            {% endfor %}
+            {% endif %}
+            {% endblock messages %}
+
+            {% block content %}
+            {% block object-tools %}{% endblock %}
+            {{ content }}
+            {% endblock %}
+          </div>
+        </div>
+        {% endblock content_container %}
+        {% if cl.has_filters %}
+        <div id="id-filters-modal"
+          class="my-1 my-lg-2 modal modal-nb ace-aside aside-right aside-offset aside-below-nav" data-backdrop="false"
+          tabindex="-1" role="dialog" aria-hidden="true">
+
+          <div class="modal-dialog" role="document">
+            <div
+              class="modal-content w-auto flex-grow-1 pb-1px radius-0 radius-l-2 border-y-2 border-l-1 brc-default-m3 bgc-white-tp1 shadow">
+
+              <!--          <div class="modal-header p-0 radius-0 mx-3">
+                <h4 class="modal-title text-primary-d1 text-140 pt-2 pl-1">{% trans 'Filter' %}</h4>
+                <button type="button" class="close m-0 mr-n2" data-dismiss="modal" aria-label="Close">
+                  <i class="fa fa-times text-70" aria-hidden="true"></i>
+                </button>
+              </div> -->
+
+              <div class="modal-body" style="padding: 0.5rem;overflow: auto !important;">
+                {% block filters %}{% endblock filters %}
+              </div>
+            </div><!-- .modal-content -->
+
+            <div class="aside-header align-self-start mt-1 mt-lg-5 text-right d-style">
+              <button type="button" class="btn bgc-primary-d1 btn-lg shadow-sm pl-2 radius-l-2 f-n-hover py-1 py-md-2"
+                data-toggle="modal" data-target="#id-filters-modal">
+                <i class="fa fa-filter text-110 ml-1" style="color: white;"></i>
+              </button>
+            </div>
+          </div><!-- .modal-dialog -->
+        </div><!-- .modal-aside -->
+        {% endif %}
+      </div>
+    </div>
+
+    {% block bootstrap_admin_js %}
+    <!--  <script src="{% static 'bootstrap_admin/js/base.js' %}"></script>-->
+    <script src="{% static 'assets/node_modules/jquery/dist/jquery.js' %}"></script>
+    <script>
+      if (typeof jQuery === 'undefined' && django && django.jQuery) {
+        jQuery = django.jQuery;
+      }
+    </script>
+    <!--   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+
+    <script src="{% static 'assets/node_modules/bootstrap/dist/js/bootstrap.js' %}"></script>
+    <script src="{% static 'assets/node_modules/tiny-date-picker/dist/date-range-picker.js' %}"></script>
+    <script src="{% static 'assets/node_modules/popper.js/dist/umd/popper.js' %}"></script>
+    <script src="{% static 'assets/node_modules/node-waves/dist/waves.js' %}"></script>
+
+
+   
+
+    <script src="{% static 'assets/js/ace.js' %}"></script>
+    <script src="{% static 'assets/js/custom_extra.js' %}"></script>
+
+    <script>
+      $(document).bind("ajaxStart", function(){
+    $("#loader").show();
+    }).bind("ajaxComplete", function(){
+     $("#loader").hide();
+    });
+
+
+    </script>
+
+    {% endblock bootstrap_admin_js %}
+
+    {% block js %}{% endblock js %}
+</body>
+
+</html>

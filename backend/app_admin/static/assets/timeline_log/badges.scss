@@ -1,0 +1,155 @@
+
+.theme-blue {
+	.badge {
+		&.badge-primary {
+			background-color: #005eaa!important;
+			&.badge-right:after {
+				border-left-color: #005eaa;
+			}
+			&.badge-left:before {
+				border-right-color: #005eaa;
+			}			
+		}
+		&.badge-secondary {
+			background-color: #88c3ea!important;
+			&.badge-right:after {
+				border-left-color: #88c3ea;
+			}
+			&.badge-left:before {
+				border-right-color: #88c3ea;
+			}			
+		}
+		&.badge-tertiary {
+			background-color: #c0e9ff!important;
+			&.badge-right:after {
+				border-left-color: #c0e9ff;
+			}
+			&.badge-left:before {
+				border-right-color: #c0e9ff;
+			}			
+		}
+		&.badge-quaternary {
+			background-color: #edf9ff!important;
+			&.badge-right:after {
+				border-left-color: #edf9ff;
+			}
+			&.badge-left:before {
+				border-right-color: #edf9ff;
+			}				
+		}
+	}
+}
+
+.theme-amber {
+	.badge {
+		&.badge-primary {
+			background-color: #fbab18!important;
+			&.badge-right:after {
+				border-left-color: #fbab18;
+			}
+			&.badge-left:before {
+				border-right-color: #fbab18;
+			}			
+		}
+		&.badge-secondary {
+			background-color: #ffd54f!important;
+			&.badge-right:after {
+				border-left-color: #ffd54f;
+			}
+			&.badge-left:before {
+				border-right-color: #ffd54f;
+			}			
+		}
+		&.badge-tertiary {
+			background-color: #ffecb3!important;
+			&.badge-right:after {
+				border-left-color: #ffecb3;
+			}
+			&.badge-left:before {
+				border-right-color: #ffecb3;
+			}			
+		}
+		&.badge-quaternary {
+			background-color: #fff7e1!important;
+			&.badge-right:after {
+				border-left-color: #fff7e1;
+			}
+			&.badge-left:before {
+				border-right-color: #fff7e1;
+			}			
+		}
+	}
+}
+
+.badge {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1rem;
+	font-weight: normal;
+	position: relative;
+	&:after, &:before {
+		position: absolute;
+		display: inline-block;
+		top: 0;
+		content: ''
+	}
+
+	&.badge-right {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+		&:after {
+			border-top: 0.75rem solid transparent;
+			border-left: 1rem solid;
+			border-bottom: 0.75rem solid transparent;
+			right: -1rem;			
+		}
+		&.p-2 {
+			&:after {
+				border-top: 1rem solid transparent;
+				border-left: 1rem solid;
+				border-bottom: 1rem solid transparent;				
+			}
+		}	
+		&.p-3 {
+			&:after {
+				border-top: 1.5rem solid transparent;
+				border-left: 1.5rem solid;
+				border-bottom: 1.5rem solid transparent;
+				right: -1.5rem;
+			}
+		}
+	}
+	&.badge-left {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		&:before {
+			border-top: 0.75rem solid transparent;
+			border-right: 1rem solid;
+			border-bottom: 0.75rem solid transparent;
+			left: -1rem;			
+		}
+		&.p-2 {
+			left: 1rem;
+			&:before {
+				border-top: 1rem solid transparent;
+				border-right: 1rem solid;
+				border-bottom: 1rem solid transparent;
+				left: -1rem;
+			}
+		}	
+		&.p-3 {
+			left: 1.5rem;
+			&:before {
+				border-top: 1.5rem solid transparent;
+				border-right: 1.5rem solid;
+				border-bottom: 1.5rem solid transparent;
+				left: -1.5rem;
+			}
+		}		
+	}
+}
+
+
+// just for the demo
+.badge {
+	margin-bottom: 30px;
+}

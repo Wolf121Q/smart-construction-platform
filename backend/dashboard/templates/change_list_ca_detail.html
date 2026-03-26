@@ -1,0 +1,946 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+{{ block.super }}
+<!-- <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" /> -->
+<link rel="stylesheet" type="text/css"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+{% if cl.formset %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" /> -->
+{% endif %}
+{% if cl.formset or action_form %}
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{% endif %}
+{{ media.css }}
+{% if not actions_on_top and not actions_on_bottom %}
+{% endif %}
+
+
+<link rel="stylesheet" type="text/css"
+  href="{% static 'assets/node_modules/tiny-date-picker/tiny-date-picker.css' %}" />
+<link rel="stylesheet" type="text/css"
+  href="{% static 'assets/node_modules/tiny-date-picker/date-range-picker.css' %}" />
+<link rel="stylesheet" type="text/css"
+  href="{% static 'assets/node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css' %}" />
+
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media.js }}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs ace-save-state d-none" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="ace-icon fa fa-home home-icon"></i>
+      <a href="{% url 'admin:index' %}" title="{% trans 'Home' %}">Home</a>
+    </li>
+    <li>
+      <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}"
+        title="{% trans 'Home' %}">{{ cl.opts.app_config.verbose_name }}</a>
+    </li>
+    <li class="active">{{ cl.opts.verbose_name_plural|capfirst }}</li>
+  </ul><!-- /.breadcrumb -->
+
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}flex{% endblock %}
+
+{% block filters %}
+{% if cl.has_filters %}
+<div id="changelist-filter">
+  {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<style type="text/css">
+  .elem,
+  .elem * {
+    box-sizing: border-box;
+    margin: 0 !important;
+  }
+
+  .elem {
+    display: inline-block;
+    font-size: 0;
+    width: 33%;
+    border: 20px solid transparent;
+    border-bottom: none;
+    background: #fff;
+    padding: 10px;
+    height: auto;
+    background-clip: padding-box;
+  }
+
+  .elem>span {
+    display: block;
+    cursor: pointer;
+    height: 0;
+    padding-bottom: 70%;
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .card-header-section {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    height: 60px;
+  }
+
+  /* table css by alex */
+  tfoot {
+    background: #f7f7f7;
+  }
+
+  tfoot {
+    position: sticky;
+    bottom: 0;
+    border-top: 2px solid #fafafa;
+  }
+
+  /* table css by alex */
+
+  .table-height-scroll {
+    height: 290px !important;
+    overflow-y: scroll;
+  }
+
+  .table-height {
+    height: 290px !important;
+  }
+
+  .date-on-medium-device {
+    position: absolute;
+    left: -68px !important;
+    top: 100%;
+    opacity: 0;
+    visibility: hidden;
+    z-index: -1;
+    transition: opacity 0.15s, visibility 0s 0.15s, z-index 0s 0.15s;
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .lcl_fade_oc.lcl_pre_show #lcl_overlay,
+  .lcl_fade_oc.lcl_pre_show #lcl_window,
+  .lcl_fade_oc.lcl_is_closing #lcl_overlay,
+  .lcl_fade_oc.lcl_is_closing #lcl_window {
+    opacity: 0 !important;
+  }
+
+  .lcl_fade_oc.lcl_is_closing #lcl_overlay {
+    -webkit-transition-delay: .15s !important;
+    transition-delay: .15s !important;
+  }
+
+  /* .img1{
+        text-align: end;
+    }
+    .img2{
+        text-align: start;
+    } */
+  @media screen and (min-width: 280px) and (max-width: 510px) {
+    .main {
+      width: 400px;
+    }
+  }
+
+  .table_height {
+    height: 351px !important;
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+
+  .table_height_station {
+    height: 351px !important;
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .img-wrraper {
+    animation: myzoom 5s infinite;
+  }
+
+  @keyframes myzoom {
+    0% {
+      transform: scale(1.3);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+
+    100% {
+      transform: scale(1.3);
+    }
+  }
+
+  .map_icon {
+    animation: myzoom 2s infinite;
+  }
+
+  @keyframes myzoom {
+    0% {
+      transform: scale(1.3);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+
+    100% {
+      transform: scale(1.3);
+    }
+  }
+
+  .search_top {
+    position: relative;
+    margin-left: 11px;
+  }
+
+  .circular_icon {
+    top: 13px;
+  }
+
+  @media only screen and (min-width: 150px) and (max-width: 320px) {
+    .search_top {
+      width: 60px;
+    }
+
+    .circular_icon {
+      width: 80px;
+    }
+  }
+
+  @media only screen and (min-width: 320px) and (max-width: 500px) {
+    body title {
+      font-size: 12px;
+    }
+  }
+
+  @media only screen and (min-width: 500px) and (max-width: 900px) {
+    body title {
+      font-size: 14px;
+    }
+  }
+
+  @media only screen and (min-width: 900px) and (max-width: 1200px) {
+    body title {
+      font-size: 16px;
+    }
+  }
+
+
+  /* Smartphones (portrait and landscape) ----------- */
+  @media only screen and (min-device-width : 150px) and (max-device-width : 480px) {
+    .card_heading_text {
+      font-size: 5vmin;
+      font-weight: 600;
+      font-weight: 600;
+    }
+
+    .heading_info_text {
+      font-size: 3vmin;
+    }
+
+    .thead_text {
+      font-size: 3vmin;
+      font-weight: 600 !important;
+    }
+
+    .rounded_box_text {
+      width: 37px;
+      height: 37px;
+    }
+
+    .tbody_text {
+      font-size: 3vmin;
+    }
+
+    .heading-text-info {
+      font-size: 14px !important;
+    }
+
+    .main-text-info {
+      font-size: 13px !important;
+    }
+
+    .total-text-info {
+      font-size: 12px !important;
+    }
+
+    .data-text-info {
+      font-size: 11px !important;
+    }
+
+    .btn-outline-primary {
+      margin-left: 0 !important;
+    }
+  }
+
+  /* select date media query start */
+  @media only screen and (min-width: 617px) and (max-width: 1044px) {
+
+    /* for 10 inches tablet screens */
+    .date-on-medium-device {
+      position: absolute;
+      left: -163px !important;
+      top: 100%;
+      opacity: 0;
+      visibility: hidden;
+      z-index: -1;
+      transition: opacity 0.15s, visibility 0s 0.15s, z-index 0s 0.15s;
+      box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .dr-cals {
+      display: flex;
+      justify-content: space-between;
+      background: white;
+      box-shadow: 8px 8px 32px -16px rgba(0, 0, 0, 0.5);
+      padding-top: 6px;
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-left: -164px !important;
+    }
+  }
+
+  /* select date media query end */
+</style>
+
+<div class="row mt-0">
+  <div class="col-12">
+
+    <div class=" mb-2 pb-2 flex-column flex-sm-row align-items-start align-items-sm-center">
+      <div class="row">
+        <div class="col-4">
+          <h1 class="page-title text-primary-d2 text-140">
+            {{ cl.opts.verbose_name_plural|capfirst }}
+          </h1>
+        </div>
+        <div class="col-8">
+
+          <div class="page-tools mt-3 mt-sm-0 mb-sm-n1">
+            <!-- dataTables search box will be inserted here dynamically -->
+            <div class="row">
+              <div class="col-10 ml-auto">
+                {% if cl.search_fields %}
+                {% block search %}{% search_form cl %}{% endblock %}
+                {% endif %}
+              </div>
+              <div class="col-2">
+                {% block object-tools %}
+                {% if has_add_permission %}
+
+                {% block object-tools-items %}
+                {% url cl.opts|admin_urlname:'add' as add_url %}
+                <a style="margin-top: 5px;" href="{% add_preserved_filters add_url is_popup to_field %}"
+                  class="btn radius-round btn-outline-primary border-2 btn-sm ml-2"
+                  title="{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}"
+                  data-placement="left" data-toggle="tooltip" role="button">
+                  <i class="fa fa-plus"></i>
+
+                </a>
+                {% endblock %}
+
+                {% endif %}
+                {% endblock %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
+        <div class="card-header" style="background: linear-gradient(to left,#0392d9, #42ccf4);">
+          <a href="{% url 'admin:dashboard_report_changelist' %}"
+            class=" btn btn-bgc-white btn-lighter-info btn-h-info btn-a-info border-2 radius-round btn-lg px-25 mx-1">
+            <i class="fas fa-sync-alt "></i></a>
+            <span style="color:white;font-weight: bold;margin-top: 12px;font-size: 18px;">{%if selected_filters %}{{selected_filters}} {% endif %}</span>
+
+          <h5 class="card-title text-white mr-2">
+          </h5>
+          <!-- date code start -->
+          <div id="id-daterange-wrapper" class="pos-rel tbody_text">
+            <!-- daterange -->
+            <div class="form-row">
+              <div class="col">
+                <input id="id-daterange-from" class="form-control ex-inputs-start tbody_text" placeholder="From date" />
+              </div>
+              <div class="text-grey-l2">_</div>
+              <div class="col">
+                <input id="id-daterange-to" class="form-control ex-inputs-end tbody_text" placeholder="To date" />
+              </div>
+            </div>
+            <div id="id-daterange-container" class="dp-daterange-picker dp-daterange-below date-on-medium-device"></div>
+          </div>
+          <!-- date code end -->
+          <!-- date save button code start -->
+          <a href="#" id="date-range-filter-submit"
+            class="btn btn-sm btn-lighter-grey btn-bgc-secondary ml-2 tbody_text text-center"
+            style="background-color: #9f3d2a;color: white;height: 36px;">
+            Go
+          </a>
+          <!-- date save button code end -->
+          <div class="text-center text-white font-weight-bold" style="margin-left: 15px;"> </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- FILTER CARDS -->
+    {% include 'partials/ca_details_stats_cards.html' %}
+
+
+      <form id="changelist-form" action="" method="post" {% if cl.formset.is_multipart %} enctype="multipart/form-data"
+      {% endif %} novalidate>{% csrf_token %}
+      <div class="card dcard">
+        {% if action_form and actions_on_top and cl.full_result_count %}
+        <div class="card-header text-white border-0">
+          {% admin_actions %}
+        </div>
+        {% endif %}
+        {% if cl.date_hierarchy %}
+        {% block date_hierarchy %}
+        <div class="card-header text-white border-0">
+          {% date_hierarchy cl %}
+          {% endblock %}
+        </div>
+        {% endif %}
+        <div class="card-body p-0 border-x-1 border-b-1 brc-default-m4 radius-0 overflow-hidden">
+          <div id="content-main" class="bootstrap-table bootstrap4">
+            {% if cl.formset.errors %}
+            <div role="alert" class="errornote alert alert-warning fade in">
+              <button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span
+                  class="sr-only">{% trans "Close" %}</span></button>
+              {% blocktrans count cl.formset.total_error_count as counter %}Please correct the error
+              below.{% plural %}Please correct the errors below.{% endblocktrans %}
+              {{ cl.formset.non_form_errors }}
+            </div>
+            {% endif %}
+            <div class="table-responsive">
+              <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+                <div class="panel panel-default">
+                  {% if cl.formset %}
+                  <div>{{ cl.formset.management_form }}</div>
+                  {% endif %}
+                  {% block result_list %}
+                  {% result_list cl %}
+                  {% if cl.result_count > cl.list_per_page or actions_on_bottom and cl.full_result_count %}
+                  <div class="panel-body actions-bottom">
+                    <div class="row">
+                      {% if action_form and actions_on_bottom and cl.full_result_count %}
+                      <div class="col-sm-4">
+                        {% admin_actions %}
+                      </div>
+                      {% endif %}
+                      <div
+                        class="{% if action_form and actions_on_bottom and cl.full_result_count %}col-sm-8{% else %}col-sm-12{% endif %}">
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% endblock %}
+                  <div class="panel-footer" id="panel-footer">
+                    <span class="info pull-left">
+                    </span>
+                    <div class="right-buttons">
+                      {% if cl.formset and cl.result_count %}
+                      <input type="submit" name="_save" class="save btn btn-primary btn-xs"
+                        value="{% trans 'Save' %}" />
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="fixed-table-pagination">
+                <div class="float-left pagination-detail">
+                  <span class="pagination-info">
+                    {{ cl.result_count }}
+                    {% ifequal cl.result_count 1 %}
+                    {{ cl.opts.verbose_name }}
+                    {% else %}
+                    {{ cl.opts.verbose_name_plural }}
+                    {% endifequal %}
+                  </span>
+                </div>
+                <div class="float-right pagination">
+                  {% block pagination %}{% pagination cl %}{% endblock %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+ 
+      </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<!-- <script src="{% static 'assets/node_modules/tableexport.jquery.plugin/tableExport.min.js' %}"></script>
+<script src="{% static 'assets/node_modules/tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js' %}"></script>
+
+ -->
+<script src="{% static 'assets/node_modules/bootstrap-table/dist/bootstrap-table.min.js' %}"></script>
+<!-- <script src="{% static 'assets/node_modules/bootstrap-table/dist/extensions/export/bootstrap-table-export.js' %}"></script>
+<script src="{% static 'assets/node_modules/bootstrap-table/dist/extensions/print/bootstrap-table-print.js' %}"></script> -->
+<script src="{% static 'assets/node_modules/bootstrap-table/dist/extensions/mobile/bootstrap-table-mobile.js' %}">
+</script>
+<!-- <script src="{% static 'bootstrap_admin/js/bootstrap_table.js' %}"></script> -->
+
+
+
+<script>
+ 
+
+(function (H) {
+    H.seriesTypes.pie.prototype.animate = function (init) {
+        const series = this,
+            chart = series.chart,
+            points = series.points,
+            {
+                animation
+            } = series.options,
+            {
+                startAngleRad
+            } = series;
+
+        function fanAnimate(point, startAngleRad) {
+            const graphic = point.graphic,
+                args = point.shapeArgs;
+
+            if (graphic && args) {
+
+                graphic
+                    // Set inital animation values
+                    .attr({
+                        start: startAngleRad,
+                        end: startAngleRad,
+                        opacity: 1
+                    })
+                    // Animate to the final position
+                    .animate({
+                        start: args.start,
+                        end: args.end
+                    }, {
+                        duration: animation.duration / points.length
+                    }, function () {
+                        // On complete, start animating the next point
+                        if (points[point.index + 1]) {
+                            fanAnimate(points[point.index + 1], args.end);
+                        }
+                        // On the last point, fade in the data labels, then
+                        // apply the inner size
+                        if (point.index === series.points.length - 1) {
+                            series.dataLabelsGroup.animate({
+                                opacity: 1
+                            },
+                            void 0,
+                            function () {
+                                points.forEach(point => {
+                                    point.opacity = 1;
+                                });
+                                series.update({
+                                    enableMouseTracking: true
+                                }, false);
+                                chart.update({
+                                    plotOptions: {
+                                        pie: {
+                                            innerSize: '40%',
+                                            borderRadius: 8
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    });
+            }
+        }
+
+        if (init) {
+            // Hide points on init
+            points.forEach(point => {
+                point.opacity = 0;
+            });
+        } else {
+            fanAnimate(points[0], startAngleRad);
+        }
+    };
+}(Highcharts));
+
+Highcharts.chart('project-zone', {
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: 'Zone Wise Chart',
+        align: 'left'
+    }, 
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+    subtitle: {
+        text: ' ',
+        align: 'left'
+    },
+    tooltip: {
+        pointFormat: ' '
+    }, 
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            borderWidth: 2,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b><br>{point.y}',
+                distance: 20
+            }
+        }
+    },
+    series: [{
+        // Disable mouse tracking on load, enable after custom animation
+        enableMouseTracking: false,
+        animation: {
+            duration: 2000
+        },
+        colorByPoint: true,
+        data: {{zonewise_graph_data|safe}}
+    }]
+});
+
+</script>
+
+
+<script>
+(function (H) {
+    H.seriesTypes.pie.prototype.animate = function (init) {
+        const series = this,
+            chart = series.chart,
+            points = series.points,
+            {
+                animation
+            } = series.options,
+            {
+                startAngleRad
+            } = series;
+
+        function fanAnimate(point, startAngleRad) {
+            const graphic = point.graphic,
+                args = point.shapeArgs;
+
+            if (graphic && args) {
+
+                graphic
+                    // Set inital animation values
+                    .attr({
+                        start: startAngleRad,
+                        end: startAngleRad,
+                        opacity: 1
+                    })
+                    // Animate to the final position
+                    .animate({
+                        start: args.start,
+                        end: args.end
+                    }, {
+                        duration: animation.duration / points.length
+                    }, function () {
+                        // On complete, start animating the next point
+                        if (points[point.index + 1]) {
+                            fanAnimate(points[point.index + 1], args.end);
+                        }
+                        // On the last point, fade in the data labels, then
+                        // apply the inner size
+                        if (point.index === series.points.length - 1) {
+                            series.dataLabelsGroup.animate({
+                                opacity: 1
+                            },
+                            void 0,
+                            function () {
+                                points.forEach(point => {
+                                    point.opacity = 1;
+                                });
+                                series.update({
+                                    enableMouseTracking: true
+                                }, false);
+                                chart.update({
+                                    plotOptions: {
+                                        pie: {
+                                            innerSize: '40%',
+                                            borderRadius: 8
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    });
+            }
+        }
+
+        if (init) {
+            // Hide points on init
+            points.forEach(point => {
+                point.opacity = 0;
+            });
+        } else {
+            fanAnimate(points[0], startAngleRad);
+        }
+    };
+}(Highcharts));
+
+Highcharts.chart('project-station', {
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: 'Station Wise Chart',
+        align: 'left'
+    }, 
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+    subtitle: {
+        text: ' ',
+        align: 'left'
+    },
+    tooltip: {
+        pointFormat: ' '
+    }, 
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            borderWidth: 2,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b><br>{point.y}',
+                distance: 20
+            }
+        }
+    },
+    series: [{
+        // Disable mouse tracking on load, enable after custom animation
+        enableMouseTracking: false,
+        animation: {
+            duration: 2000
+        },
+        colorByPoint: true,
+        data: {{stationwise_graph_data|safe}}
+    }]
+});
+
+</script>
+
+<script>
+  /*    
+    (function ($) {
+      $('.object-tools .btn').tooltip({'container':'body'});
+      $('#result_list .vTextField').addClass('form-control');
+      // $('#toolbar .popover-dismiss').popover({
+      //   trigger: 'focus',
+      //   container: 'body',
+      //   title: '',
+      //   content:$('.popover-search-info').html(),
+      //   html:true,
+      //   hide:600
+      // }).focus();
+
+      // checkbox progressbar
+    //   $checkboxes = $('#result_list .action-checkbox input');
+    //   var COUNT_ITEMS = $checkboxes.length;
+    //   $checkboxes.on('click', function () {
+    //     checked = $('#result_list .action-checkbox input:checked').length;
+    //     width = (checked * 100) / COUNT_ITEMS;
+    //     $('.progressbar-selected-rows').width(width + '%');
+    //   });
+    //   $('#action-toggle').on('click', function () {
+    //     if ($(this).is(':checked')) {
+    //       $('.progressbar-selected-rows').width('100%');
+    //     } else {
+    //       $('.progressbar-selected-rows').width(0);
+    //     }
+    //   });
+    //   $('.info-actions .clear').on('click', function () {
+    //     $('.progressbar-selected-rows').width(0);
+    //   });
+
+    //   // if not using date hierarchy filters
+    //   if (!$('.date-hierarchy').find('.toplinks').length) {
+    //     $('.panel-body.actions-top').addClass('no-hierarchy-filters');
+    //   }
+    // })(django.jQuery);
+    */
+
+
+
+  (function ($) {
+    $(document).ready(function () {
+      // Check if the URL has any query parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const hasParams = urlParams.toString().length > 0;
+      // Hide the list table if there are no query parameters
+      if (!hasParams) {
+        $('#result_list').hide();
+        $('.changelist-filter, #add-button').hide();
+        $('.dcard').hide();
+      }
+
+      // Show the list table when a filter is selected
+      $('.field-name a, .field-other_field a').click(function () {
+        $('.changelist').show();
+        $('.changelist-filter, #add-button').show();
+        $('.dcard').show();
+      });
+    });
+
+
+    // LOCATION RELOAD IF IDLE FOR 5 MIN
+
+    var inactivityTime = 0;
+    var refreshTime = 300000; // 5 minute in milliseconds
+
+    // Increment inactivityTime every second
+    setInterval(function () {
+      inactivityTime += 1000;
+    }, 1000);
+
+    // Reset inactivityTime when user interacts with the page
+    $(document).on('mousemove keydown scroll', function () {
+      inactivityTime = 0;
+    });
+
+    // Refresh page if inactivityTime exceeds refreshTime
+    setInterval(function () {
+      if (inactivityTime >= refreshTime) {
+        location.reload();
+      }
+    }, refreshTime);
+
+    $(window).on('load', function () {
+      var urlParams = new URLSearchParams(window.location.search); //get all parameters
+
+      var drf_gte = urlParams.get('drf__created_on__gte');
+      var drf_lte = urlParams.get('drf__created_on__lte');
+      if (drf_gte && drf_lte) {
+        $('#id-daterange-from').val(drf_gte)
+        $('#id-daterange-to').val(drf_lte)
+        $('.region_filter_link,.city_filter_link,.site_filter_link,.material_filter_link').each(function () {
+          var hrefValue = $(this).attr("href");
+          hrefValue += "&drf__created_on__gte=" + drf_gte + "&drf__created_on__lte=" + drf_lte;
+          $(this).attr("href", hrefValue);
+        });
+      }
+    });
+
+
+    // date range picker example
+    var daterange_container = document.querySelector('#id-daterange-container')
+    // Inject DateRangePicker into our container
+    DateRangePicker.DateRangePicker(daterange_container, {
+        mode: 'dp-below',
+        format: function (dt) {
+          return (dt.getMonth() + 1) + '/' + dt.getDate() + '/' + dt.getFullYear();
+        },
+      })
+      .on('statechange', function (_, rp) {
+        // Update the inputs when the state changes
+        var range = rp.state
+        $('#id-daterange-from').val(range.start ? range.start.toDateString() : '')
+        $('#id-daterange-to').val(range.end ? range.end.toDateString() : '')
+        daterange_container.classList.remove('visible')
+      })
+
+    $('#id-daterange-from, #id-daterange-to').on('focus', function () {
+      daterange_container.classList.add('visible')
+    })
+
+    var daterange_wrapper = document.querySelector('#id-daterange-wrapper')
+    var previousTimeout = null;
+    $(daterange_wrapper).on('focusout', function () {
+      if (previousTimeout) clearTimeout(previousTimeout)
+      previousTimeout = setTimeout(function () {
+        if (!daterange_wrapper.contains(document.activeElement)) {
+          daterange_container.classList.remove('visible')
+        }
+      }, 10)
+    })
+
+
+    // date code end
+
+    function formatDate(date) {
+      var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+      if (month.length < 2) month = '0' + month;
+      if (day.length < 2) day = '0' + day;
+
+      return [year, month, day].join('-');
+    }
+
+    $('#date-range-filter-submit').click(function (event) {
+
+      if ($('#id-daterange-to').val() != "" && $('#id-daterange-from').val() != "") {
+        var daterange_from = formatDate($('#id-daterange-from').val());
+        var daterange_to = formatDate($('#id-daterange-to').val());
+        if (daterange_from != "" && daterange_to != "") {
+          var queryparams = {
+            drf__created_on__gte: daterange_from,
+            drf__created_on__lte: daterange_to
+          };
+          var url = '{% url "admin:dashboard_cadetail_changelist" %}' + '?' + $.param(queryparams);
+          window.location.href = url;
+          $('#id_drf__created_on__gte').val(daterange_from)
+          $('#id_drf__created_on__lte').val(daterange_to)
+        }
+      } else {
+        alert("Please fill both fields first");
+      }
+    });
+
+    function allow_click(item) {
+      if (item.innerText == 0) {
+        item.setAttribute("href", "javascript:void(0);")
+      }
+    }
+  })(django.jQuery);
+</script>
+
+
+
+{% endblock js %}
